@@ -84,8 +84,15 @@ export default async function FlatPage({ params }: Params) {
     return <PageTemplate page={entry.page} />;
   }
 
-  const comparison =
-    entry.article.frontmatter.type === "comparison" ? await getComparison(slug) : null;
+  let comparison = null;
+  if (entry.article.frontmatter.type === "comparison") {
+    comparison = await getComparison(slug);
+    if (!comparison) {
+      throw new Error(
+        `Content error in ${entry.article.file}\n  type: comparison, but content/comparisons/${slug}.ts is missing`,
+      );
+    }
+  }
 
   return <ArticleTemplate article={entry.article} comparison={comparison} />;
 }
