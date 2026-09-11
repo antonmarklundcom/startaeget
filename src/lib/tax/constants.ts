@@ -61,20 +61,22 @@ const SV_SOURCES = {
     "https://bolagsverket.se/ff/foretagsformer/aktiebolag/starta/aktiekapital.1079.html",
 } as const;
 
-/** Corroborated across independent secondary sources; primary page unreachable. */
-const UNVERIFIED =
-  "Kontrollerad mot flera oberoende andrahandskällor, men inte mot myndighetens egen sida — byggmiljön kommer inte ut på skatteverket.se, bolagsverket.se eller verksamt.se.";
+/**
+ * Why the flagged values are flagged. Rendered once per result panel rather
+ * than stamped onto every constant — the same paragraph repeated eight times
+ * buries the tool it is meant to qualify.
+ */
+export const UNVERIFIED_EXPLANATION =
+  "Värden märkta \u201Cverifiera\u201D är kontrollerade mot flera oberoende andrahandskällor, men inte mot myndighetens egen sida — byggmiljön når inte ut till skatteverket.se, bolagsverket.se eller verksamt.se. Klicka på källan och kontrollera själv innan du fattar ett beslut som hänger på siffran.";
 
 function c(input: Omit<TaxConstant, "verified" | "verifiedOn"> & {
   verified?: boolean;
   verifiedOn?: string | null;
 }): TaxConstant {
-  const verified = input.verified ?? false;
   return {
     ...input,
-    verified,
+    verified: input.verified ?? false,
     verifiedOn: input.verifiedOn ?? null,
-    note: verified ? input.note : (input.note ?? UNVERIFIED),
   };
 }
 
@@ -97,7 +99,7 @@ export const constants: TaxConstant[] = [
     label: "Egenavgifter på överskottet i enskild firma",
     validFrom: "2026-01-01",
     source: SV_SOURCES.egenavgifter,
-    note: `${UNVERIFIED} Full avgift för dig som är under 66 år; lägre om du är äldre eller har hel pension.`,
+    note: `Full avgift för dig som är under 66 år; lägre om du är äldre eller har hel pension.`,
   }),
   c({
     key: "egenavgifter-schablonavdrag",
@@ -106,7 +108,7 @@ export const constants: TaxConstant[] = [
     label: "Schablonavdrag för egenavgifter i näringsbilagan",
     validFrom: "2026-01-01",
     source: SV_SOURCES.egenavgifter,
-    note: `${UNVERIFIED} 25 % gäller aktiv näringsverksamhet; 10 % för vissa äldre årskullar.`,
+    note: `25 % gäller aktiv näringsverksamhet; 10 % för vissa äldre årskullar.`,
   }),
   c({
     key: "arbetsgivaravgifter",
@@ -125,7 +127,7 @@ export const constants: TaxConstant[] = [
     label: "Genomsnittlig kommunalskatt i Sverige (riksgenomsnitt)",
     validFrom: "2026-01-01",
     source: SV_SOURCES.kommunalskatt,
-    note: `${UNVERIFIED} Riksgenomsnitt. Din egen kommun ligger mellan cirka 28,9 % och 35,7 % — räkna om med din egen skattesats.`,
+    note: `Riksgenomsnitt. Din egen kommun ligger mellan cirka 28,9 % och 35,7 % — räkna om med din egen skattesats.`,
   }),
   c({
     key: "statlig-skatt",
@@ -142,7 +144,7 @@ export const constants: TaxConstant[] = [
     label: "Brytpunkt för statlig inkomstskatt (lön före skatt, under 66 år)",
     validFrom: "2026-01-01",
     source: SV_SOURCES.beloppOchProcent,
-    note: `${UNVERIFIED} Brytpunkten är skiktgränsen plus grundavdraget; skiktgränsen för 2026 anges till 643 000 kr.`,
+    note: `Brytpunkten är skiktgränsen plus grundavdraget; skiktgränsen för 2026 anges till 643 000 kr.`,
   }),
   c({
     key: "skiktgrans",
@@ -178,7 +180,7 @@ export const constants: TaxConstant[] = [
     validFrom: "2026-01-01",
     source: SV_SOURCES.utdelning,
     note:
-      `${UNVERIFIED} Från 2026 ersätts förenklingsregeln och huvudregeln av en gemensam regel med ett grundbelopp på 4 inkomstbasbelopp, som delas mellan delägarna. Reformen är ny — kontrollera mot Skatteverket innan du planerar en utdelning.`,
+      `Från 2026 ersätts förenklingsregeln och huvudregeln av en gemensam regel med ett grundbelopp på 4 inkomstbasbelopp, som delas mellan delägarna. Reformen är ny — kontrollera mot Skatteverket innan du planerar en utdelning.`,
   }),
   c({
     key: "utdelningsskatt",
@@ -223,7 +225,7 @@ export const constants: TaxConstant[] = [
     label: "Lägsta aktiekapital i ett privat aktiebolag",
     validFrom: "2020-01-01",
     source: SV_SOURCES.aktiekapital,
-    note: `${UNVERIFIED} Pengarna är inte en avgift — de blir bolagets egna och får användas i verksamheten.`,
+    note: `Pengarna är inte en avgift — de blir bolagets egna och får användas i verksamheten.`,
   }),
   c({
     key: "bolagsverket-ab-nyregistrering",
@@ -232,7 +234,7 @@ export const constants: TaxConstant[] = [
     label: "Bolagsverkets avgift för att nyregistrera aktiebolag via e-tjänst",
     validFrom: "2025-06-19",
     source: SV_SOURCES.bvAktiebolag,
-    note: `${UNVERIFIED} Avgifterna höjdes 19 juni 2025. På pappersblankett anges 2 900 kr.`,
+    note: `Avgifterna höjdes 19 juni 2025. På pappersblankett anges 2 900 kr.`,
   }),
   c({
     key: "bolagsverket-ab-nyregistrering-blankett",
@@ -249,7 +251,7 @@ export const constants: TaxConstant[] = [
     label: "Bolagsverkets avgift för att registrera enskild firma (frivilligt)",
     validFrom: "2025-06-19",
     source: SV_SOURCES.bvEnskild,
-    note: `${UNVERIFIED} Frivilligt för enskild firma — du behöver det bara om du vill skydda företagsnamnet. F-skatt och moms registrerar du gratis hos Skatteverket.`,
+    note: `Frivilligt för enskild firma — du behöver det bara om du vill skydda företagsnamnet. F-skatt och moms registrerar du gratis hos Skatteverket.`,
   }),
   c({
     key: "bolagsverket-handelsbolag",

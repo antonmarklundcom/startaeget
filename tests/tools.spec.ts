@@ -3,6 +3,7 @@ import {
   constant,
   constants,
   rate,
+  UNVERIFIED_EXPLANATION,
   value,
   type TaxConstant,
 } from "../src/lib/tax/constants";
@@ -36,13 +37,17 @@ describe("tax constants", () => {
     }
   });
 
-  it("makes every unverified constant explain itself", () => {
+  it("never claims a verification date it does not have", () => {
     const unverified = constants.filter((item: TaxConstant) => !item.verified);
     expect(unverified.length).toBeGreaterThan(0);
     for (const item of unverified) {
-      expect(item.note, item.key).toBeTruthy();
       expect(item.verifiedOn, item.key).toBeNull();
     }
+    for (const item of constants.filter((entry) => entry.verified)) {
+      expect(item.verifiedOn, item.key).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+    // The reason the flagged values are flagged is stated once, by the UI.
+    expect(UNVERIFIED_EXPLANATION).toMatch(/verifiera/);
   });
 
   it("throws on an unknown key instead of returning zero", () => {
