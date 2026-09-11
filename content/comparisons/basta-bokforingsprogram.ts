@@ -3,9 +3,12 @@
  * src/lib/content/schema.ts › COMPARISON_COLUMNS — the same five for every
  * comparison on the site, so the tables stay comparable.
  *
- * Prices are the vendors' own list prices on `sourceDate`. See docs/log/O2.md:
- * this session could not reach the vendor sites from the build sandbox, so S5
- * re-checks every row against the linked page before launch.
+ * Prices are the vendors' own list prices on `sourceDate`. S5 (2026-09-11)
+ * re-attempted the re-check O2 asked for and hit the same egress block
+ * (403 on CONNECT to bokio.se, fortnox.se, vismaspcs.se, wint.se and
+ * bjornlunden.se — see docs/log/O3.md, confirmed again the same day). Values
+ * are unchanged from O2 and still corroborated only against secondary
+ * sources; a human must open each `sourceUrl` before launch.
  */
 const comparison = {
   slug: "basta-bokforingsprogram",
