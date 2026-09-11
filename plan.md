@@ -14,9 +14,11 @@ Sweden only. Swedish language (du-form). Founder-first content + decision tools 
 | S6 Affärsidé & affärsplan | 2 | Sonnet | `prompts/sonnet-6-affarside.md` | §6.3 | `content/articles/affarside/**`, `content/lead-magnets/**`, `content/image-briefs/s6.json` | O2 |
 | S7 E-handel & hemsida | 2 | Sonnet | `prompts/sonnet-7-ehandel-hemsida.md` | §6.4 | `content/articles/e-handel/**`, `content/articles/hemsida/**`, `content/image-briefs/s7.json` | O2 |
 | S8 Marknadsföring & sidor | 2 | Sonnet | `prompts/sonnet-8-marknadsforing-sidor.md` | §6.5 | `content/articles/marknadsforing/**`, `content/pages/**`, `content/image-briefs/s8.json` | O2 |
-| S9 Link pass | — | Sonnet | `prompts/sonnet-9-link-pass.md` | §6.6 | any `content/**` file (links/related only), `content/nav.ts`, `KNOWN-ISSUES.md`, `plan.md` §9 | all |
+| S9 Link pass | — | Sonnet | `prompts/sonnet-9-link-pass.md` | §6.6 | any `content/**` file (links/related only), `content/nav.ts`, `KNOWN-ISSUES.md`, `plan.md` §9 | all, incl. D1 |
+| D1 Verkstan design | 1 (runs in parallel with S4–S8) | Opus | `prompts/opus-10-verkstan.md` | §5.4, `docs/design/verkstan.md` | `src/**` (except `src/lib/tax/**` maths and `src/app/api/**`), `content/hubs.ts`, `content/home.ts`, `content/tools.ts`, `tests/screenshots.mjs`, `docs/design/**` | O3 |
+| B1 Blog admin | 1 (after D1) | Opus | `prompts/opus-11-blog-admin.md` | §5.5 | `src/app/admin/**`, `src/app/api/admin/**`, `src/lib/admin/**`, `src/middleware.ts`, `src/lib/content/schema.ts` (additive only), `content/hubs.ts` + `content/nav.ts` (add `blogg` only), `content/articles/blogg/**`, `.env.example`, `tests/admin.e2e.mjs`, `drizzle/**` (only if a table is unavoidable); plus for the lead-magnet loader and `<Stat k>`: `src/lib/content/index.ts`, `src/components/mdx/**`, `src/app/(site)/[slug]/page.tsx` | D1 |
 
-Estimated cost: O1 $15–20, O2 $12–18, O3 $15–20, S4–S8 $8–12 each in parallel, S9 ~$4 → roughly $95–120. Wall-clock ≈ 5 h (lane 1 ≈ 3 h, lane 2 ≈ 1.5 h, link pass ≈ 0.5 h). Imagery is a manual pipeline after the build (§7), not a phase.
+Estimated cost: O1 $15–20, O2 $12–18, O3 $15–20, S4–S8 $8–12 each in parallel, S9 ~$4, D1 $15–25, B1 $15–20 → roughly $125–165. Wall-clock ≈ 5 h (lane 1 ≈ 3 h, lane 2 ≈ 1.5 h, link pass ≈ 0.5 h). Imagery is a manual pipeline after the build (§7), not a phase.
 
 ---
 
@@ -45,6 +47,13 @@ All affiliate links are marked "Annonslänk" inline and explained on `/annonspol
 - **Content lives in the repo**, not the DB: MDX article files + typed TypeScript content arrays. No CMS. Sonnet phases write files, PRs review them, Git is the history.
 - **DB is small on purpose:** `leads`, `subscribers`, `affiliate_clicks`, `tool_results` (only when the user asks to e-mail a result). Nothing public renders from the DB.
 - Static generation for every content page (`generateStaticParams`); route handlers only for `/go/*`, forms and the sitemap.
+- **Stack question re-asked 2026-09-11 (HTML/PHP vs Node) — answer: Node/Next.js stays.** Three phases are merged on it, the tools are React components, and the blog admin (§5.5) needs a server. The PHP template profile is for brochure sites without logins; this site has one.
+- **Blog admin is git-backed, not a CMS database.** `/admin/` edits the MDX files in `content/` and commits them to `main` through the GitHub API; Hostinger rebuilds on push. Content stays in the repo (the decision above holds), PR review still works, Git is the history. No `posts` table.
+
+### 1.8 Design direction (decided 2026-09-11)
+- **Direction 1b "Verkstan"** from `docs/design/tre-riktningar.dc.html` replaces O2's blue serif editorial look. The extracted contract is `docs/design/verkstan.md`; D1 implements it, every later `src/**` change follows it. Outfit + Figtree, paper `#fffdf8`, accent green `#0f6b4a`, one tint per hub, pills and 24 px cards, no shadows except the hero tool card, no dark mode.
+- O2's decisions that survive: frontmatter drives everything, `Annonslänk` marking unconditional, `overflow-wrap` on headings, per-row sourced comparison prices, the one-boolean drawer. O2's accent, fonts and table layout do not.
+- Lane 2 phases are unaffected: they write MDX against the same frontmatter and the same MDX vocabulary (`Callout`, `Checklist`, `StatRow`, `Stat`, `Verifiera`). Their screenshots will show whichever design is on `main` at the time; that is fine.
 
 ### 1.4 URLs
 - Keep every dateless legacy slug at its **flat root path** (`/starta-aktiebolag/`) — they carry the existing rankings. Hubs get new top-level paths (§2). Articles are addressed by slug only; the hub is metadata, not part of the path. Trailing slash on, matching WordPress.
@@ -147,6 +156,7 @@ Every build session runs under these rules. They are copied from `phased-autonom
 12. **Orientation read:** prompt file, plan §1 and §4, own section(s), phase table, §9, and the logs of the phases in `Depends on`. Nothing else.
 13. **Polish cap:** one screenshot pass (≤ 5 pages × 2 widths, after the last code change), one Lighthouse run only if the exit criteria name a number, one scripted interaction pass only for phases shipping JS (script saved under `tests/`). PR body written once, ≤ 25 lines. When the exit criteria pass, open the PR that turn. Ideas found afterwards go to §10.
 14. **Screenshots live in CI, not git.** `docs/screenshots/` is git-ignored; the CI job uploads them as a PR artifact.
+15a. **S4–S7 are run by Anton in his own windows (2026-09-11), not by the watcher.** The watcher never spawns S4–S7 from "not started"; it still re-spawns a stalled one, merges a green orphaned PR, starts S8 and S9. D1 and B1 are driven from Anton's Fable planning session with Opus subagents and are not the watcher's to spawn either.
 15. **Decisions travel by files, never by messages.** To change a running phase, edit its prompt on main; phases re-read their prompt before opening and before merging the PR.
 16. **Anti-fabrication:** every tax rate, fee, threshold or price lives in `src/lib/tax/constants.ts` or the article's `sources` with a source URL and validity date. If a session cannot verify a number against Skatteverket/Bolagsverket/Verksamt (or the partner's own page), it writes "verifiera" next to it and logs it under Known issues instead of guessing.
 
@@ -180,6 +190,26 @@ Scaffold and contracts. No visual design beyond tokens; no article copy.
 - **Tool 3 Vad-blir-kvar** (`/verktyg/vad-blir-kvar/`): inputs revenue (exkl. moms), costs, hours; outputs side-by-side enskild firma vs AB net, with the assumptions listed under the result and a big "uppskattning, inte rådgivning" label; CTA to byrå lead form and bokföringsprogram.
 - All three: pure functions in `src/lib/tax/*.ts` with unit tests (`tests/tools.spec.ts`, vitest) covering at least 5 cases each; client components, URL-state, no DB except e-mail-my-result. SoftwareApplication JSON-LD. Wire the hero slot on home to tool 1's first question.
 - Exit: unit tests green; verify green; the three tool pages render and complete a full run in the scripted Playwright pass; `docs/log/O3.md`. Then §4.10: create the watcher, spawn S4–S8 (max 4 at once).
+
+### 5.4 D1 Verkstan design (Opus; parallel with lane 2 — Owns are disjoint)
+Re-skin the whole site to `docs/design/verkstan.md` without changing any contract a lane 2 phase writes against.
+- Tokens, fonts (`Outfit` + `Figtree` via `next/font/google`), container 80rem, `data-hub` page tint mechanism; `tint` on hubs (`content/hubs.ts`, schema default `sand`), `tint` + `minutes` on tools.
+- Header, footer, home (hero with the truthful chip — no invented counters), tool cards, six rooms with real article counts, guides/comparisons panels, sun newsletter band.
+- ArticleTemplate + ComparisonTemplate (rows as cards, same data shape), HubTemplate, PageTemplate, the MDX blocks, forms, ToolShell + the three tools' result panels and inputs (visual only — `src/lib/tax/**` maths and tests untouched), `EmailResult`, `ToolSources`.
+- Keep: every route, every class hook the e2e scripts use (`tests/tools.e2e.mjs` must pass unchanged; if a selector must change, change the test in the same commit and say so in the log), JSON-LD, metadata, forms' behaviour, print styles.
+- Do not touch `content/articles/**`, `content/comparisons/**`, `src/lib/tax/**`, `src/app/api/**`, `src/lib/content/**` beyond the additive `tint`/`minutes` fields.
+- Exit: verify green; unit tests green; `tests/tools.e2e.mjs` green; Lighthouse mobile per `docs/design/verkstan.md` §3 on the four named routes; no horizontal scroll at 375 px; a screenshot pass of `/`, `/starta-foretag/`, `/starta-aktiebolag/`, `/basta-bokforingsprogram/`, `/verktyg/bolagsform/` at 375 + 1440 as the PR artifact; `docs/log/D1.md`.
+
+### 5.5 B1 Blog admin (Opus; after D1 merges)
+A single-admin, git-backed editor so Anton can write blog posts and update old articles (links, facts, "Uppdaterad") without a code session.
+- **Hub `blogg`**: 7th entry in `HUBS`, `content/hubs.ts` (tint `sand`, kind `hub`, listing sorted by `updated` desc) and a "Blogg" item in `nav.footer` "Guider" (primary nav is full — S9 may promote it). New article type `post` (sources optional). `content/articles/blogg/` seeded with one real post written to O2 quality (what the relaunch changed and why, links to the tools).
+- **Auth**: `/admin/login/` with `ADMIN_PASSWORD` (timing-safe compare), session = HMAC-signed httpOnly cookie (`ADMIN_SESSION_SECRET`, 7 days, `secure` in production, `sameSite: lax`), `src/middleware.ts` guards `/admin/*`; 5 failed logins per 15 min per IP → 429. `robots.ts` disallows `/admin/`; every admin page `noindex`. No DB.
+- **Store** (`src/lib/admin/store.ts`): `listArticles`, `readArticle`, `writeArticle`, `createArticle` behind one interface with two backends: `github` when `GITHUB_TOKEN` + `GITHUB_REPO` are set (Contents API on `GITHUB_BRANCH`, default `main`; read = the GitHub file, write = PUT with the file's sha, commit message `admin: <title>`), else `local` (the repo's `content/` on disk — dev and the fallback). List/read in github mode come from GitHub so an edit that is committed but not yet deployed is what the editor shows. 60 s in-memory cache.
+- **Screens**: `/admin/` list (filter by hub, search title/slug, state chip: mint "publicerad", sun "väntar på bygge" when the GitHub sha is newer than the deployed build's commit — `NEXT_PUBLIC_BUILD_SHA` written at build time, else omit the chip), "Ny bloggpost". `/admin/artiklar/[hub]/[slug]/` editor: every frontmatter field as a form control (`updated` defaults to today on save; `related` and `partners` as multi-selects from the loaders; `sources`/`faq` as repeatable rows; `legacy` read-only), the MDX body in a textarea with a toolbar: **Infoga länk** (searchable picker over articles, hubs and tools inserting `[text](/slug/)`), Callout / Checklist / Stat snippets. Preview pane: a server action compiles the MDX with the site's own `Mdx` component and returns HTML or the compile error. Plain textarea — no editor dependency.
+- **Validation before every commit**: `articleFrontmatterSchema` + MDX compile must pass, slug must not collide with a hub/tool/reserved route (reuse O1's check), every internal link `](/x/)` must resolve to an existing slug/hub/tool (warning, not error). An invalid file is never committed, so the admin can never break the build.
+- **Lead magnets and `<Stat k>` (lane 2 asked for these; B1 is the first `src/**` phase after them):** (a) a loader for `content/lead-magnets/*.mdx` (page-shaped frontmatter + `gate: newsletter` boolean) resolved by the `/[slug]/` route, rendered with `PageTemplate` in print-friendly form; gated = the body renders after the `NewsletterForm` submit (client state, no server check — the value is the list, not the secret). (b) A `<Stat k="<constant key>" />` MDX component that renders the value + unit from `src/lib/tax/constants.ts` with its source link, so plan §6's rule can be followed. Both additive; add `src/lib/content/index.ts`, `src/lib/content/schema.ts`, `src/components/mdx/**` and `src/app/(site)/[slug]/page.tsx` to B1's Owns for these two items only.
+- **After save**: "Sparat i GitHub (commit abc1234). Hostinger bygger om sajten — ändringen syns om några minuter." / "Sparat lokalt". Rebuild latency (2–5 min) is the accepted trade-off of git-backed content.
+- Exit: verify green; `tests/admin.e2e.mjs` green in local mode (login, create post, insert a link, save, file on disk validates, delete); unit tests for the frontmatter round-trip (`gray-matter` stringify → parse equals input); `/admin/` unauthenticated → 302 to login, `noindex`; `/blogg/` renders the seed post; `docs/log/B1.md`; `.env.example` + §7 updated.
 
 ## 6. Lane 2 — content (Sonnet, parallel) and the link pass
 
@@ -216,8 +246,8 @@ Legacy: `seo-guide`, the Google Ads, Instagram, sociala medier, SMMA and AI-agen
 New: `marknadsforing-nyforetagare` (cornerstone), `google-foretagsprofil`, `nyhetsbrev-for-smaforetag`.
 Pages: `om-oss` (who writes this, method, sources), `kontakt`, `annonspolicy`, `integritetspolicy` (GDPR-correct: what the forms store, VenderCRM as biträde, cookie policy), `villkor`, `nyhetsbrev` (landing with the three magnets), `redovisningsbyra` (lead-gen landing).
 
-### 6.6 S9 Link pass (Sonnet, after all lane 2 PRs merge)
-Fill `related:` (2–4 per article, within and across hubs), add cross-article links in bodies where a guide names a concept another guide owns, add tool CTAs to the articles that match each tool, check `content/nav.ts` and hub featured lists, verify every legacy URL, every hub and every tool appears in the sitemap, promote open cross-phase items to `KNOWN-ISSUES.md`, run verify + one full screenshot pass, close with the report. Delete the watcher Routine first.
+### 6.6 S9 Link pass (Sonnet, after all lane 2 PRs **and D1** merge — its screenshot pass must show the final design; B1 is not a prerequisite)
+Fill `related:` (2–4 per article, within and across hubs), add cross-article links in bodies where a guide names a concept another guide owns, add tool CTAs to the articles that match each tool, check `content/nav.ts` and hub featured lists (promote each hub's cornerstone into `hub.featured`; add "Blogg" to the primary nav if B1 has merged and the header still fits at 1024 px), verify every legacy URL, every hub and every tool appears in the sitemap, promote open cross-phase items to `KNOWN-ISSUES.md`, run verify + one full screenshot pass, close with the report. Delete the watcher Routine first.
 
 ## 7. Human-inputs checklist
 
@@ -232,6 +262,9 @@ Fill `related:` (2–4 per article, within and across hubs), add cross-article l
 | 7 | Imagery: run the Higgsfield → webimg pipeline on `content/image-briefs/*.json` from your PC per `higgsfield-image-pipeline` (sandbox 403s on the CDN) — a manual step, not a phase | after link pass |
 | 8 | Domain cutover: map startaegetforetag.se to the Node slot, keep WP export, switch off WP | after 7 |
 | 9 | Google Search Console: submit new sitemap, monitor the 301s for 4 weeks | after 8 |
+| 10 | Admin secrets in hPanel: `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` (32+ random chars) | B1 live |
+| 11 | A fine-grained GitHub token with *Contents: read/write* on this repo only → `GITHUB_TOKEN`, plus `GITHUB_REPO=antonmarklundcom/startaeget`, `GITHUB_BRANCH=main` in hPanel. Without it the admin is read-only in production. | B1 live |
+| 12 | Confirm in hPanel that the Node.js app redeploys automatically on push to `main` (Git integration → auto-deploy). If it does not, every admin save needs a manual "Redeploy" click — say so in `docs/log/B1.md` if you find out. | B1 live |
 
 ### 7.1 Redirect map — dated URLs (the three required 301s)
 
@@ -255,9 +288,11 @@ Plus, generated from `content/legacy-urls.json` and §2.1: every `retire` entry 
 | O1 Foundation | #2 | `docs/log/O1.md` |
 | O2 Design & templates | #4 | `docs/log/O2.md` |
 | O3 Tools | #5 | `docs/log/O3.md` |
+| (design + admin plan) | #6 | `docs/design/verkstan.md` |
 | S5 Ekonomi & jämförelser | #10 | `docs/log/S5.md` |
 | S6 Affärsidé & affärsplan | #7 | `docs/log/S6.md` |
 | S7 E-handel & hemsida | #8 | `docs/log/S7.md` |
+| S4 Starta företag | #9 | `docs/log/S4.md` |
 
 ## 10. Backlog
 - Affärsplan-generator (form → PDF), gated by e-mail.

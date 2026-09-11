@@ -1,6 +1,6 @@
 # Phase S9 — Link pass. SONNET session. Sequential, after every S4–S8 PR is merged.
 
-Read ONLY: this file, `plan.md` §1, §2, §4, §6.6, the phase table and §9, and `docs/log/S4.md` … `docs/log/S8.md`. Do not read the rest.
+Read ONLY: this file, `plan.md` §1, §2, §4, §6.6, the phase table and §9, `docs/log/S4.md` … `docs/log/S8.md`, and `docs/design/verkstan.md` §2 (so the screenshot pass judges the right design). Do not read the rest.
 Execute under the autonomy protocol §4.
 
 Owns: `related:` and body cross-links in any `content/**` article, `content/nav.ts`, `content/hubs.ts` featured lists, `KNOWN-ISSUES.md`, `plan.md` §9, `docs/log/S9.md`. No `src/**` changes.
