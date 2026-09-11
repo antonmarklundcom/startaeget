@@ -1,0 +1,101 @@
+---
+title: Webbhotell – vad det är och vad du behöver
+slug: webbhotell
+hub: hemsida
+type: guide
+description: "Lagringsutrymme, bandbredd, uptime, SSL och backup förklarat i klarspråk – så avgör du om ett webbhotell räcker för din hemsida."
+intent: "vad ett webbhotell är, vilka tekniska krav en företagshemsida faktiskt ställer, och hur du bedömer om ett hotell räcker — inte en rangordning av leverantörer"
+updated: 2026-09-11
+legacy: true
+sources:
+  - label: "Internetstiftelsen om webbhotell och domäner"
+    url: "https://internetstiftelsen.se/"
+partners:
+  - loopia
+  - one-com
+  - hostinger
+  - miss-hosting
+related: []
+faq:
+  - q: Behöver jag ett webbhotell om jag bygger hemsidan i Wix eller Squarespace?
+    a: Nej. De byggarna hyr ut allting i ett paket — server, domän och verktyg i samma abonnemang — och kallar det sällan webbhotell. Ordet syftar oftast på fristående hosting du köper separat till exempelvis WordPress eller en egen kodad sida.
+  - q: Vad är skillnaden på webbhotell och domän?
+    a: Domänen är adressen, till exempel dittforetag.se. Webbhotellet är utrymmet där själva filerna och databasen ligger. Du kan köpa dem hos olika leverantörer och peka domänen mot hotellet, men de flesta småföretag köper båda på samma ställe för enkelhetens skull.
+  - q: Räcker delat webbhotell för en företagshemsida?
+    a: För de flesta enkla företagssidor och mindre webbutiker, ja. Delat webbhotell blir en flaskhals först vid mycket trafik, tunga bilder utan optimering eller webbutiker med stora produktkataloger — då är det dags att titta på VPS eller ett hotell riktat mot e-handel.
+  - q: Ingår SSL-certifikat i priset?
+    a: Hos de flesta seriösa leverantörer i dag, ja — men kontrollera alltid att det står uttryckligen i paketet innan du betalar, eftersom vissa äldre eller billigare paket fortfarande tar extra betalt för det.
+  - q: Vad händer om jag vill byta webbhotell senare?
+    a: Du flyttar filer och databas till det nya hotellet och pekar om domänens namnserver eller DNS-poster dit. Det går nästan alltid att göra utan avbrott om du planerar bytet, men fråga alltid om uppsägningstid innan du binder upp dig så att du inte betalar för två hotell samtidigt.
+image:
+  slot: webbhotell-hero
+  alt: Företagare tittar på serverikoner och tekniska specifikationer för ett webbhotell på skärmen
+---
+
+Ett webbhotell är platsen där hemsidans filer, bilder och databas faktiskt ligger lagrade, och som gör att sidan syns för besökare dygnet runt. De flesta som startar företag stöter på ordet första gången de ska sätta upp en WordPress-sida eller en enkel webbutik, och det är lätt att bara välja det billigaste paketet man ser. Den här guiden går igenom vad du faktiskt betalar för, vilka tekniska krav en vanlig företagshemsida ställer, och vilka frågor du bör ställa innan du binder upp dig — så att du kan jämföra leverantörer själv utifrån rätt kriterier.
+
+<Callout title="Det här är inte en rangordning">
+Loopia, One.com, Hostinger och Miss Hosting nämns här som exempel på webbhotell som är vanliga i Sverige. Den här texten rangordnar dem inte mot varandra — den går i stället igenom vad du ska leta efter, oavsett vilken leverantör du till slut väljer.
+</Callout>
+
+## Vad ett webbhotell faktiskt levererar
+
+Ett webbhotell är i grunden en server, eller en andel av en server, som du hyr plats på. Den levererar fyra saker som varje hemsida behöver:
+
+<Checklist items={[
+  "Lagringsutrymme för filer, bilder, teman och plugins",
+  "Bandbredd som avgör hur mycket trafik sidan klarar per månad",
+  "En databas, oftast MySQL, som WordPress och de flesta e-handelsplattformar kräver för att lagra sidor, produkter och inställningar",
+  "E-postkonton kopplade till din domän, till exempel info@dittforetag.se"
+]} />
+
+För en vanlig informationssida med några undersidor, ett kontaktformulär och lite text och bilder räcker det minsta paketet hos i princip vilken leverantör som helst. Det är först när sidan får mycket trafik, kör tunga funktioner som video eller stora bildgallerier, eller är en webbutik med hundratals produkter, som utrymme och bandbredd faktiskt börjar spela roll.
+
+## Delat webbhotell eller VPS
+
+De flesta småföretag börjar på **delat webbhotell** (shared hosting). Det innebär att din sida delar serverns resurser — processorkraft och minne — med många andra kunders sidor på samma maskin. Det är billigt, kräver ingen teknisk kunskap att sköta, och leverantören uppdaterar servern åt dig.
+
+En **VPS** (virtual private server) ger dig en egen avgränsad del av en server med garanterade resurser som inte påverkas av andra kunder. Det är dyrare och kräver oftast att du själv, eller någon du anlitar, sköter mer av den tekniska driften.
+
+<StatRow items={[
+  { value: "Delat webbhotell", label: "Passar de flesta", note: "Enkel företagssida, blogg, mindre webbutik" },
+  { value: "VPS", label: "Passar vid tillväxt", note: "Hög trafik, tung e-handel, egna serverinställningar" }
+]} />
+
+Tumregeln är enkel: börja på delat webbhotell. Byt till VPS den dagen sidan faktiskt blir långsam vid normal trafik, inte i förväg baserat på en känsla av att det borde behövas. De flesta som byter för tidigt betalar för kapacitet de aldrig använder.
+
+## Det som måste ingå, oavsett leverantör
+
+Vissa saker är inte tillval du kan tacka nej till för att spara pengar — de är grundkrav för att en hemsida ska vara säker och pålitlig.
+
+**SSL-certifikat.** Det är krypteringen som gör att adressen visar https istället för http, och att besökarens webbläsare inte varnar för en osäker anslutning. Google använder dessutom SSL som en rankingfaktor, så en sida utan det tappar både förtroende och söksynlighet. De flesta webbhotell inkluderar i dag ett gratis SSL-certifikat (ofta via Let's Encrypt) i grundpriset — kontrollera ändå att det står uttryckligen i paketet du tittar på.
+
+**Backup-rutiner.** Fråga hur ofta backup tas, hur länge de sparas, och om återställning ingår i priset eller kostar extra. En backup som bara finns om du själv kommer ihåg att beställa den är i praktiken ingen backup alls.
+
+**Drifttid (uptime).** Leverantörer brukar ange en uptime-garanti, till exempel <Verifiera /> 99,9 procent tillgänglighet per år. Läs vad som faktiskt händer om garantin inte hålls — vissa ger kompensation i form av kredit på ditt konto, andra lovar mycket men reglerar lite i avtalet.
+
+**Svensk support.** För den som inte är teknisk själv är det stor skillnad mellan att kunna ringa eller chatta på svenska och att behöva formulera ett tekniskt problem på engelska till en supportkö i ett annat tidszon. Om du redan vet att du kommer behöva hjälp ibland, väg in supportens språk och öppettider innan du väljer.
+
+## Att installera WordPress eller en webbutik
+
+De flesta webbhotell riktade mot privatpersoner och mindre företag erbjuder en enklicksinstallation för WordPress, ofta genom ett kontrollpanelsverktyg som cPanel eller ett eget gränssnitt. Det innebär att du inte behöver ladda upp filer manuelt eller sätta upp databasen själv — installationen sköter det åt dig på några minuter.
+
+Ska du driva en webbutik är det värt att kolla om hotellet har färdiga paket anpassade för WooCommerce eller andra e-handelsplattformar, eftersom de ofta kommer med mer lagringsutrymme och bättre prestanda för produktbilder och kassaflöden redan från start. Har du redan bestämt dig för en specifik e-handelsplattform, kolla dess egna rekommendationer för webbhotell innan du köper — vissa plattformar ställer krav på till exempel PHP-version eller minneskvot som inte alla billigaste paket klarar.
+
+## Frågor att ställa innan du betalar
+
+Innan du lägger en beställning, gå igenom de här punkterna med leverantören eller i deras avtalsvillkor:
+
+<Checklist items={[
+  "Ingår domänen i priset, eller måste den köpas separat och förnyas för sig?",
+  "Vad är uppsägningstiden, och binds jag upp på ett år i förväg för introduktionspriset?",
+  "Vad kostar det efter det första året, när introduktionsrabatten är slut?",
+  "Ingår SSL, backup och e-postkonton, eller är de tillval?",
+  "Finns svensk support, och under vilka tider är den öppen?"
+]} />
+
+Introduktionspriser är den vanligaste fällan. Många leverantörer lockar med ett lågt pris det första året som sedan höjs betydligt vid förnyelse. Räkna på totalkostnaden över två till tre år, inte bara på priset som står överst på sidan, innan du jämför olika alternativ mot varandra.
+
+## Så väger du ihop det
+
+Ett webbhotell behöver inte vara det svåraste beslutet i att bygga en hemsida — men det är lätt att välja enbart på pris och sedan bli förvånad av vad som saknas. Utgå från vad din sida faktiskt behöver: lagringsutrymme och bandbredd som matchar hur mycket trafik och innehåll du väntar dig, SSL och backup som grundkrav snarare än tillval, och support på ett språk du kan använda den dagen något krånglar. Med de kriterierna på plats kan du jämföra konkreta paket hos leverantörer som Loopia, One.com, Hostinger och Miss Hosting utifrån dina egna prioriteringar, i stället för att gissa vad som brukar vara viktigt.

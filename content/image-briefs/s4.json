@@ -1,0 +1,86 @@
+[
+  {
+    "slot": "starta-eget-foretag-hero",
+    "prompt": "Editorial photo, natural light: a person in their late 20s/30s at a home desk with a laptop and a handwritten to-do list, planning a new business. Warm, optimistic, not corporate-stock-photo staged. No visible logos or text on screen.",
+    "alt": "Person som planerar sitt nya företag vid ett skrivbord med anteckningar och en laptop",
+    "page": "/starta-eget-foretag/"
+  },
+  {
+    "slot": "enskild-firma-eller-aktiebolag-hero",
+    "prompt": "Conceptual editorial illustration or photo: two diverging paths or road signs suggesting a decision point, clean and minimal, no literal signage text. Should read as 'choosing between two options', not a literal crossroads cliché.",
+    "alt": "Två vägskyltar som symboliserar valet mellan enskild firma och aktiebolag",
+    "page": "/enskild-firma-eller-aktiebolag/"
+  },
+  {
+    "slot": "enskild-firma-hero",
+    "prompt": "Editorial photo: a solo freelancer/consultant at a kitchen table sending an invoice from a laptop, relaxed home setting, morning light. No visible brand logos.",
+    "alt": "Person som fakturerar en kund som ensam näringsidkare vid köksbordet",
+    "page": "/enskild-firma/"
+  },
+  {
+    "slot": "starta-handelsbolag-hero",
+    "prompt": "Editorial photo: two business partners sitting across a table signing a partnership agreement document, handshake or pen-to-paper moment, professional but warm tone.",
+    "alt": "Två affärspartners skriver under ett kompanjonsavtal vid ett bord innan de registrerar handelsbolag",
+    "page": "/starta-handelsbolag/"
+  },
+  {
+    "slot": "foretagslan-hero",
+    "prompt": "Editorial photo: a founder reviewing loan terms and a simple spreadsheet/calculator at a desk, focused and slightly serious expression, neutral office or home-office setting.",
+    "alt": "Företagare som går igenom lånevillkor och kalkyler vid ett skrivbord",
+    "page": "/foretagslan/"
+  },
+  {
+    "slot": "stod-till-nytt-foretag-hero",
+    "prompt": "Editorial photo: a person reading through official-looking support/grant terms on a laptop screen at home, thoughtful expression. No visible logos or readable text on screen.",
+    "alt": "Person som läser igenom villkor för olika företagsstöd vid en dator",
+    "page": "/stod-till-nytt-foretag/"
+  },
+  {
+    "slot": "starta-eget-bidrag-hero",
+    "prompt": "Editorial photo: a person going through a printed business plan with an advisor across a desk, collaborative meeting tone, could suggest an Arbetsförmedlingen-style advisory session without depicting any real logo or signage.",
+    "alt": "Person som går igenom en affärsplan tillsammans med en rådgivare vid ett skrivbord",
+    "page": "/starta-eget-bidrag/"
+  },
+  {
+    "slot": "registrera-foretag-bolagsverket-hero",
+    "prompt": "Editorial photo: a person using BankID / e-legitimation on a phone next to a laptop to complete an official registration, clean desk, focused moment. No real government branding or logos.",
+    "alt": "Person loggar in med BankID för att registrera företag i Bolagsverkets e-tjänst",
+    "page": "/registrera-foretag-bolagsverket/"
+  },
+  {
+    "slot": "f-skatt-hero",
+    "prompt": "Editorial photo: a person filling in an official-looking online application form on a laptop, calm concentrated expression, home-office setting. No readable text or real logos on screen.",
+    "alt": "Person som ansöker om F-skatt på verksamt.se via dator",
+    "page": "/f-skatt/"
+  },
+  {
+    "slot": "momsregistrering-hero",
+    "prompt": "Editorial photo: a receipt and a calculator on a desk next to a laptop, suggesting VAT calculation on a sale, clean flat-lay or desk composition.",
+    "alt": "Kvitto och miniräknare som symboliserar uträkning av moms på en försäljning",
+    "page": "/momsregistrering/"
+  },
+  {
+    "slot": "foretagsforsakring-hero",
+    "prompt": "Editorial photo: a small business owner comparing printed insurance quotes/documents at a desk, thoughtful expression, neutral professional tone.",
+    "alt": "Företagare går igenom försäkringsvillkor och offerter vid skrivbordet",
+    "page": "/foretagsforsakring/"
+  },
+  {
+    "slot": "lagerbolag-eller-nyregistrering-hero",
+    "prompt": "Conceptual editorial photo: two folders or document stacks side by side suggesting a choice between a ready-made company and a fresh registration, clean minimal composition, no readable text.",
+    "alt": "Två dokumentmappar som symboliserar valet mellan ett färdigt lagerbolag och en nyregistrering",
+    "page": "/lagerbolag-eller-nyregistrering/"
+  },
+  {
+    "slot": "starta-foretag-vid-sidan-av-jobbet-hero",
+    "prompt": "Editorial photo: a person working on a laptop at the kitchen table in the evening, warm lamp light, suggesting a side project after a day job. Relaxed, slightly tired but motivated mood.",
+    "alt": "Person som jobbar med sitt sidoprojekt vid köksbordet på kvällen",
+    "page": "/starta-foretag-vid-sidan-av-jobbet/"
+  },
+  {
+    "slot": "checklista-starta-foretag-hero",
+    "prompt": "Editorial photo or flat-lay: a printed checklist with some boxes ticked off, pen resting on top, clean bright composition suitable for a print-friendly reference page.",
+    "alt": "Checklista med ibockade rutor för att starta företag",
+    "page": "/checklista-starta-foretag/"
+  }
+]
