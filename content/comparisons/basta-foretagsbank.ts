@@ -22,7 +22,7 @@ const comparison = {
       badge: "Bäst om du redan är privatkund",
       verdict:
         "Går snabbast att komma igång med om du redan har SEB som privatbank, eftersom mycket av kundkännedomen redan finns registrerad. Den fördelen försvinner om du byter bank samtidigt som du startar bolag.",
-      price: "Kontakta banken för aktuellt pris — priser för företagskonto publiceras sällan öppet",
+      price: "Kontakta banken för aktuellt pris — publiceras sällan öppet",
       freeTier: "Ingen renodlad gratisnivå för företagskonto",
       bestFor: "Befintliga SEB-kunder som startar bolag",
       highlight: "Snabb onboarding för redan existerande privatkunder",
