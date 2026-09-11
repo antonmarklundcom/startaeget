@@ -333,7 +333,7 @@ export function BolagsformPartners() {
           tool="bolagsform"
         />
       ) : null}
-      <LeadForm sourcePage="/verktyg/bolagsform/" />
+      {form ? <LeadForm sourcePage="/verktyg/bolagsform/" /> : null}
     </>
   );
 }

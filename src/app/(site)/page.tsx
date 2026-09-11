@@ -134,7 +134,7 @@ export default function HomePage() {
           <div className="container panels">
             {guides.length ? (
               <div className="panel">
-                <h2>Mest lästa guider</h2>
+                <h2>Nya guider</h2>
                 <ul className="rows">
                   {guides.map((article) => (
                     <li key={article.frontmatter.slug}>

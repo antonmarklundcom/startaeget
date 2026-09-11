@@ -22,7 +22,7 @@ export function SiteFooter({ nav }: { nav: Nav }) {
               <ul>
                 {group.items.map((item) => (
                   <li key={item.href}>
-                    <Link href={item.href}>{item.label}</Link>
+                    <Link href={item.href} prefetch={false}>{item.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -35,8 +35,8 @@ export function SiteFooter({ nav }: { nav: Nav }) {
             Källor vi citerar: {home.trustRow.map((item) => item.label).join(" · ")}
           </p>
           <p>
-            © {year} {SITE_NAME} · <Link href="/annonspolicy/">Annonspolicy</Link> ·{" "}
-            <Link href="/integritetspolicy/">Integritet</Link>
+            © {year} {SITE_NAME} · <Link href="/annonspolicy/" prefetch={false}>Annonspolicy</Link> ·{" "}
+            <Link href="/integritetspolicy/" prefetch={false}>Integritet</Link>
           </p>
         </div>
       </div>
