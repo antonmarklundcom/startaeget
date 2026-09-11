@@ -31,7 +31,7 @@ export function PartnerCta({
           <li key={partner.id}>
             <span className="partner-cta__name">{partner.name}</span>
             <a
-              className="btn btn--secondary btn--block"
+              className="btn btn--dark btn--small btn--block"
               href={goHref(partner.id)}
               rel={
                 isAffiliate(partner) ? "sponsored nofollow noopener" : "nofollow noopener"
@@ -40,7 +40,7 @@ export function PartnerCta({
             >
               {partner.cta}
             </a>
-            <span className="partner-cta__disclosure">{partner.disclosure}</span>
+            <span className="chip chip--ad">{partner.disclosure}</span>
           </li>
         ))}
       </ul>

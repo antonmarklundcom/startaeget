@@ -1,37 +1,51 @@
 /**
- * Design tokens — the only place colour, spacing, type scale and radii are
- * defined (plan §5.1). Components consume these and never hard-code a value.
+ * Design tokens — "Verkstan" (docs/design/verkstan.md §1). The only place
+ * colour, spacing, type scale and radii are defined; components consume these
+ * and never hard-code a value.
  *
- * O2 accent decision: deep editorial blue #1b3f8f. The site's trust mechanic is
- * "we link the authority" (plan §1.1), and the authorities it cites are blue;
- * a serif-headline editorial surface in one deep blue reads as a reference
- * work, while the O1 provisional green read as an eco brand. 9.7:1 on white, so
- * it is usable for body links, not only for large CTAs.
- *
- * Spacing is an 8-px grid. Type scale is 1.25 (major third) from a 16-px base.
+ * D1 replaced O2's blue serif editorial block wholesale. Light theme only, no
+ * dark mode. One green accent, one tint per room, pills and 24 px cards.
  */
 
 :root {
-  /* Neutrals */
-  --color-ink: #14181d;
-  --color-ink-soft: #40474f;
-  --color-ink-muted: #646d79;
-  --color-line: #e2e6ea;
-  --color-line-strong: #cdd4db;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f5f7f9;
-  --color-surface-sunk: #eef1f4;
+  /* Paper and ink */
+  --color-surface: #fffdf8;
+  --color-surface-alt: #f6f3ec;
+  --color-surface-sunk: #e9e5dc;
+  --color-ink: #1c1b1a;
+  --color-ink-soft: #3d3a35;
+  --color-ink-muted: #6b675f;
+  --color-line: #e6e1d6;
 
-  /* Accent — one, reserved for CTAs, links and key highlights */
-  --color-accent: #1b3f8f;
-  --color-accent-strong: #14306e;
-  --color-accent-soft: #eaf0fb;
-  --color-accent-line: #c3d2ee;
+  /* Accent */
+  --color-accent: #0f6b4a;
+  --color-accent-strong: #0b4a33;
   --color-accent-contrast: #ffffff;
+  --color-warning: #ffb020;
 
-  /* Support */
-  --color-warning-soft: #fdf4e3;
-  --color-warning-line: #e8c97a;
+  /* Room tints — one per hub, plus the neutral fallback */
+  --tint-mint: #c9f0dc;
+  --tint-mint-ink: #0b4a33;
+  --tint-sky: #cfe6ff;
+  --tint-sky-ink: #0d3d6b;
+  --tint-sun: #ffe58a;
+  --tint-sun-ink: #5a4300;
+  --tint-peach: #ffd3c2;
+  --tint-peach-ink: #6b2a10;
+  --tint-lilac: #e3dcff;
+  --tint-lilac-ink: #3b2a7a;
+  --tint-rose: #ffdbe8;
+  --tint-rose-ink: #6b1f47;
+  --tint-sand: #f6f3ec;
+  --tint-sand-ink: #3d3a35;
+
+  /* The per-page tint. [data-hub] below remaps these in one place. */
+  --hub-tint: var(--tint-sand);
+  --hub-tint-ink: var(--tint-sand-ink);
+
+  --gradient-hero: linear-gradient(135deg, #c9f0dc 0%, #e8f7ee 55%, #fff6d1 100%);
+  /* The hero tool card is the only thing on the site with a shadow. */
+  --shadow-float: 0 20px 50px rgb(15 107 74 / 0.14);
 
   /* Spacing — 8-px grid */
   --space-1: 0.5rem;
@@ -42,8 +56,10 @@
   --space-6: 4rem;
   --space-7: 6rem;
 
-  /* Type scale — 1.25 from 1rem */
-  --text-sm: 0.8rem;
+  /* Type scale — 1.25 from 1rem, for in-prose headings. Display sizes are set
+     per surface in components.css, straight from the contract's px scale. */
+  --text-xs: 0.75rem;   /* 12 px — the floor, chips and meta */
+  --text-sm: 0.8125rem; /* 13 px */
   --text-base: 1rem;
   --text-md: 1.25rem;
   --text-lg: 1.563rem;
@@ -51,30 +67,101 @@
   --text-2xl: 2.441rem;
   --text-3xl: 3.052rem;
 
-  --leading-tight: 1.15;
-  --leading-snug: 1.3;
-  --leading-normal: 1.65;
+  --leading-tight: 1.05;
+  --leading-snug: 1.2;
+  --leading-normal: 1.6;
 
-  /* Radii and elevation */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
-  --shadow-card: 0 1px 2px rgb(20 24 29 / 0.05), 0 8px 24px rgb(20 24 29 / 0.05);
-  --shadow-lift: 0 2px 4px rgb(20 24 29 / 0.06), 0 14px 32px rgb(20 24 29 / 0.09);
+  /* Radii — pills for anything pressable, generous cards for everything else */
+  --radius-pill: 999px;
+  --radius-xs: 10px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+  --radius-3xl: 32px;
 
   /* Layout */
   --measure: 68ch;
-  --container: 72rem;
-  --header-height: 4rem;
+  --container: 80rem;
+  --header-height: 4.5rem;
 }
 
-/*
- * Big-type editorial: display sizes step up only once the viewport can hold
- * them, so the mobile single-column flow stays the baseline (plan §5.2).
- */
 @media (min-width: 48rem) {
   :root {
     --text-2xl: 3.052rem;
     --text-3xl: 3.815rem;
   }
+}
+
+/*
+ * One room, one colour. A surface writes var(--hub-tint) and never a tint name,
+ * so re-colouring a hub is a one-line change here.
+ */
+[data-hub="starta-foretag"],
+[data-hub="verktyg"] {
+  --hub-tint: var(--tint-mint);
+  --hub-tint-ink: var(--tint-mint-ink);
+}
+
+[data-hub="ekonomi"] {
+  --hub-tint: var(--tint-sky);
+  --hub-tint-ink: var(--tint-sky-ink);
+}
+
+[data-hub="affarside"] {
+  --hub-tint: var(--tint-sun);
+  --hub-tint-ink: var(--tint-sun-ink);
+}
+
+[data-hub="e-handel"] {
+  --hub-tint: var(--tint-peach);
+  --hub-tint-ink: var(--tint-peach-ink);
+}
+
+[data-hub="hemsida"],
+[data-hub="jamfor"] {
+  --hub-tint: var(--tint-lilac);
+  --hub-tint-ink: var(--tint-lilac-ink);
+}
+
+[data-hub="marknadsforing"] {
+  --hub-tint: var(--tint-rose);
+  --hub-tint-ink: var(--tint-rose-ink);
+}
+
+[data-hub="blogg"],
+[data-hub="sand"] {
+  --hub-tint: var(--tint-sand);
+  --hub-tint-ink: var(--tint-sand-ink);
+}
+
+/* The tool tints, used by the tool cards and the result panels. */
+[data-tint="mint"] {
+  --hub-tint: var(--tint-mint);
+  --hub-tint-ink: var(--tint-mint-ink);
+}
+[data-tint="sky"] {
+  --hub-tint: var(--tint-sky);
+  --hub-tint-ink: var(--tint-sky-ink);
+}
+[data-tint="sun"] {
+  --hub-tint: var(--tint-sun);
+  --hub-tint-ink: var(--tint-sun-ink);
+}
+[data-tint="peach"] {
+  --hub-tint: var(--tint-peach);
+  --hub-tint-ink: var(--tint-peach-ink);
+}
+[data-tint="lilac"] {
+  --hub-tint: var(--tint-lilac);
+  --hub-tint-ink: var(--tint-lilac-ink);
+}
+[data-tint="rose"] {
+  --hub-tint: var(--tint-rose);
+  --hub-tint-ink: var(--tint-rose-ink);
+}
+[data-tint="sand"] {
+  --hub-tint: var(--tint-sand);
+  --hub-tint-ink: var(--tint-sand-ink);
 }

@@ -195,103 +195,110 @@ export function StartkostnadSteps() {
       </fieldset>
 
       <div className="tool__actions">
-        <button className="btn btn--ghost" onClick={reset} type="button">
+        <button className="btn btn--ghost btn--small" onClick={reset} type="button">
           Återställ beloppen
         </button>
       </div>
+
+      <ToolSources keys={SOURCE_KEYS} />
     </div>
   );
 }
 
 export function StartkostnadResult() {
-  const { selection, result } = useTool();
+  const { result } = useTool();
   const once = result.lines.filter((line) => line.item.kind === "once" && line.amount !== 0);
   const monthly = result.lines.filter((line) => line.item.kind === "monthly" && line.amount !== 0);
 
   return (
     <>
-      <div className="result__verdict">
-        <span className="result__label">Att betala vid start</span>
-        <p className="result__figure" data-testid="total-once">
-          {formatSek(result.once)}
-        </p>
-        <span className="result__estimate">Uppskattning, inte rådgivning</span>
+      <div className="result__figures">
+        <div className="result__verdict">
+          <p className="result__label">Att betala vid start</p>
+          <p className="result__figure" data-testid="total-once">
+            {formatSek(result.once)}
+          </p>
+        </div>
+        <div className="result__verdict">
+          <p className="result__label">Per månad</p>
+          <p className="result__figure" data-testid="total-monthly">
+            {formatSek(result.monthly)}
+          </p>
+        </div>
       </div>
 
       {result.ofWhichAktiekapital > 0 ? (
-        <p className="q__help">
+        <p className="result__explain">
           Varav {formatSek(result.ofWhichAktiekapital)} är aktiekapital, som blir bolagets
           egna pengar och får användas i verksamheten. Rena utlägg:{" "}
           <strong>{formatSek(result.onceExcludingCapital)}</strong>.
         </p>
       ) : null}
 
-      <table className="ledger">
-        <caption>Vid start</caption>
-        <tbody>
-          {once.map((line) => (
-            <tr key={line.item.id}>
-              <th scope="row">{line.item.label}</th>
-              <td>{formatSek(line.amount)}</td>
-            </tr>
-          ))}
-          <tr className="ledger__total">
-            <th scope="row">Summa vid start</th>
-            <td>{formatSek(result.once)}</td>
-          </tr>
-        </tbody>
-      </table>
+      <span className="result__estimate">
+        Uppskattning, inte rådgivning · Källa Skatteverket, Bolagsverket
+      </span>
 
-      <table className="ledger" style={{ marginBlockStart: "var(--space-3)" }}>
-        <caption>Löpande, per månad</caption>
-        <tbody>
-          {monthly.length ? (
-            monthly.map((line) => (
+      <div className="result__box">
+        <table className="ledger">
+          <caption>Vid start</caption>
+          <tbody>
+            {once.map((line) => (
               <tr key={line.item.id}>
                 <th scope="row">{line.item.label}</th>
                 <td>{formatSek(line.amount)}</td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <th scope="row">Inga löpande kostnader ifyllda</th>
-              <td>{formatSek(0)}</td>
+            ))}
+            <tr className="ledger__total">
+              <th scope="row">Summa vid start</th>
+              <td>{formatSek(result.once)}</td>
             </tr>
-          )}
-          <tr className="ledger__total">
-            <th scope="row">Per månad</th>
-            <td data-testid="total-monthly">{formatSek(result.monthly)}</td>
-          </tr>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
 
-      <table className="ledger" style={{ marginBlockStart: "var(--space-3)" }}>
-        <caption>Första året</caption>
-        <tbody>
-          <tr className="ledger__total">
-            <th scope="row">Vid start + tolv månader</th>
-            <td data-testid="total-first-year">{formatSek(result.firstYear)}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="result__box">
+        <table className="ledger">
+          <caption>Löpande, per månad</caption>
+          <tbody>
+            {monthly.length ? (
+              monthly.map((line) => (
+                <tr key={line.item.id}>
+                  <th scope="row">{line.item.label}</th>
+                  <td>{formatSek(line.amount)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <th scope="row">Inga löpande kostnader ifyllda</th>
+                <td>{formatSek(0)}</td>
+              </tr>
+            )}
+            <tr className="ledger__total">
+              <th scope="row">Per månad</th>
+              <td>{formatSek(result.monthly)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <div className="tool__actions">
-        <button
-          className="btn btn--secondary"
-          onClick={() => window.print()}
-          type="button"
-        >
+      <div className="result__box">
+        <table className="ledger">
+          <caption>Första året</caption>
+          <tbody>
+            <tr className="ledger__total">
+              <th scope="row">Vid start + tolv månader</th>
+              <td data-testid="total-first-year">{formatSek(result.firstYear)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div className="tool__actions no-print">
+        <button className="btn btn--ghost btn--small" onClick={() => window.print()} type="button">
           Skriv ut checklistan
         </button>
       </div>
-
-      <ToolSources keys={SOURCE_KEYS} />
-
-      <EmailResult
-        payload={{ form: selection.form, once: result.once, monthly: result.monthly }}
-        summary={`Startkostnad för ${FORM_NAMES[selection.form]}: ${formatSek(result.once)} vid start, ${formatSek(result.monthly)} per månad`}
-        tool="startkostnad"
-      />
     </>
   );
 }
@@ -306,8 +313,13 @@ export function StartkostnadPartners() {
   return (
     <>
       {unique.length ? (
-        <PartnerCta heading="Leverantörer för posterna ovan" partners={unique} />
+        <PartnerCta heading="Passar ditt svar" partners={unique} />
       ) : null}
+      <EmailResult
+        payload={{ form: selection.form, once: result.once, monthly: result.monthly }}
+        summary={`Startkostnad för ${FORM_NAMES[selection.form]}: ${formatSek(result.once)} vid start, ${formatSek(result.monthly)} per månad`}
+        tool="startkostnad"
+      />
       <LeadForm sourcePage="/verktyg/startkostnad/" />
       <p className="q__help no-print">
         Räknar du på {FORM_NAMES[selection.form].toLowerCase()}? Posterna med{" "}

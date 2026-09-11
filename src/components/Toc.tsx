@@ -6,8 +6,8 @@ export function Toc({ body, minHeadings = 4 }: { body: string; minHeadings?: num
   if (entries.length < minHeadings) return null;
 
   return (
-    <nav className="toc no-print" aria-labelledby="toc-heading">
-      <h2 id="toc-heading">På den här sidan</h2>
+    <nav className="aside-card toc no-print" aria-labelledby="toc-heading">
+      <h2 id="toc-heading">På sidan</h2>
       <ol>
         {entries.map((entry) => (
           <li key={entry.id}>

@@ -14,6 +14,7 @@ export const metadata: Metadata = buildMetadata({
   path: "/verktyg/",
 });
 
+/** The tools room: mint head panel, the three full tool cards (contract §2). */
 export default function ToolsHubPage() {
   const crumbs = [
     { name: "Start", path: "/" },
@@ -21,30 +22,41 @@ export default function ToolsHubPage() {
   ];
 
   return (
-    <div className="container hub">
+    <div className="container hub" data-hub="verktyg">
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <Breadcrumbs crumbs={crumbs} />
-      <p className="eyebrow">Räknare</p>
-      <h1>Verktyg</h1>
-      <p className="hub__intro">
-        Tre räknare som tar dig från fråga till beslut. Alla siffror bygger på
-        Skatteverkets och Bolagsverkets egna uppgifter, med datum för när vi
-        kontrollerade dem.
-      </p>
-      <div className="bento">
+
+      <header className="head-panel">
+        <p className="chip-row">
+          <span className="chip">{tools.length} verktyg</span>
+          <span className="chip chip--source">Inga konton · källa på varje siffra</span>
+        </p>
+        <h1>Verktyg</h1>
+        <p className="lede">
+          Tre räknare som tar dig från fråga till beslut. Alla siffror bygger på
+          Skatteverkets och Bolagsverkets egna uppgifter, med datum för när vi
+          kontrollerade dem.
+        </p>
+      </header>
+
+      <ul className="tool-cards" style={{ marginBlockStart: "var(--space-4)" }}>
         {tools.map((tool, index) => (
-          <Link
-            key={tool.id}
-            href={tool.path}
-            className={index === 0 ? "bento__item bento__item--lead" : "bento__item"}
-          >
-            <span className="bento__step">Steg {index + 1}</span>
-            <h2>{tool.title}</h2>
-            <p>{tool.description}</p>
-            <span className="bento__cue">Öppna räknaren →</span>
-          </Link>
+          <li key={tool.id}>
+            <Link className="tool-card" data-tint={tool.tint} href={tool.path}>
+              <span className="tool-card__tile" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h2 className="tool-card__title">{tool.title}</h2>
+              <p className="tool-card__desc">{tool.description}</p>
+              <span className="tool-card__foot">
+                <span className="tool-card__minutes">{tool.minutes} minuter</span>
+                <span className="tool-card__go">Starta</span>
+              </span>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
+
       <NewsletterBand source="/verktyg/" />
     </div>
   );

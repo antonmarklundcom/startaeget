@@ -42,7 +42,7 @@ export function StatRow({ items }: { items: readonly StatItem[] }) {
         <div className="stat" key={item.label}>
           <p className="stat__value">{item.value}</p>
           <p className="stat__label">{item.label}</p>
-          {item.note ? <p className="stat__note">{item.note}</p> : null}
+          {item.note ? <p className="chip chip--source stat__note">{item.note}</p> : null}
         </div>
       ))}
     </div>
