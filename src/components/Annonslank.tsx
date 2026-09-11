@@ -2,10 +2,11 @@ import { getPartner, isAffiliate, goHref } from "@/lib/affiliates";
 
 /**
  * An inline link to a partner. Always routes through /go/<id> so the click is
- * logged, and always carries the "Annonslänk" marking when the link earns money
- * (plan §1.2 — required by Swedish marketing law).
- *
- * O1 ships the behaviour; O2 owns how it looks.
+ * logged, and always carries its disclosure in plain sight (plan §1.2 — marking
+ * is required by Swedish marketing law and it is also the cheapest trust
+ * signal we have). The marking is unconditional: it does not wait for the
+ * affiliate programme to be enrolled, so nothing silently changes character on
+ * the day an `affiliateUrl` is filled in.
  */
 export function Annonslank({
   partner,
@@ -18,23 +19,17 @@ export function Annonslank({
   if (!entry) {
     throw new Error(`<Annonslank partner="${partner}"> — unknown partner id`);
   }
-  const paid = isAffiliate(entry);
 
   return (
     <>
       <a
         href={goHref(entry.id)}
-        rel={paid ? "sponsored nofollow noopener" : "nofollow noopener"}
+        rel={isAffiliate(entry) ? "sponsored nofollow noopener" : "nofollow noopener"}
         target="_blank"
       >
         {children ?? entry.name}
-      </a>
-      {paid ? (
-        <span className="annonslank-mark" title={entry.disclosure}>
-          {" "}
-          ({entry.disclosure})
-        </span>
-      ) : null}
+      </a>{" "}
+      <span className="annonslank-mark">({entry.disclosure})</span>
     </>
   );
 }
