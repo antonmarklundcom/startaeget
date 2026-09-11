@@ -256,6 +256,8 @@ Plus, generated from `content/legacy-urls.json` and §2.1: every `retire` entry 
 | O2 Design & templates | #4 | `docs/log/O2.md` |
 | O3 Tools | #5 | `docs/log/O3.md` |
 | S5 Ekonomi & jämförelser | #10 | `docs/log/S5.md` |
+| S6 Affärsidé & affärsplan | #7 | `docs/log/S6.md` |
+| S7 E-handel & hemsida | #8 | `docs/log/S7.md` |
 
 ## 10. Backlog
 - Affärsplan-generator (form → PDF), gated by e-mail.
