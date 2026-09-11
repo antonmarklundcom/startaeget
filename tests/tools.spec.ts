@@ -351,6 +351,20 @@ describe("tool 3 — Vad blir kvar", () => {
     expect(dividend?.amount).toBeGreaterThan(0);
   });
 
+  it("tells the truth about the dividend allowance in both directions", () => {
+    const small = vadblirkvar.compare({ revenue: 900_000, costs: 0 });
+    expect(small.ab.dividendAboveAllowance).toBe(0);
+    expect(small.assumptions.some((line) => line.includes("ligger inom grundbeloppet"))).toBe(true);
+
+    // Above roughly 1,3 Mkr the dividend outgrows the grundbelopp and the
+    // excess is taxed as tjänsteinkomst — the assumption must say so rather
+    // than keep claiming the dividend stays inside it.
+    const large = vadblirkvar.compare({ revenue: 2_000_000, costs: 0 });
+    expect(large.ab.dividendAboveAllowance).toBeGreaterThan(0);
+    expect(large.assumptions.some((line) => line.includes("större än grundbeloppet"))).toBe(true);
+    expect(large.assumptions.some((line) => line.includes("ligger inom grundbeloppet"))).toBe(false);
+  });
+
   it("shows a per-hour figure only when hours are given", () => {
     expect(vadblirkvar.compare({ revenue: 600_000, costs: 0 }).netPerHour).toBeNull();
     const withHours = vadblirkvar.compare({ revenue: 600_000, costs: 0, hoursPerWeek: 40 });

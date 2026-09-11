@@ -52,6 +52,10 @@ export type FormResult = {
   /** Total tax and contributions. */
   totalTax: number;
   lines: Breakdown[];
+  /** Aktiebolag only: the dividend paid, and how much of it fell outside the
+   *  lågbeskattad grundbelopp and was therefore taxed as tjänsteinkomst. */
+  dividend?: number;
+  dividendAboveAllowance?: number;
 };
 
 export type Comparison = {
@@ -144,9 +148,13 @@ export function aktiebolag(surplus: number, kommunalRate: number): FormResult {
 
   const net = netSalary + dividendTax.net;
 
+  const allowance = value("utdelning-grundbelopp");
+
   return {
     form: "ab",
     surplus: overskott,
+    dividend,
+    dividendAboveAllowance: Math.max(0, dividend - allowance),
     net,
     keepRate: overskott > 0 ? net / overskott : 0,
     totalTax: avgifter + salaryTax.total + companyTax + dividendTax.total,
@@ -189,7 +197,10 @@ export function aktiebolag(surplus: number, kommunalRate: number): FormResult {
         label: "Skatt på utdelningen",
         amount: -dividendTax.total,
         kind: "out",
-        help: `20 % upp till grundbeloppet på ${value("utdelning-grundbelopp").toLocaleString("sv-SE")} kr.`,
+        help:
+          dividend > allowance
+            ? `20 % på de första ${allowance.toLocaleString("sv-SE")} kr. Resten, ${Math.round(dividend - allowance).toLocaleString("sv-SE")} kr, ligger utanför grundbeloppet och beskattas som tjänsteinkomst.`
+            : `20 % upp till grundbeloppet på ${allowance.toLocaleString("sv-SE")} kr.`,
       },
       { label: "Kvar till dig", amount: net, kind: "total" },
     ],
@@ -235,7 +246,9 @@ export function compare(input: Input): Comparison {
       }.`,
       "Grundavdrag och jobbskatteavdrag är uppskattade med förenklade formler, inte Skatteverkets exakta tabeller.",
       "I aktiebolaget tas lön upp till brytpunkten för statlig skatt och resten som utdelning. Det är vanligt, men inte alltid det bästa för just dig.",
-      "Utdelningen antas ligga inom grundbeloppet för lågbeskattad utdelning, som du delar med eventuella andra delägare.",
+      ab.dividendAboveAllowance && ab.dividendAboveAllowance > 0
+        ? `Utdelningen är större än grundbeloppet för lågbeskattad utdelning. De första ${value("utdelning-grundbelopp").toLocaleString("sv-SE")} kr beskattas med 20 %; de ${Math.round(ab.dividendAboveAllowance).toLocaleString("sv-SE")} kr som ligger över beskattas som tjänsteinkomst, här grovt uppskattat med kommunalskattesatsen. Med en högre lön i stället för utdelning kan utfallet bli ett annat — det är ett fall att räkna på med en byrå.`
+        : "Utdelningen ligger inom grundbeloppet för lågbeskattad utdelning, som du delar med eventuella andra delägare.",
       "Ingen hänsyn är tagen till pensionssparande, sjukpenning, tjänstepension eller annan inkomst du har under året.",
       "Du antas vara under 66 år och ha full egenavgift respektive full arbetsgivaravgift.",
     ],
