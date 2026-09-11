@@ -254,6 +254,7 @@ Plus, generated from `content/legacy-urls.json` and §2.1: every `retire` entry 
 | (plan) | — | — |
 | O1 Foundation | #2 | `docs/log/O1.md` |
 | O2 Design & templates | #4 | `docs/log/O2.md` |
+| O3 Tools | #5 | `docs/log/O3.md` |
 
 ## 10. Backlog
 - Affärsplan-generator (form → PDF), gated by e-mail.

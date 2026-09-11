@@ -9,7 +9,7 @@ export const tools = [
       "Svara på åtta frågor och få veta om aktiebolag, enskild firma eller handelsbolag passar din situation bäst.",
     intro:
       "Åtta frågor om vinst, risk, delägare och hur du vill ta ut pengar — sedan ett svar med motiveringen utskriven.",
-    status: "stub",
+    status: "live",
   },
   {
     id: "startkostnad",
@@ -20,7 +20,7 @@ export const tools = [
       "Räkna ut vad det kostar att starta ditt företag: avgifter, aktiekapital, bank, bokföring, försäkring och hemsida.",
     intro:
       "Alla poster du faktiskt betalar vid start, med rimliga standardvärden du kan ändra rad för rad.",
-    status: "stub",
+    status: "live",
   },
   {
     id: "vad-blir-kvar",
@@ -31,6 +31,6 @@ export const tools = [
       "Från omsättning till pengar på ditt konto — jämför enskild firma och aktiebolag med samma siffror.",
     intro:
       "Fyll i omsättning och kostnader och se hur mycket som blir kvar efter skatt och avgifter i respektive bolagsform.",
-    status: "stub",
+    status: "live",
   },
 ] as const;
