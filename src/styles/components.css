@@ -432,6 +432,7 @@
   box-shadow: var(--shadow-card);
 }
 
+.bento__item h2,
 .bento__item h3 {
   font-size: var(--text-lg);
 }
@@ -584,6 +585,12 @@
 .article__body {
   display: grid;
   gap: var(--space-4);
+}
+
+/* A grid item defaults to min-width:auto, which lets the wide comparison table
+   push the whole page sideways instead of scrolling inside its own box. */
+.article__body > * {
+  min-width: 0;
 }
 
 .article__aside {

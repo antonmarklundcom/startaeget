@@ -43,6 +43,10 @@ h4 {
   text-wrap: balance;
   font-weight: 600;
   letter-spacing: -0.01em;
+  /* Swedish closes its compounds, so display sizes meet words like
+     "Startkostnadskalkylatorn". They break rather than push the viewport. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 h1 {
