@@ -1,0 +1,80 @@
+[
+  {
+    "slot": "bokforing-for-nyborjare-hero",
+    "prompt": "Photorealistic lifestyle photo of a Swedish small-business founder at a kitchen table, sorting paper receipts next to an open laptop showing a simple bookkeeping app, warm natural daylight, tidy Scandinavian home interior, candid pose, no visible text or logos on screen",
+    "alt": "Nybliven företagare sorterar kvitton och fyller i bokföringsprogram vid köksbordet",
+    "page": "/bokforing-for-nyborjare/"
+  },
+  {
+    "slot": "egenavgifter-hero",
+    "prompt": "Photorealistic photo of a Swedish sole trader (enskild firma) sitting at a home desk with a calculator, a notebook and a small stack of receipts, calm focused expression, soft window light, neutral Scandinavian décor, no visible text or logos",
+    "alt": "Företagare räknar på egenavgifter och överskott vid ett skrivbord med kvitton",
+    "page": "/egenavgifter/"
+  },
+  {
+    "slot": "preliminarskatt-hero",
+    "prompt": "Photorealistic photo of a person at a kitchen table in the evening, adjusting figures on a laptop screen showing a generic tax-return style form, warm lamp light, relaxed home setting, no visible text or logos on screen",
+    "alt": "Företagare justerar sin preliminära inkomstdeklaration på skärmen hemma vid köksbordet",
+    "page": "/preliminarskatt/"
+  },
+  {
+    "slot": "lon-eller-utdelning-aktiebolag-hero",
+    "prompt": "Photorealistic photo of a company owner at a desk looking at a computer screen showing a simple two-column comparison chart, thoughtful expression, modern small-office setting, soft daylight, no visible text or logos on screen",
+    "alt": "Aktiebolagsägare jämför lön och utdelning i en tabell på datorskärmen",
+    "page": "/lon-eller-utdelning-aktiebolag/"
+  },
+  {
+    "slot": "moms-for-nyforetagare-hero",
+    "prompt": "Photorealistic photo of a new business owner at a desk with a laptop and a small pile of receipts, pointing at a screen showing simple percentage figures, bright neutral home-office light, no visible text or logos on screen",
+    "alt": "Nyföretagare räknar på momssatser vid datorn med kvitton bredvid tangentbordet",
+    "page": "/moms-for-nyforetagare/"
+  },
+  {
+    "slot": "bokforing-dropshipping-hero",
+    "prompt": "Photorealistic photo of a person at a laptop in a small home office, one screen showing an online store order list and a browser tab with a supplier invoice, a smartphone nearby, tidy modern desk, no visible text or logos on screen",
+    "alt": "Företagare hanterar dropshipping-beställningar och leverantörsfakturor i bokföringsprogram",
+    "page": "/bokforing-dropshipping/"
+  },
+  {
+    "slot": "redovisningsbyra-eller-sjalv-hero",
+    "prompt": "Photorealistic photo of a business owner at a desk holding two printed quotes side by side, one laptop open beside them, weighing a decision, neutral Scandinavian office interior, soft daylight, no visible text or logos",
+    "alt": "Företagare jämför pris på redovisningsbyrå mot ett bokföringsprogram vid skrivbordet",
+    "page": "/redovisningsbyra-eller-sjalv/"
+  },
+  {
+    "slot": "foretagskonto-hero",
+    "prompt": "Photorealistic photo of a person holding a smartphone showing a generic mobile-banking style app interface, sitting at a desk with a laptop in the background, confident relaxed pose, bright modern interior, no visible text or logos",
+    "alt": "Företagare loggar in på sitt nya företagskonto i mobilbanken vid ett skrivbord",
+    "page": "/foretagskonto/"
+  },
+  {
+    "slot": "basta-foretagsbank-hero",
+    "prompt": "Photorealistic overhead photo of a tablet on a desk showing four generic banking app icons arranged side by side for comparison, a coffee cup and notebook nearby, clean modern flat lay, no visible text or logos",
+    "alt": "Företagare jämför fyra bankappar för företagskonto sida vid sida på en surfplatta",
+    "page": "/basta-foretagsbank/"
+  },
+  {
+    "slot": "basta-foretagsforsakring-hero",
+    "prompt": "Photorealistic photo of a business owner at a desk reading a printed insurance quote document, a laptop open beside them, calm concentrated expression, soft daylight, neutral office interior, no visible text or logos",
+    "alt": "Företagare läser igenom en offert för företagsförsäkring vid skrivbordet",
+    "page": "/basta-foretagsforsakring/"
+  },
+  {
+    "slot": "basta-kassasystem-hero",
+    "prompt": "Photorealistic photo of a small shop counter with a tablet-based point-of-sale screen, a compact card reader and a receipt printer, warm retail lighting, tidy small independent store setting, no visible text or logos",
+    "alt": "Butiksdisk med surfplatta, kortterminal och kvittoskrivare i en mindre butik",
+    "page": "/basta-kassasystem/"
+  },
+  {
+    "slot": "basta-faktureringsprogram-hero",
+    "prompt": "Photorealistic photo of a person creating an invoice on a laptop at a desk, a calculator and a notepad beside the keyboard, focused everyday work moment, bright neutral home-office light, no visible text or logos on screen",
+    "alt": "Person som skapar en faktura på laptop vid ett skrivbord med kalkylator",
+    "page": "/basta-faktureringsprogram/"
+  },
+  {
+    "slot": "basta-lagerbolag-hero",
+    "prompt": "Photorealistic photo of a person signing company formation documents at a desk, a pen in hand, a laptop open nearby, formal but approachable mood, soft daylight, neutral office interior, no visible text or logos",
+    "alt": "Person som signerar bolagshandlingar vid ett skrivbord med dator och penna",
+    "page": "/basta-lagerbolag/"
+  }
+]
