@@ -1,0 +1,50 @@
+[
+  {
+    "slot": "affarsideer-hero",
+    "prompt": "Candid documentary-style photo of a person at a kitchen table writing business ideas in a notebook, laptop open beside them, soft natural window light, Swedish home interior, warm and approachable, no visible text or logos",
+    "alt": "Person som skriver ner affärsidéer i en anteckningsbok vid ett köksbord",
+    "page": "/affarsideer/"
+  },
+  {
+    "slot": "affarsplan-hero",
+    "prompt": "Candid documentary-style photo of a person writing a business plan at a kitchen table, laptop, coffee cup and a notepad, soft natural light, focused and calm mood, no visible text or logos",
+    "alt": "Person som skriver en affärsplan vid ett köksbord med dator, kaffekopp och anteckningsblock",
+    "page": "/affarsplan/"
+  },
+  {
+    "slot": "affarsplan-exempel-hero",
+    "prompt": "Close-up documentary-style photo of a filled-in business plan document with handwritten notes and a calculator on a desk, soft natural light, no visible text or logos",
+    "alt": "Ifylld affärsplan med handskrivna anteckningar och en miniräknare på ett skrivbord",
+    "page": "/affarsplan-exempel/"
+  },
+  {
+    "slot": "validera-affarside-hero",
+    "prompt": "Candid documentary-style photo of a person taking notes during a customer conversation at a desk, engaged and listening posture, soft natural light, no visible text or logos",
+    "alt": "Person som antecknar svar under ett kundsamtal vid ett skrivbord",
+    "page": "/validera-affarside/"
+  },
+  {
+    "slot": "hitta-affarside-hero",
+    "prompt": "Candid documentary-style photo of a person thinking at a desk with papers and notes spread out, reflective mood, soft natural light, no visible text or logos",
+    "alt": "Person som funderar vid ett skrivbord med papper och anteckningar utspridda",
+    "page": "/hitta-affarside/"
+  },
+  {
+    "slot": "prissattning-nyforetagare-hero",
+    "prompt": "Candid documentary-style photo of a person calculating prices with price tags and a spreadsheet on a laptop at a desk, focused mood, soft natural light, no visible text or logos",
+    "alt": "Person som räknar på prislappar och kalkylark vid ett skrivbord",
+    "page": "/prissattning-nyforetagare/"
+  },
+  {
+    "slot": "affarsideer-liten-budget-hero",
+    "prompt": "Candid documentary-style photo of a person starting a business from a kitchen table with just a laptop and a cup of coffee, minimal and resourceful mood, soft natural light, no visible text or logos",
+    "alt": "Person som startar företag från köksbordet med bara en bärbar dator och en kaffekopp",
+    "page": "/affarsideer-liten-budget/"
+  },
+  {
+    "slot": "affarsideer-vid-sidan-av-jobbet-hero",
+    "prompt": "Candid documentary-style photo of a person working on a side project at a kitchen table in the evening, warm lamp light, relaxed after-work mood, no visible text or logos",
+    "alt": "Person som arbetar med sitt sidoprojekt vid köksbordet en kväll efter jobbet",
+    "page": "/affarsideer-vid-sidan-av-jobbet/"
+  }
+]
