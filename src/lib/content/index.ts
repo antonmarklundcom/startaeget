@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import { RESERVED_SLUGS } from "./site";
 import {
   articleFrontmatterSchema,
   pageFrontmatterSchema,
@@ -97,11 +98,17 @@ export function getAllArticles(): Article[] {
 
   const seen = new Map<string, string>();
   for (const article of articles) {
-    const previous = seen.get(article.frontmatter.slug);
+    const slug = article.frontmatter.slug;
+    const previous = seen.get(slug);
     if (previous) {
       throw new ContentError(article.file, `duplicate slug, already used by ${previous}`);
     }
-    seen.set(article.frontmatter.slug, article.file);
+    // A slug that collides with a hub or a reserved route would be silently
+    // shadowed by the /[slug]/ resolver, so it is an error, not a surprise.
+    if (RESERVED_SLUGS.has(slug)) {
+      throw new ContentError(article.file, `slug "${slug}" is a hub or reserved route`);
+    }
+    seen.set(slug, article.file);
   }
 
   articleCache = articles;
@@ -147,7 +154,24 @@ export function getAllPages(): Page[] {
         `slug "${parsed.data.slug}" does not match the file name "${expected}.mdx"`,
       );
     }
+    if (RESERVED_SLUGS.has(parsed.data.slug)) {
+      throw new ContentError(
+        relative(file),
+        `slug "${parsed.data.slug}" is a hub or reserved route`,
+      );
+    }
     pages.push({ frontmatter: parsed.data, body: content, file: relative(file) });
+  }
+
+  const claimed = new Map<string, string>();
+  for (const article of getAllArticles()) {
+    claimed.set(article.frontmatter.slug, article.file);
+  }
+  for (const page of pages) {
+    const owner = claimed.get(page.frontmatter.slug);
+    if (owner) {
+      throw new ContentError(page.file, `slug already used by the article in ${owner}`);
+    }
   }
 
   pageCache = pages;
