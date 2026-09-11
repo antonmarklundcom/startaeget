@@ -1,0 +1,39 @@
+{
+  "complete": false,
+  "note": "Seed from the planning session. Anton completes this with all 48 exact WordPress paths (§7 item 1). action: keep = same path rewritten; redirect = 301 to `to`; retire = 301 to hub in `to`.",
+  "entries": [
+    { "path": "/affarsideer-2023/", "action": "redirect", "to": "/affarsideer/" },
+    { "path": "/affarsideer2024/", "action": "redirect", "to": "/affarsideer/" },
+    { "path": "/ehandel-2024/", "action": "redirect", "to": "/ehandel/" },
+    { "path": "/starta-aktiebolag/", "action": "keep", "hub": "starta-foretag" },
+    { "path": "/starta-eget-foretag/", "action": "keep", "hub": "starta-foretag" },
+    { "path": "/dropshipping-sverige/", "action": "keep", "hub": "e-handel" },
+    { "path": "/skapa-hemsida-med-wordpress/", "action": "keep", "hub": "hemsida" },
+    { "path": "/wordpress-teman/", "action": "keep", "hub": "hemsida" },
+    { "path": "/basta-webbhotellet/", "action": "keep", "hub": "hemsida", "type": "comparison" },
+    { "path": "/webbhotell/", "action": "keep", "hub": "hemsida" },
+    { "path": "/smma/", "action": "keep", "hub": "marknadsforing" },
+    { "path": "/category/affarsideer/", "action": "redirect", "to": "/affarside/" },
+    { "path": "/category/affarsplan/", "action": "redirect", "to": "/affarside/" },
+    { "path": "/category/digitala-produkter/", "action": "redirect", "to": "/e-handel/" },
+    { "path": "/category/facebook/", "action": "redirect", "to": "/marknadsforing/" },
+    { "path": "/category/google-ads/", "action": "redirect", "to": "/marknadsforing/" },
+    { "path": "/category/hemsida/", "action": "redirect", "to": "/hemsida/" },
+    { "path": "/category/inspiration/", "action": "redirect", "to": "/affarside/" },
+    { "path": "/category/instagram/", "action": "redirect", "to": "/marknadsforing/" },
+    { "path": "/category/produkter-tjanster/", "action": "redirect", "to": "/e-handel/" },
+    { "path": "/category/seo/", "action": "redirect", "to": "/marknadsforing/" },
+    { "path": "/category/sociala-medier/", "action": "redirect", "to": "/marknadsforing/" },
+    { "path": "/category/starta-foretag/", "action": "redirect", "to": "/starta-foretag/" },
+    { "path": "/category/starta-foretag-101/", "action": "redirect", "to": "/starta-foretag/" },
+    { "path": "/category/tips-rad/", "action": "redirect", "to": "/starta-foretag/" },
+    { "path": "/category/tjanster-for-foretag/", "action": "redirect", "to": "/ekonomi/" },
+    { "path": "/category/wordpress/", "action": "redirect", "to": "/hemsida/" }
+  ],
+  "todo_unknown_slugs": [
+    "enskild firma post", "bidrag post", "företagslån post", "affärsplan post", "affärsplan mall post", "affärsplan exempel post",
+    "bokföring för dropshipping post", "webshop post", "domän post", "konverteringsoptimering post", "SEO-guide post",
+    "Google Ads post", "Instagram post", "sociala medier post", "AI agency post", "bäst bank för företag post",
+    "remaining posts up to 48 — export from WP admin › Posts or wp-sitemap-posts-post-1.xml"
+  ]
+}
