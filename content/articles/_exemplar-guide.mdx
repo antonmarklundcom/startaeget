@@ -1,0 +1,53 @@
+---
+title: Exempelguide — så ser en guide ut
+slug: exemplar-guide
+hub: starta-foretag
+type: guide
+description: Referensartikel som visar hur en guide på sajten är uppbyggd, vilka fält frontmatter kräver och hur källor och partnerblock renderas.
+intent: intern referens för artikelmallen
+updated: 2025-09-11
+sources:
+  - label: Verksamt.se — Starta företag
+    url: https://www.verksamt.se/starta
+  - label: Bolagsverket — Registrera företag
+    url: https://bolagsverket.se/foretag
+partners:
+  - bokio
+  - fortnox
+related: []
+faq:
+  - q: Vad är den här sidan?
+    a: Det är en exempelartikel som O1 lade upp så att artikelmallen har riktig data att rendera. O2 ersätter den med en färdig guide.
+  - q: Får jag skriva om den?
+    a: Ja. Filen ägs av designfasen och ska bytas ut mot en riktig guide med samma struktur.
+image:
+  slot: exemplar-guide-hero
+  alt: Skrivbord med anteckningar inför registreringen av ett nytt företag
+legacy: false
+---
+
+Den här sidan finns för att artikelmallen ska ha riktigt innehåll att rendera
+innan de första guiderna är skrivna. Strukturen nedan är den varje guide på
+sajten följer.
+
+## Så är en guide uppbyggd
+
+En guide börjar med det beslut läsaren står inför, inte med en historisk
+bakgrund. Därefter kommer stegen i den ordning de faktiskt dyker upp, och sist
+en kort sammanfattning av vad som händer efter att beslutet är fattat.
+
+- Ett avsnitt per beslut, aldrig ett avsnitt per myndighet.
+- Varje siffra som ändras årligen får en källa och ett datum.
+- Länkar till Skatteverket, Bolagsverket och Verksamt ligger i `sources` och
+  renderas i källrutan längst ned.
+
+## Partnerblock
+
+Partnerblocket nedan kommer från fältet `partners` i frontmatter. Inne i
+brödtexten går det också att länka en enskild partner, som <Annonslank partner="bokio" />,
+och märkningen sätts automatiskt när länken är en annonslänk.
+
+## Vad du gör härnäst
+
+Byt ut den här texten mot en riktig guide. Behåll fälten — de är kontraktet som
+resten av sajten bygger på.
