@@ -25,10 +25,14 @@ import { ToolSources } from "./ToolSources";
  * in the URL so a result can be shared or reloaded, and the home hero links in
  * with question 1 already answered.
  *
- * The questions and the result sit in two different slots of O2's ToolShell, so
- * the state they share travels by context: the page wraps the shell in
- * <BolagsformProvider> and drops <BolagsformSteps/> and <BolagsformResult/> into
- * the slots. That keeps the shell's layout O2's and the state O3's.
+ * The questions and the result sit in two different slots of ToolShell, so the
+ * state they share travels by context: the page wraps the shell in
+ * <BolagsformProvider> and drops the slot fillers in. That keeps the shell a
+ * server component and the page prerendered.
+ *
+ * D1 laid it out to docs/design/verkstan.md §2: the tinted panel carries the
+ * answer, the score bars and the assumption chip; the reasoning and the next
+ * steps sit in the white column beside the questions, where they are read.
  */
 
 const SOURCE_KEYS = [
@@ -46,6 +50,8 @@ const READ_NEXT: Record<CompanyForm, { href: string; label: string }> = {
   enskild: { href: "/starta-foretag/", label: "Guiderna för dig som startar eget" },
   handelsbolag: { href: "/starta-foretag/", label: "Guiderna för dig som startar eget" },
 };
+
+const FORM_ORDER: CompanyForm[] = ["ab", "enskild", "handelsbolag"];
 
 type State = {
   answers: Answers;
@@ -115,6 +121,25 @@ export function BolagsformProvider({ children }: { children: React.ReactNode }) 
   return <BolagsformContext.Provider value={value}>{children}</BolagsformContext.Provider>;
 }
 
+/** The page-header progress line (contract §2), fed by the live state. */
+export function BolagsformProgress() {
+  const { result } = useTool();
+  const done = result.form !== null;
+  const percent = (result.answered / QUESTIONS.length) * 100;
+
+  return (
+    <p className="tool__progress">
+      <span>
+        {result.answered} av {QUESTIONS.length}
+        {done ? " · klart" : ""}
+      </span>
+      <span aria-hidden="true" className="tool__progress-bar">
+        <span style={{ width: `${percent}%` }} />
+      </span>
+    </p>
+  );
+}
+
 export function BolagsformSteps() {
   const { answers, result, index, pick, goTo, reset } = useTool();
   const done = result.form !== null;
@@ -165,7 +190,7 @@ export function BolagsformSteps() {
 
       {index > 0 && !done ? (
         <div className="q__nav">
-          <button className="btn btn--ghost" onClick={() => goTo(index - 1)} type="button">
+          <button className="btn btn--ghost btn--small" onClick={() => goTo(index - 1)} type="button">
             ← Föregående fråga
           </button>
         </div>
@@ -191,8 +216,44 @@ export function BolagsformSteps() {
         </div>
       ) : null}
 
+      {result.form ? (
+        <>
+          <h2 className="q__title">Därför blev det {FORM_NAMES[result.form].toLowerCase()}</h2>
+          <ul className="result__why">
+            {result.reasons.map((reason) => (
+              <li key={reason}>
+                <span>{reason}</span>
+              </li>
+            ))}
+          </ul>
+
+          {result.excluded.length ? (
+            <p className="q__help">
+              Uteslutet av dina svar:{" "}
+              {result.excluded.map((excluded) => FORM_NAMES[excluded]).join(", ")}.
+            </p>
+          ) : null}
+
+          <h2 className="q__title">Nästa steg</h2>
+          <ol className="result__steps">
+            {nextSteps(result.form).map((step) => (
+              <li key={step}>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+
+          <p className="q__help">
+            Läs vidare:{" "}
+            <Link href={READ_NEXT[result.form].href}>{READ_NEXT[result.form].label}</Link>
+          </p>
+
+          <ToolSources keys={SOURCE_KEYS} />
+        </>
+      ) : null}
+
       <div className="tool__actions">
-        <button className="btn btn--ghost" onClick={reset} type="button">
+        <button className="btn btn--ghost btn--small" onClick={reset} type="button">
           Börja om
         </button>
       </div>
@@ -201,88 +262,78 @@ export function BolagsformSteps() {
 }
 
 export function BolagsformResult() {
-  const { answers, result } = useTool();
+  const { result } = useTool();
   const form = result.form;
+  const top = Math.max(1, ...FORM_ORDER.map((entry) => result.scores[entry]));
 
   if (!form) {
     return (
-      <>
-        <div className="result__verdict">
-          <span className="result__label">Resultat</span>
-          <p className="result__form">Svara på frågorna</p>
-        </div>
-        <p className="q__help">
+      <div className="result__verdict">
+        <p className="result__label">Svara på frågorna</p>
+        <p className="result__explain">
           Förslaget visas här när alla {QUESTIONS.length} frågor är besvarade, tillsammans
           med motiveringen och vad du gör härnäst.
         </p>
-        <ToolSources keys={SOURCE_KEYS} />
-      </>
+      </div>
     );
   }
 
   return (
     <>
       <div className="result__verdict">
-        <span className="result__label">Vårt förslag</span>
+        <p className="result__label">För dig passar</p>
         <p className="result__form" data-testid="verdict">
           {FORM_NAMES[form]}
         </p>
-        <span className="result__estimate">Uppskattning, inte rådgivning</span>
       </div>
+
+      <ul className="scores">
+        {FORM_ORDER.map((entry) => (
+          <li className={entry === form ? "score score--winner" : "score"} key={entry}>
+            <span>{FORM_NAMES[entry]}</span>
+            <span aria-hidden="true" className="score__track">
+              <span
+                className="score__fill"
+                style={{ width: `${Math.max(0, (result.scores[entry] / top) * 100)}%` }}
+              />
+            </span>
+            <span className="score__value">{result.scores[entry]}</span>
+          </li>
+        ))}
+      </ul>
 
       {result.close && result.runnerUp ? (
         <p className="result__tie">
           Det är nära mellan {FORM_NAMES[form].toLowerCase()} och{" "}
-          {FORM_NAMES[result.runnerUp].toLowerCase()} i ditt fall. Läs motiveringen nedan och
-          väg själv — eller fråga en byrå innan du registrerar.
+          {FORM_NAMES[result.runnerUp].toLowerCase()} i ditt fall. Läs motiveringen och väg
+          själv — eller fråga en byrå innan du registrerar.
         </p>
       ) : null}
 
-      <h2 className="result__label">Därför</h2>
-      <ul className="result__why">
-        {result.reasons.map((reason) => (
-          <li key={reason}>{reason}</li>
-        ))}
-      </ul>
-
-      {result.excluded.length ? (
-        <p className="q__help">
-          Uteslutet av dina svar:{" "}
-          {result.excluded.map((excluded) => FORM_NAMES[excluded]).join(", ")}.
-        </p>
-      ) : null}
-
-      <h2 className="result__label">Så här gör du</h2>
-      <ol className="result__steps">
-        {nextSteps(form).map((step) => (
-          <li key={step}>
-            <span>{step}</span>
-          </li>
-        ))}
-      </ol>
-
-      <p className="q__help">
-        Läs vidare: <Link href={READ_NEXT[form].href}>{READ_NEXT[form].label}</Link>
-      </p>
-
-      <ToolSources keys={SOURCE_KEYS} />
-
-      <EmailResult
-        payload={{ answers, form, scores: result.scores }}
-        summary={`Bolagsformsväljaren föreslår ${FORM_NAMES[form]}`}
-        tool="bolagsform"
-      />
+      <span className="result__estimate">
+        Uppskattning, inte rådgivning · Källa Skatteverket, Bolagsverket
+      </span>
     </>
   );
 }
 
 export function BolagsformPartners() {
-  const { result } = useTool();
-  if (!result.form) return null;
+  const { answers, result } = useTool();
+  const form = result.form;
+
   return (
     <>
-      <PartnerCta heading="Det här behöver du härnäst" partners={partnersFor(result.form)} />
-      <LeadForm sourcePage="/verktyg/bolagsform/" />
+      {form ? (
+        <PartnerCta heading="Passar ditt svar" partners={partnersFor(form)} />
+      ) : null}
+      {form ? (
+        <EmailResult
+          payload={{ answers, form, scores: result.scores }}
+          summary={`Bolagsformsväljaren föreslår ${FORM_NAMES[form]}`}
+          tool="bolagsform"
+        />
+      ) : null}
+      {form ? <LeadForm sourcePage="/verktyg/bolagsform/" /> : null}
     </>
   );
 }

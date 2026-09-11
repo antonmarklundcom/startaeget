@@ -1,18 +1,25 @@
 import type { Metadata } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Figtree, Outfit } from "next/font/google";
 import "@/styles/globals.css";
 import { SITE_NAME, siteUrl } from "@/lib/site";
 
-const body = Inter({
+/**
+ * Exactly two families (docs/design/verkstan.md §1): Figtree carries the body,
+ * Outfit every heading, card title and result number. Both self-hosted by
+ * next/font with `display: swap`, so no third-party CSS and no layout shift.
+ */
+const body = Figtree({
   subsets: ["latin", "latin-ext"],
   variable: "--font-body",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
-const heading = Source_Serif_4({
+const heading = Outfit({
   subsets: ["latin", "latin-ext"],
   variable: "--font-heading",
   display: "swap",
+  weight: ["700", "800"],
 });
 
 export const metadata: Metadata = {

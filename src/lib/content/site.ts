@@ -10,6 +10,10 @@ import { tools as toolData } from "../../../content/tools";
  * them; O2 and O3 own the data files that fill them in.
  */
 
+/** The seven room colours (docs/design/verkstan.md §1). */
+export const TINTS = ["mint", "sky", "sun", "peach", "lilac", "rose", "sand"] as const;
+export type Tint = (typeof TINTS)[number];
+
 export const hubSchema = z.object({
   id: z.string(),
   /** Path with leading and trailing slash, e.g. "/starta-foretag/". */
@@ -21,6 +25,8 @@ export const hubSchema = z.object({
   /** "hub" lists its own articles; "comparisons" lists every comparison page. */
   kind: z.enum(["hub", "comparisons"]).default("hub"),
   featured: z.array(z.string()).default([]),
+  /** Room colour; CSS maps it through [data-hub] in src/styles/tokens.css. */
+  tint: z.enum(TINTS).default("sand"),
 });
 
 export type HubDef = z.infer<typeof hubSchema>;
@@ -60,6 +66,10 @@ export const toolSchema = z.object({
   intro: z.string().min(40),
   /** "stub" = the route renders a placeholder until O3 ships the tool. */
   status: z.enum(["stub", "live"]).default("stub"),
+  /** Card colour, same palette as the hubs. */
+  tint: z.enum(TINTS).default("sand"),
+  /** Honest minutes-to-answer, shown on the tool card. */
+  minutes: z.number().int().min(1).max(30).default(3),
 });
 
 export type ToolDef = z.infer<typeof toolSchema>;

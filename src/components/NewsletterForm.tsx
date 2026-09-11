@@ -13,6 +13,7 @@ export function NewsletterForm({
 }: {
   source: string;
   magnet?: string;
+  /** Drops the note line — used in the one-row strip variant of the band. */
   compact?: boolean;
 }) {
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -50,7 +51,7 @@ export function NewsletterForm({
 
   return (
     <form className="form" onSubmit={onSubmit} noValidate={false}>
-      <div className={compact ? "" : "newsletter__row"}>
+      <div className="newsletter__row">
         <div className="form__field">
           <label htmlFor={`nl-${source}`}>Din e-postadress</label>
           <input
@@ -62,14 +63,16 @@ export function NewsletterForm({
             placeholder="du@företaget.se"
           />
         </div>
-        <button type="submit" className="btn btn--primary" disabled={state === "sending"}>
-          {state === "sending" ? "Skickar …" : "Prenumerera"}
+        <button type="submit" className="btn btn--dark" disabled={state === "sending"}>
+          {state === "sending" ? "Skickar …" : "Häng med"}
         </button>
       </div>
       <input className="form__hp" type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-      <p className="form__note">
-        Ett mejl när vi publicerar något nytt. Inga annonsutskick, avsluta när du vill.
-      </p>
+      {compact ? null : (
+        <p className="form__note">
+          Ett mejl när vi publicerar något nytt. Inga annonsutskick, avsluta när du vill.
+        </p>
+      )}
       {state === "error" ? (
         <p className="form__status form__status--error" role="alert">
           Det gick inte att spara adressen just nu. Försök igen om en stund.

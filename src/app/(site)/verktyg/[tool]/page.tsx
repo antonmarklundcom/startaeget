@@ -4,6 +4,7 @@ import { tools, getTool } from "@/lib/content/site";
 import { ToolFrame } from "@/components/tools/ToolFrame";
 import {
   BolagsformPartners,
+  BolagsformProgress,
   BolagsformProvider,
   BolagsformResult,
   BolagsformSteps,
@@ -63,6 +64,7 @@ export default async function ToolPage({ params }: Params) {
       <BolagsformProvider>
         <ToolFrame
           partners={<BolagsformPartners />}
+          progress={<BolagsformProgress />}
           result={<BolagsformResult />}
           steps={<BolagsformSteps />}
           tool={tool}

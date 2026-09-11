@@ -76,7 +76,7 @@ export function LeadForm({ sourcePage }: { sourcePage: string }) {
             <textarea id="lead-message" name="message" required />
           </div>
           <input className="form__hp" type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-          <button type="submit" className="btn btn--primary" disabled={state === "sending"}>
+          <button type="submit" className="btn btn--dark" disabled={state === "sending"}>
             {state === "sending" ? "Skickar …" : "Skicka förfrågan"}
           </button>
           <p className="form__note">

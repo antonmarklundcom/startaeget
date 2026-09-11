@@ -29,7 +29,7 @@ export function Annonslank({
       >
         {children ?? entry.name}
       </a>{" "}
-      <span className="annonslank-mark">({entry.disclosure})</span>
+      <span className="annonslank-mark">{entry.disclosure}</span>
     </>
   );
 }

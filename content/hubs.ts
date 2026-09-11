@@ -14,6 +14,7 @@ export const hubs = [
       "Här samlar vi guiderna om att välja bolagsform, registrera företaget och få ordning på F-skatt, moms och försäkring från dag ett.",
     kind: "hub",
     featured: ["starta-aktiebolag"],
+    tint: "mint",
   },
   {
     id: "ekonomi",
@@ -26,6 +27,7 @@ export const hubs = [
       "Bokföring, bank och skatt är där de flesta nyföretagare fastnar. Guiderna här tar dig igenom valen i den ordning de faktiskt dyker upp.",
     kind: "hub",
     featured: ["basta-bokforingsprogram"],
+    tint: "sky",
   },
   {
     id: "affarside",
@@ -38,6 +40,7 @@ export const hubs = [
       "Från idélistor och validering till en affärsplan du kan visa banken. Mallar och exempel ingår.",
     kind: "hub",
     featured: [],
+    tint: "sun",
   },
   {
     id: "e-handel",
@@ -50,6 +53,7 @@ export const hubs = [
       "Guider för dig som säljer på nätet: plattformsval, uppstart, bokföring och de misstag som kostar mest i början.",
     kind: "hub",
     featured: [],
+    tint: "peach",
   },
   {
     id: "hemsida",
@@ -62,6 +66,7 @@ export const hubs = [
       "Att få upp en hemsida är enkelt. Att välja rätt domän, webbhotell och verktyg från början sparar dig ett byte senare.",
     kind: "hub",
     featured: [],
+    tint: "lilac",
   },
   {
     id: "marknadsforing",
@@ -74,6 +79,7 @@ export const hubs = [
       "De första kunderna kommer sällan från annonser. Här är kanalerna i den ordning de brukar löna sig för ett nystartat företag.",
     kind: "hub",
     featured: [],
+    tint: "rose",
   },
   {
     id: "jamfor",
@@ -86,5 +92,6 @@ export const hubs = [
       "Varje jämförelse bygger på leverantörernas egna prissidor, med datum för när vi kontrollerade dem senast.",
     kind: "comparisons",
     featured: [],
+    tint: "lilac",
   },
 ] as const;
