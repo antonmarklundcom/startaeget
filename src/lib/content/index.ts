@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { RESERVED_SLUGS } from "./site";
+// Relative, not "@/": next.config.ts pulls this loader in through
+// legacy-fallback.ts, and that compile step does not see the path aliases.
+import { duplicateHeadings } from "../../components/mdx/headings";
 import {
   articleFrontmatterSchema,
   pageFrontmatterSchema,
@@ -93,6 +96,16 @@ export function getAllArticles(): Article[] {
     if (content.trim().length < 200) {
       throw new ContentError(relative(file), "body is empty or shorter than 200 characters");
     }
+    // Two `## ` headings with the same text render the same id, so the table of
+    // contents links the first one twice and the page ships a duplicate id.
+    const repeated = duplicateHeadings(content);
+    if (repeated.length) {
+      throw new ContentError(
+        relative(file),
+        `repeated "## " heading: ${repeated.map((h) => `"${h}"`).join(", ")} — ` +
+          "give each heading its own wording so the table of contents can link it",
+      );
+    }
     articles.push({ frontmatter: parsed.data, body: content, file: relative(file) });
   }
 
@@ -158,6 +171,14 @@ export function getAllPages(): Page[] {
       throw new ContentError(
         relative(file),
         `slug "${parsed.data.slug}" is a hub or reserved route`,
+      );
+    }
+    const repeated = duplicateHeadings(content);
+    if (repeated.length) {
+      throw new ContentError(
+        relative(file),
+        `repeated "## " heading: ${repeated.map((h) => `"${h}"`).join(", ")} — ` +
+          "two headings with the same wording render the same id",
       );
     }
     pages.push({ frontmatter: parsed.data, body: content, file: relative(file) });
