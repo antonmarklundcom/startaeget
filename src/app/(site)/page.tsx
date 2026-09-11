@@ -117,7 +117,9 @@ export default function HomePage() {
                       <h3 className="room__title">{hub.h1}</h3>
                       <p className="room__desc">{hub.description}</p>
                       {count > 0 ? (
-                        <span className="room__count">{count} guider</span>
+                        <span className="room__count">
+                          {count} {count === 1 ? "guide" : "guider"}
+                        </span>
                       ) : null}
                     </Link>
                   </li>

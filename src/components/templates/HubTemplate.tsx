@@ -36,7 +36,14 @@ export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[
         {articles.length ? (
           <p className="chip-row">
             <span className="chip">
-              {articles.length} {isComparisons ? "jämförelser" : "guider"}
+              {articles.length}{" "}
+              {isComparisons
+                ? articles.length === 1
+                  ? "jämförelse"
+                  : "jämförelser"
+                : articles.length === 1
+                  ? "guide"
+                  : "guider"}
             </span>
             {isComparisons ? (
               <span className="chip chip--ad">Innehåller annonslänkar</span>
