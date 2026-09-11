@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { legacyRedirects } from "./src/lib/redirects";
+import { missingLegacyRedirects } from "./src/lib/legacy-fallback";
 
 const nextConfig: NextConfig = {
   trailingSlash: true,
@@ -9,7 +10,7 @@ const nextConfig: NextConfig = {
     "/**": ["./content/**/*"],
   },
   async redirects() {
-    return legacyRedirects();
+    return [...legacyRedirects(), ...missingLegacyRedirects()];
   },
   async headers() {
     return [

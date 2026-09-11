@@ -1,6 +1,6 @@
 {
   "complete": false,
-  "note": "Seed from the planning session. Anton completes this with all 48 exact WordPress paths (§7 item 1). action: keep = same path rewritten; redirect = 301 to `to`; retire = 301 to hub in `to`.",
+  "note": "O1 (2025-09-11) tried to complete this from https://startaegetforetag.se/wp-sitemap-posts-post-1.xml and /sitemap_index.xml; the sandbox egress proxy rejects the host (403 on CONNECT), so the list is still the planning-session seed. Anton completes this with all 48 exact WordPress paths (§7 item 1). action: keep = same path rewritten; redirect = 301 to `to`; retire = 301 to hub in `to`.",
   "entries": [
     { "path": "/affarsideer-2023/", "action": "redirect", "to": "/affarsideer/" },
     { "path": "/affarsideer2024/", "action": "redirect", "to": "/affarsideer/" },
