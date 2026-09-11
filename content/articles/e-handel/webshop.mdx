@@ -1,0 +1,114 @@
+---
+title: Webshop – det här ingår och vad det kostar att komma igång
+slug: webshop
+hub: e-handel
+type: guide
+description: "Vad en webshop faktiskt består av: plattform, betalning, frakt, lager och de krav du inte kan välja bort innan du säljer något."
+intent: "vad en webshop består av och vilka delar (plattform, betalning, frakt, lager) som krävs innan lansering — skild från en steg-för-steg-startguide"
+updated: 2026-09-11
+legacy: true
+sources:
+  - label: "Verksamt: Starta e-handelsföretag"
+    url: https://verksamt.se/starta/olika-satt-att-starta/e-handel
+  - label: "Konsumentverket: Prisinformation i e-handel"
+    url: https://www.konsumentverket.se/for-foretag/regler-per-omrade/prisinformation/
+partners:
+  - shopify
+  - quickbutik
+  - woocommerce
+related: []
+faq:
+  - q: Vad är egentligen skillnaden på en webshop och en vanlig hemsida?
+    a: En hemsida visar upp dig och det du säljer. En webshop lägger till en kassa som tar betalt, ett lager eller en leverantör som skickar varan, och de juridiska bitarna som hör till ett köp — kvitto, ångerrätt och integritetspolicy. Utan de delarna är det en broschyr, inte en butik.
+  - q: Måste jag ha eget lager för att starta en webshop?
+    a: Nej. Dropshipping och fulfillment-tjänster gör att du kan sälja utan att själv binda kapital i varor eller ha en lokal att packa i. Du får lägre marginal och mindre kontroll över leveranstiden i gengäld, så valet är en avvägning snarare än ett rätt eller fel.
+  - q: Vad kostar det att komma igång med en webshop?
+    a: Plattformen är den kostnad som syns tydligast, ofta en månadsavgift eller en engångskostnad för egen installation. Betaltjänsten tar en avgift per transaktion. Lager, frakt och eventuell bokföringstjänst tillkommer utöver det, medan registreringen hos Skatteverket är gratis.
+  - q: Behöver jag en integritetspolicy även som liten webshop?
+    a: Ja. Så fort du samlar in namn, adress eller e-post för att kunna leverera en beställning behandlar du personuppgifter, och då gäller GDPR oavsett omsättning. En integritetspolicy som beskriver vad du samlar in och varför är ett krav, inte en formalitet för de stora aktörerna.
+  - q: Kan jag bygga en webshop själv utan att kunna programmera?
+    a: Ja, de flesta plattformar är byggda för det. Shopify och Quickbutik sköter drift och uppdateringar åt dig mot en månadsavgift; en egen WooCommerce-butik kräver mer teknisk skötsel men kostar mindre löpande. Ingen av vägarna kräver att du kan koda själv.
+image:
+  slot: webshop-hero
+  alt: Bärbar dator som visar en webshops produktsida bredvid ett paket redo att skickas
+---
+
+En webshop är inte en enskild produkt du köper eller bygger på en helg. Det är flera delar som måste hänga ihop: en plattform som visar produkterna, en betalningslösning som tar emot pengarna, ett sätt att få varan till kunden, och de juridiska bitarna som gäller så fort du säljer till privatpersoner på distans. Den här texten går igenom vad de delarna faktiskt är och vad var och en tenderar att kosta — inte i vilken ordning du ska klicka dig fram, det tar vi i en egen startguide.
+
+<Callout title="Letar du efter steg-för-steg-planen?">
+Den här sidan förklarar vad en webshop består av. Ska du faktiskt sätta i gång med en egen finns en separat guide för det, och [e-handelshubben](/e-handel/) samlar jämförelser av plattformar och betaltjänster.
+</Callout>
+
+## Plattformen: butikens skelett
+
+Plattformen är mjukvaran som visar produkter, hanterar kundvagn och tar hand om kassan. Det finns i grova drag två typer.
+
+En **SaaS-plattform** som Shopify eller Quickbutik är hyrd programvara: du betalar en månadsavgift, och leverantören sköter drift, säkerhet och uppdateringar. Du kommer i gång snabbt och slipper tekniskt underhåll, men är låst till leverantörens funktioner och prisnivå.
+
+En **egen installation** som WooCommerce, byggd ovanpå ett webbhotell, kostar mindre i löpande avgift men lägger ansvaret för uppdateringar, säkerhet och prestanda på dig eller den du anlitar. Den passar bäst när du redan har viss teknisk vana eller någon som sköter driften åt dig.
+
+Ingen av vägarna kräver att du kan programmera. Skillnaden ligger i om du betalar för att slippa sköta tekniken, eller sköter den själv för att betala mindre varje månad.
+
+## Betalningslösningen: att faktiskt få betalt
+
+En webshop behöver ett sätt att ta emot pengar som svenska kunder faktiskt använder — kort, Swish och för många branscher även faktura eller delbetalning. Betaltjänsten kopplas in i plattformens kassa och tar en avgift per transaktion, vanligen en fast del plus en procentsats av köpesumman.
+
+Den avgiften är lätt att glömma när du sätter priser. Räkna igenom en enskild order hela vägen — inköpspris, betaltjänstavgift, frakt, eventuell plattformsavgift — innan du bestämmer vad kunden ska betala. Annars upptäcker du marginalen först efter ett par hundra sålda ordrar.
+
+## Frakt och leverans: löftet du måste hålla
+
+Fraktvalet påverkar mer än kostnaden — det sätter kundens förväntan redan i kassan. Du behöver bestämma vilka fraktalternativ du erbjuder, vem som betalar för dem, och en leveranstid du faktiskt kan hålla. <Verifiera /> Svenska konsumenter jämför din leveranstid mot de stora aktörernas, inte mot andra nystartade butiker, vilket gör att en ärlig och hållen leveranstid ofta slår ett löfte om snabbast leverans som du sedan missar.
+
+Fraktkostnaden förhandlas oftast fram med en eller flera transportörer, direkt eller genom en integration i plattformen som räknar priset automatiskt utifrån vikt och destination.
+
+## Lager, dropshipping eller fulfillment
+
+Varorna måste finnas någonstans innan de kan skickas, och det finns tre vanliga upplägg.
+
+<Checklist items={[
+  "Eget lager — du köper in och packar själv, bäst marginal men bundet kapital och eget packningsarbete",
+  "Dropshipping — leverantören skickar direkt till kunden, inget bundet kapital men längre leveranstid och mindre kontroll",
+  "Fulfillment — ett tredjepartslager packar och skickar åt dig mot en avgift per order, vanligt när volymen vuxit förbi vad du hinner själv"
+]} />
+
+De flesta börjar med ett litet eget lager för att lära känna sina produkter och sina kunder, och lägger till dropshipping för att testa bredare sortiment utan att binda mer kapital, eller flyttar till fulfillment när packningen blivit ett heltidsjobb i sig. Att kombinera upplägg för olika delar av sortimentet är vanligare än att välja ett enda för alltid.
+
+## Kundservice: den delen som säljer tyst
+
+En webshop utan ansikte mot kunden behöver kompensera med en tydlig kontaktväg — ett telefonnummer, ett chattfönster eller en e-postadress som faktiskt bemannas, inte bara ett kontaktformulär som försvinner in i en inkorg. Frågor om leveranstid, retur och produktinformation kommer innan köpet lika ofta som efter det, och hur snabbt de besvaras avgör fler avslut än butikens design.
+
+Räkna med att avsätta tid för kundservice redan från start, även om det bara är du själv som svarar. En obesvarad fråga blir sällan en beställning.
+
+## Integritetspolicy, ångerrätt och prisinformation
+
+Det här är delarna som inte syns förrän någon letar efter dem, men som är krav snarare än tillval så fort du säljer till privatpersoner på distans inom EU.
+
+**Integritetspolicy och GDPR.** Så fort du samlar in namn, adress eller e-post för att leverera en beställning behandlar du personuppgifter. Du behöver kunna beskriva vad du samlar in, varför, och hur länge du sparar det — oavsett hur liten butiken är.
+
+**Ångerrätt.** Distansavtalslagen ger konsumenter 14 dagars ångerrätt från det att varan kommit fram, och du måste informera om villkoren tydligt innan köpet. Görs det inte förlängs ångerrätten kraftigt, vilket gör det till en av de dyraste sakerna att missa av misstag.
+
+**Prisinformation.** Priset i kassan ska stämma med det totalpris kunden fick se innan köpet, inklusive moms och kända fraktkostnader. Otydlig eller dold prisinformation är ett av de vanligaste skälen till att kunder avbryter köpet i sista steget.
+
+<StatRow items={[
+  { value: "14 dagar", label: "Lagstadgad ångerrätt", note: "Källa: Konsumentverket" },
+  { value: "25 %", label: "Moms på de flesta varor", note: "Gäller de flesta fysiska produkter" },
+  { value: "0 kr", label: "Registrering hos Skatteverket", note: "F-skatt och momsregistrering är gratis" }
+]} />
+
+## Vad som kostar pengar och vad som är gratis
+
+Det är lätt att blanda ihop juridiska krav med tekniska val när man räknar på en webshop, men de har helt olika kostnadsbild.
+
+Gratis, oavsett hur du bygger butiken: registrering av F-skatt och moms hos Skatteverket, att skriva en integritetspolicy själv, och att informera korrekt om ångerrätt och pris. Det här är regler du måste följa, inte funktioner du köper.
+
+Kostar pengar, i varierande grad beroende på vad du väljer: plattformen (månadsavgift eller egen drift), betaltjänsten (avgift per transaktion), frakten (per försändelse eller ett fast avtal), och lager eller fulfillment (bundet kapital respektive avgift per order). Det är här skillnaden mellan en billig och en dyr start faktiskt ligger — inte i de juridiska kraven, som kostar lika mycket för alla.
+
+## Hur delarna hänger ihop
+
+Ingen av delarna fungerar isolerat. Plattformen måste kunna koppla in den betaltjänst du vill använda. Betaltjänsten och fraktvalet avgör vilket pris du visar i kassan och hur den totalsumman räknas fram, vilket i sin tur styr vad prisinformationslagen kräver att du visar redan tidigare i köpresan. Lagervalet påverkar vilken leveranstid du kan lova, och den leveranstiden är precis det kunderna jämför dig mot de stora aktörerna på.
+
+Ändrar du en del i efterhand — byter fraktbolag, lägger till fulfillment, höjer priser — påverkar det ofta minst en annan del också. Att se webshopen som ett system snarare än en lista av separata val gör det lättare att förstå varför ett billigt val på ett ställe ibland kostar mer på ett annat.
+
+<Callout title="Nästa steg" variant="warning">
+Den här sidan beskriver delarna. Vill du sätta i gång i praktisk ordning — registrera företaget, välja plattform, koppla betalning och öppna butiken — använder du den separata steg-för-steg-guiden för att starta webshop. [Bolagsformsväljaren](/verktyg/bolagsform/) och [startkostnadskalkylatorn](/verktyg/startkostnad/) hjälper dig räkna på din egen situation redan innan dess.
+</Callout>
