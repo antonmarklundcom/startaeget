@@ -16,7 +16,7 @@ Sweden only. Swedish language (du-form). Founder-first content + decision tools 
 | S8 Marknadsföring & sidor | 2 | Sonnet | `prompts/sonnet-8-marknadsforing-sidor.md` | §6.5 | `content/articles/marknadsforing/**`, `content/pages/**`, `content/image-briefs/s8.json` | O2 |
 | S9 Link pass | — | Sonnet | `prompts/sonnet-9-link-pass.md` | §6.6 | any `content/**` file (links/related only), `content/nav.ts`, `KNOWN-ISSUES.md`, `plan.md` §9 | all, incl. D1 |
 | D1 Verkstan design | 1 (runs in parallel with S4–S8) | Opus | `prompts/opus-10-verkstan.md` | §5.4, `docs/design/verkstan.md` | `src/**` (except `src/lib/tax/**` maths and `src/app/api/**`), `content/hubs.ts`, `content/home.ts`, `content/tools.ts`, `tests/screenshots.mjs`, `docs/design/**` | O3 |
-| B1 Blog admin | 1 (after D1) | Opus | `prompts/opus-11-blog-admin.md` | §5.5 | `src/app/admin/**`, `src/app/api/admin/**`, `src/lib/admin/**`, `src/middleware.ts`, `src/lib/content/schema.ts` (additive only), `content/hubs.ts` + `content/nav.ts` (add `blogg` only), `content/articles/blogg/**`, `.env.example`, `tests/admin.e2e.mjs`, `drizzle/**` (only if a table is unavoidable) | D1 |
+| B1 Blog admin | 1 (after D1) | Opus | `prompts/opus-11-blog-admin.md` | §5.5 | `src/app/admin/**`, `src/app/api/admin/**`, `src/lib/admin/**`, `src/middleware.ts`, `src/lib/content/schema.ts` (additive only), `content/hubs.ts` + `content/nav.ts` (add `blogg` only), `content/articles/blogg/**`, `.env.example`, `tests/admin.e2e.mjs`, `drizzle/**` (only if a table is unavoidable); plus for the lead-magnet loader and `<Stat k>`: `src/lib/content/index.ts`, `src/components/mdx/**`, `src/app/(site)/[slug]/page.tsx` | D1 |
 
 Estimated cost: O1 $15–20, O2 $12–18, O3 $15–20, S4–S8 $8–12 each in parallel, S9 ~$4, D1 $15–25, B1 $15–20 → roughly $125–165. Wall-clock ≈ 5 h (lane 1 ≈ 3 h, lane 2 ≈ 1.5 h, link pass ≈ 0.5 h). Imagery is a manual pipeline after the build (§7), not a phase.
 
@@ -207,6 +207,7 @@ A single-admin, git-backed editor so Anton can write blog posts and update old a
 - **Store** (`src/lib/admin/store.ts`): `listArticles`, `readArticle`, `writeArticle`, `createArticle` behind one interface with two backends: `github` when `GITHUB_TOKEN` + `GITHUB_REPO` are set (Contents API on `GITHUB_BRANCH`, default `main`; read = the GitHub file, write = PUT with the file's sha, commit message `admin: <title>`), else `local` (the repo's `content/` on disk — dev and the fallback). List/read in github mode come from GitHub so an edit that is committed but not yet deployed is what the editor shows. 60 s in-memory cache.
 - **Screens**: `/admin/` list (filter by hub, search title/slug, state chip: mint "publicerad", sun "väntar på bygge" when the GitHub sha is newer than the deployed build's commit — `NEXT_PUBLIC_BUILD_SHA` written at build time, else omit the chip), "Ny bloggpost". `/admin/artiklar/[hub]/[slug]/` editor: every frontmatter field as a form control (`updated` defaults to today on save; `related` and `partners` as multi-selects from the loaders; `sources`/`faq` as repeatable rows; `legacy` read-only), the MDX body in a textarea with a toolbar: **Infoga länk** (searchable picker over articles, hubs and tools inserting `[text](/slug/)`), Callout / Checklist / Stat snippets. Preview pane: a server action compiles the MDX with the site's own `Mdx` component and returns HTML or the compile error. Plain textarea — no editor dependency.
 - **Validation before every commit**: `articleFrontmatterSchema` + MDX compile must pass, slug must not collide with a hub/tool/reserved route (reuse O1's check), every internal link `](/x/)` must resolve to an existing slug/hub/tool (warning, not error). An invalid file is never committed, so the admin can never break the build.
+- **Lead magnets and `<Stat k>` (lane 2 asked for these; B1 is the first `src/**` phase after them):** (a) a loader for `content/lead-magnets/*.mdx` (page-shaped frontmatter + `gate: newsletter` boolean) resolved by the `/[slug]/` route, rendered with `PageTemplate` in print-friendly form; gated = the body renders after the `NewsletterForm` submit (client state, no server check — the value is the list, not the secret). (b) A `<Stat k="<constant key>" />` MDX component that renders the value + unit from `src/lib/tax/constants.ts` with its source link, so plan §6's rule can be followed. Both additive; add `src/lib/content/index.ts`, `src/lib/content/schema.ts`, `src/components/mdx/**` and `src/app/(site)/[slug]/page.tsx` to B1's Owns for these two items only.
 - **After save**: "Sparat i GitHub (commit abc1234). Hostinger bygger om sajten — ändringen syns om några minuter." / "Sparat lokalt". Rebuild latency (2–5 min) is the accepted trade-off of git-backed content.
 - Exit: verify green; `tests/admin.e2e.mjs` green in local mode (login, create post, insert a link, save, file on disk validates, delete); unit tests for the frontmatter round-trip (`gray-matter` stringify → parse equals input); `/admin/` unauthenticated → 302 to login, `noindex`; `/blogg/` renders the seed post; `docs/log/B1.md`; `.env.example` + §7 updated.
 
@@ -287,10 +288,12 @@ Plus, generated from `content/legacy-urls.json` and §2.1: every `retire` entry 
 | O1 Foundation | #2 | `docs/log/O1.md` |
 | O2 Design & templates | #4 | `docs/log/O2.md` |
 | O3 Tools | #5 | `docs/log/O3.md` |
+| (design + admin plan) | #6 | `docs/design/verkstan.md` |
 | S5 Ekonomi & jämförelser | #10 | `docs/log/S5.md` |
 | S6 Affärsidé & affärsplan | #7 | `docs/log/S6.md` |
 | S7 E-handel & hemsida | #8 | `docs/log/S7.md` |
-| (design + admin plan) | — | `docs/design/verkstan.md` |
+| S4 Starta företag | #9 | `docs/log/S4.md` |
+| D1 Verkstan design | (this PR) | `docs/log/D1.md` |
 
 ## 10. Backlog
 - Affärsplan-generator (form → PDF), gated by e-mail.
