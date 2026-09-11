@@ -29,12 +29,14 @@ export const nav = {
         { label: "Startkostnadskalkylatorn", href: "/verktyg/startkostnad/" },
         { label: "Vad blir kvar?", href: "/verktyg/vad-blir-kvar/" },
         { label: "Jämförelser", href: "/jamfor/" },
+        { label: "Få offert från byrå", href: "/redovisningsbyra/" },
       ],
     },
     {
       heading: "Om sajten",
       items: [
         { label: "Om oss", href: "/om-oss/" },
+        { label: "Nyhetsbrev", href: "/nyhetsbrev/" },
         { label: "Kontakt", href: "/kontakt/" },
         { label: "Annonspolicy", href: "/annonspolicy/" },
         { label: "Integritetspolicy", href: "/integritetspolicy/" },

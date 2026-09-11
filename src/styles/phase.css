@@ -1,0 +1,11 @@
+/**
+ * Lane 2 escape hatch (plan §4.9). A content phase that truly cannot express
+ * something with the O2 components appends ONE block here, marked with its
+ * phase id, and notes it in its own log:
+ *
+ *   /* == S5 == *\/
+ *   .s5-something { ... }
+ *
+ * Empty on purpose. If this file grows, the component it works around is
+ * missing from src/components/ and belongs there instead.
+ */

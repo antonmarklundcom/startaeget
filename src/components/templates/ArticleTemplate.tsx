@@ -1,21 +1,28 @@
 import Link from "next/link";
 import type { Article } from "@/lib/content";
 import type { Comparison } from "@/lib/content/schema";
-import { COMPARISON_COLUMNS } from "@/lib/content/schema";
 import { getHub } from "@/lib/content/site";
 import { getArticleBySlug } from "@/lib/content";
 import { Mdx } from "@/components/Mdx";
+import { Toc } from "@/components/Toc";
 import { PartnerCta } from "@/components/PartnerCta";
-import { Annonslank } from "@/components/Annonslank";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
+import { LeadForm } from "@/components/LeadForm";
+import { NewsletterBand } from "@/components/SiteFooter";
+import { ComparisonTemplate } from "./ComparisonTemplate";
 import { articleJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/jsonld";
 import { formatUpdated } from "@/lib/site";
 
 /**
- * The article surface. O1 ships structure and data wiring only — O2 replaces
- * the markup with the designed template. The props are the contract.
+ * The article surface. Everything on it is driven by frontmatter, so a content
+ * phase produces a finished page by writing MDX and nothing else (plan §5.2) —
+ * including which pages get the byrå lead form.
  */
+
+/** Hubs where the reader is choosing an accountant, per plan §6.1 and §6.2. */
+const LEAD_FORM_HUBS = new Set(["starta-foretag", "ekonomi"]);
+
 export function ArticleTemplate({
   article,
   comparison,
@@ -25,14 +32,15 @@ export function ArticleTemplate({
 }) {
   const fm = article.frontmatter;
   const hub = getHub(fm.hub);
+  const path = `/${fm.slug}/`;
   const crumbs = [
     { name: "Start", path: "/" },
     ...(hub ? [{ name: hub.h1, path: hub.path }] : []),
-    { name: fm.title, path: `/${fm.slug}/` },
+    { name: fm.title, path },
   ];
   const related = fm.related
     .map((slug) => getArticleBySlug(slug))
-    .filter((a): a is Article => Boolean(a) && !a!.frontmatter.draft);
+    .filter((a): a is Article => a !== null && !a.frontmatter.draft);
 
   return (
     <article className="container article">
@@ -41,34 +49,58 @@ export function ArticleTemplate({
       <JsonLd data={faqJsonLd(fm.faq)} />
 
       <Breadcrumbs crumbs={crumbs} />
-      <h1>{fm.title}</h1>
-      <p className="article__updated">Uppdaterad {formatUpdated(fm.updated)}</p>
 
-      <div className="prose">
-        <Mdx source={article.body} />
+      <header className="article__head">
+        {hub ? <p className="eyebrow">{hub.h1}</p> : null}
+        <h1>{fm.title}</h1>
+        <p className="lede">{fm.description}</p>
+      </header>
+
+      <p className="article__meta">
+        <span>Uppdaterad {formatUpdated(fm.updated)}</span>
+        {fm.sources.length ? (
+          <span>
+            <a href="#kallor">{fm.sources.length} källor</a>
+          </span>
+        ) : null}
+      </p>
+
+      <div className="article__body">
+        <div>
+          <div className="prose">
+            <Mdx source={article.body} />
+          </div>
+
+          {comparison ? <ComparisonTemplate comparison={comparison} /> : null}
+
+          {fm.faq.length ? (
+            <section className="faq" aria-labelledby="faq-heading">
+              <h2 id="faq-heading">Vanliga frågor</h2>
+              <dl>
+                {fm.faq.map((item) => (
+                  <div className="faq__item" key={item.q}>
+                    <dt>{item.q}</dt>
+                    <dd>{item.a}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ) : null}
+        </div>
+
+        <aside className="article__aside">
+          <Toc body={article.body} />
+          {fm.partners.length ? <PartnerCta partners={fm.partners} /> : null}
+        </aside>
       </div>
 
-      {comparison ? <ComparisonTable comparison={comparison} /> : null}
-
-      {fm.partners.length ? <PartnerCta partners={fm.partners} /> : null}
-
-      {fm.faq.length ? (
-        <section className="article__faq">
-          <h2>Vanliga frågor</h2>
-          <dl>
-            {fm.faq.map((item) => (
-              <div key={item.q}>
-                <dt>{item.q}</dt>
-                <dd>{item.a}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      ) : null}
-
       {fm.sources.length ? (
-        <section className="article__sources">
-          <h2>Källor</h2>
+        <section className="sources" id="kallor" aria-labelledby="sources-heading">
+          <h2 id="sources-heading">Källor</h2>
+          <p>
+            Siffrorna på den här sidan är hämtade härifrån. Hittar du något som inte
+            stämmer längre — hör av dig, vi rättar och daterar om sidan.
+          </p>
           <ul>
             {fm.sources.map((source) => (
               <li key={source.url}>
@@ -82,62 +114,28 @@ export function ArticleTemplate({
       ) : null}
 
       {related.length ? (
-        <section className="article__related">
-          <h2>Läs vidare</h2>
-          <ul>
+        <section className="related" aria-labelledby="related-heading">
+          <h2 id="related-heading">Läs vidare</h2>
+          <ul className="card-grid">
             {related.map((item) => (
-              <li key={item.frontmatter.slug}>
-                <Link href={`/${item.frontmatter.slug}/`}>{item.frontmatter.title}</Link>
+              <li className="card" key={item.frontmatter.slug}>
+                <h3>
+                  <Link href={`/${item.frontmatter.slug}/`}>{item.frontmatter.title}</Link>
+                </h3>
+                <p>{item.frontmatter.description}</p>
               </li>
             ))}
           </ul>
         </section>
       ) : null}
-    </article>
-  );
-}
 
-function ComparisonTable({ comparison }: { comparison: Comparison }) {
-  return (
-    <section className="comparison" aria-label="Jämförelsetabell">
-      <div className="comparison__scroll">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Alternativ</th>
-              {COMPARISON_COLUMNS.map((column) => (
-                <th key={column.key} scope="col">
-                  {column.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {comparison.rows.map((row) => (
-              <tr key={row.id}>
-                <th scope="row">
-                  {row.partnerId ? (
-                    <Annonslank partner={row.partnerId}>{row.name}</Annonslank>
-                  ) : (
-                    row.name
-                  )}
-                  {row.badge ? <span className="comparison__badge">{row.badge}</span> : null}
-                </th>
-                {COMPARISON_COLUMNS.map((column) => (
-                  <td key={column.key}>{row[column.key]}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <ul className="comparison__verdicts">
-        {comparison.rows.map((row) => (
-          <li key={row.id}>
-            <strong>{row.name}:</strong> {row.verdict}
-          </li>
-        ))}
-      </ul>
-    </section>
+      {LEAD_FORM_HUBS.has(fm.hub) ? (
+        <div className="related">
+          <LeadForm sourcePage={path} />
+        </div>
+      ) : null}
+
+      <NewsletterBand source={path} />
+    </article>
   );
 }

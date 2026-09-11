@@ -13,7 +13,7 @@ export const hubs = [
     intro:
       "Här samlar vi guiderna om att välja bolagsform, registrera företaget och få ordning på F-skatt, moms och försäkring från dag ett.",
     kind: "hub",
-    featured: [],
+    featured: ["starta-aktiebolag"],
   },
   {
     id: "ekonomi",
@@ -25,7 +25,7 @@ export const hubs = [
     intro:
       "Bokföring, bank och skatt är där de flesta nyföretagare fastnar. Guiderna här tar dig igenom valen i den ordning de faktiskt dyker upp.",
     kind: "hub",
-    featured: [],
+    featured: ["basta-bokforingsprogram"],
   },
   {
     id: "affarside",
