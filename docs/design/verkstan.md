@@ -112,21 +112,12 @@ restyle its list as stacked pills).
    24, padding 24): 14 px dot in the hub tint, title Outfit 700 22 px, description 14 px,
    "{n} guider" 13 px 600 muted where n is the real published-article count for the hub
    (hide the line when 0). Mobile: 2 columns, dot 10 px, title 14 px, no description.
-<<<<<<< HEAD
-4. **Mest lästa guider / Jämförelser** — two sand panels side by side (radius 24,
-   padding 32), h2 30 px. Guide rows: white, radius 16, `padding 16px 18px`, title 16 px
-   700 + meta line in accent-strong 12 px 600 "● Uppdaterad {månad} · {first source
-   label}", arrow "→" right. Comparison rows: title + description line (13 px muted) and
-   a peach "Annonslänkar" chip. Until real read counts exist, "Mest lästa" shows the
-   four newest guides; the heading stays.
-=======
 4. **Nya guider / Jämförelser** — two sand panels side by side (radius 24,
    padding 32), h2 30 px. Guide rows: white, radius 16, `padding 16px 18px`, title 16 px
    700 + meta line in accent-strong 12 px 600 "● Uppdaterad {månad} · {first source
    label}", arrow "→" right. Comparison rows: title + description line (13 px muted) and
    a peach "Annonslänkar" chip. The heading is "Nya guider" (the four newest) until
    real read counts exist — a "Mest lästa" heading without a metric is a claim (§4.16).
->>>>>>> origin/main
 5. **Newsletter band** — sun panel (radius 28, `margin 24px 24px 0`, padding 48), two
    columns: h2 36 px "Häng med. Ett mejl i månaden." + copy "Ett mejl i månaden om det
    som ändras för dig som driver eget. Inga nyhetsbrev om nyhetsbrev."; right: the

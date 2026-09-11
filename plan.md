@@ -293,10 +293,7 @@ Plus, generated from `content/legacy-urls.json` and §2.1: every `retire` entry 
 | S6 Affärsidé & affärsplan | #7 | `docs/log/S6.md` |
 | S7 E-handel & hemsida | #8 | `docs/log/S7.md` |
 | S4 Starta företag | #9 | `docs/log/S4.md` |
-<<<<<<< HEAD
-=======
 | D1 Verkstan design | #11 | `docs/log/D1.md` |
->>>>>>> origin/main
 
 ## 10. Backlog
 - Affärsplan-generator (form → PDF), gated by e-mail.
