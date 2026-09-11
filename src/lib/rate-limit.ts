@@ -10,6 +10,14 @@ const buckets = new Map<string, Bucket>();
 
 export function rateLimit(key: string, limit = 5, windowMs = 60_000): boolean {
   const now = Date.now();
+
+  // Keep the map from growing with every IP that ever posted a form.
+  if (buckets.size > 5_000) {
+    for (const [existing, value] of buckets) {
+      if (value.resetAt <= now) buckets.delete(existing);
+    }
+  }
+
   const bucket = buckets.get(key);
 
   if (!bucket || bucket.resetAt <= now) {
