@@ -252,6 +252,7 @@ Plus, generated from `content/legacy-urls.json` and §2.1: every `retire` entry 
 | Phase | PR | Log |
 |---|---|---|
 | (plan) | — | — |
+| O1 Foundation | #2 | `docs/log/O1.md` |
 
 ## 10. Backlog
 - Affärsplan-generator (form → PDF), gated by e-mail.
