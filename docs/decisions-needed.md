@@ -2,4 +2,5 @@
 
 Build sessions append questions here (plan §4.4), commit, push, and end. Anton answers inline and the next run of the phase picks it up.
 
-(none yet)
+- **S6:** `content/legacy-urls.json` still has no entries for `affarsplan`, `affarsplan-exempel` or `affarsplan-mall` (they're only in `todo_unknown_slugs`). Per prompt §S6, S6 used the slugs named in plan §6.3 (`affarsplan`, `affarsplan-exempel` as `legacy: true` articles; `affarsplan-mall` as the lead-magnet slug) and left `content/legacy-urls.json` untouched (outside S6's Owns). Once the real WordPress export lands, confirm these three paths match or correct the slugs and any 301s.
+- **S6:** `content/lead-magnets/**` (`affarsplan-mall.mdx`, `startkostnads-checklista.mdx`) has no loader — `src/lib/content/index.ts` only walks `content/articles/` and `content/pages/`, and `pageFrontmatterSchema` has no field for "gate the page behind the newsletter form, render as printable" (S6 wrote a `gate: newsletter` frontmatter field as a proposal). Both files are content-complete but currently unreachable at `/affarsplan-mall/` and `/startkostnads-checklista/`. Needs a `src/**` change (new loader + a page-shape schema field) — outside lane 2's hard limits, so S6 did not make it. Workaround: no article links to either page yet, so nothing 404s from the site (verified — verify.mjs is clean).
