@@ -20,12 +20,11 @@ import { constants } from "@/lib/tax/constants";
  * the newest check any of them carries — rather than typed here, so it cannot
  * drift from src/lib/tax/constants.ts (which D1 does not touch).
  */
-const VERIFIED_ON =
-  constants
-    .map((item) => item.verifiedOn)
-    .filter((date): date is string => Boolean(date))
-    .sort()
-    .at(-1) ?? "ej kontrollerade";
+const VERIFIED_ON = constants
+  .map((item) => item.verifiedOn)
+  .filter((date): date is string => Boolean(date))
+  .sort()
+  .at(-1);
 
 export function ToolShell({
   tool,
@@ -94,7 +93,10 @@ export function ToolShell({
       </p>
 
       <p className="tool__footnote">
-        Källor: Skatteverket · Bolagsverket · Verksamt.se — hämtade {VERIFIED_ON}
+        Källor: Skatteverket · Bolagsverket · Verksamt.se
+        {VERIFIED_ON
+          ? ` — hämtade ${VERIFIED_ON}`
+          : " — siffrorna är ännu inte kontrollerade mot myndigheternas egna sidor, se källrutan"}
       </p>
     </div>
   );

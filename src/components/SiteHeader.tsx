@@ -49,7 +49,13 @@ export function SiteHeader({ nav }: { nav: Nav }) {
         </nav>
 
         <div className="site-header__actions">
-          <Link className="btn btn--dark btn--small site-header__cta" href="/nyhetsbrev/">
+          {/* /nyhetsbrev/ is S8's page and does not exist yet; without this the
+              router prefetches it on every view and logs a 404. */}
+          <Link
+            className="btn btn--dark btn--small site-header__cta"
+            href="/nyhetsbrev/"
+            prefetch={false}
+          >
             Nyhetsbrev
           </Link>
           <button
@@ -80,7 +86,7 @@ export function SiteHeader({ nav }: { nav: Nav }) {
                 </li>
               ))}
               <li>
-                <Link href="/nyhetsbrev/" onClick={() => setOpen(false)}>
+                <Link href="/nyhetsbrev/" onClick={() => setOpen(false)} prefetch={false}>
                   Nyhetsbrev
                 </Link>
               </li>
