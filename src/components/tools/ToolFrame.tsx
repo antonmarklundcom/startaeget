@@ -13,6 +13,7 @@ export function ToolFrame(props: {
   steps?: React.ReactNode;
   result?: React.ReactNode;
   partners?: React.ReactNode;
+  progress?: React.ReactNode;
   disclaimer?: string;
 }) {
   return <ToolShell {...props} />;

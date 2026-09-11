@@ -16,20 +16,22 @@ export function PageTemplate({ page }: { page: Page }) {
   ];
 
   return (
-    <article className="container article">
+    <article className="container article" data-hub="sand">
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <Breadcrumbs crumbs={crumbs} />
 
-      <header className="article__head">
+      <header className="head-panel">
+        <p className="chip-row">
+          <span className="chip chip--source">
+            Uppdaterad {fm.updated.slice(0, 7)}
+            {fm.sources.length ? ` · ${fm.sources.length} källor` : ""}
+          </span>
+        </p>
         <h1>{fm.title}</h1>
         <p className="lede">{fm.description}</p>
       </header>
 
-      <p className="article__meta">
-        <span>Uppdaterad {formatUpdated(fm.updated)}</span>
-      </p>
-
-      <div className="prose">
+      <div className="prose" style={{ marginBlockStart: "var(--space-4)" }}>
         <Mdx source={page.body} />
       </div>
 
@@ -41,7 +43,8 @@ export function PageTemplate({ page }: { page: Page }) {
               <li key={source.url}>
                 <a href={source.url} rel="noopener" target="_blank">
                   {source.label}
-                </a>
+                </a>{" "}
+                · hämtad {formatUpdated(fm.updated)}
               </li>
             ))}
           </ul>
@@ -49,7 +52,7 @@ export function PageTemplate({ page }: { page: Page }) {
       ) : null}
 
       {fm.leadForm ? (
-        <div className="related">
+        <div className="related" id="byra">
           <LeadForm sourcePage={path} />
         </div>
       ) : null}

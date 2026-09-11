@@ -3,21 +3,24 @@ import type { Article } from "@/lib/content";
 import type { Comparison } from "@/lib/content/schema";
 import { getHub } from "@/lib/content/site";
 import { getArticleBySlug } from "@/lib/content";
+import { getPartners, isAffiliate, goHref } from "@/lib/affiliates";
 import { Mdx } from "@/components/Mdx";
 import { Toc } from "@/components/Toc";
-import { PartnerCta } from "@/components/PartnerCta";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { LeadForm } from "@/components/LeadForm";
-import { NewsletterBand } from "@/components/SiteFooter";
+import { NewsletterStrip } from "@/components/SiteFooter";
 import { ComparisonTemplate } from "./ComparisonTemplate";
 import { articleJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/jsonld";
 import { formatUpdated } from "@/lib/site";
 
 /**
- * The article surface. Everything on it is driven by frontmatter, so a content
- * phase produces a finished page by writing MDX and nothing else (plan §5.2) —
- * including which pages get the byrå lead form.
+ * The article surface (docs/design/verkstan.md §2). Everything on it is driven
+ * by frontmatter, so a content phase produces a finished page by writing MDX and
+ * nothing else — including which pages get the byrå lead form.
+ *
+ * The head panel wears the hub's tint through data-hub, which is also what
+ * colours the related pills and the "Vårt val" card further down.
  */
 
 /** Hubs where the reader is choosing an accountant, per plan §6.1 and §6.2. */
@@ -42,28 +45,34 @@ export function ArticleTemplate({
     .map((slug) => getArticleBySlug(slug))
     .filter((a): a is Article => a !== null && !a.frontmatter.draft);
 
+  const pick = getPartners(fm.partners)[0] ?? null;
+  const hasLeadForm = LEAD_FORM_HUBS.has(fm.hub);
+  const comparisonHasPartner = comparison?.rows.some((row) => row.partnerId) ?? false;
+  const marksAds = fm.partners.length > 0 || comparisonHasPartner;
+  const priceCheck = comparison?.rows.find((row) => row.sourceDate)?.sourceDate;
+
   return (
-    <article className="container article">
+    <article className="container article" data-hub={fm.hub}>
       <JsonLd data={articleJsonLd(fm)} />
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <JsonLd data={faqJsonLd(fm.faq)} />
 
       <Breadcrumbs crumbs={crumbs} />
 
-      <header className="article__head">
-        {hub ? <p className="eyebrow">{hub.h1}</p> : null}
+      <header className="head-panel">
+        <p className="chip-row">
+          <span className="chip chip--source">
+            {priceCheck
+              ? `Priser kontrollerade ${priceCheck}`
+              : `Uppdaterad ${fm.updated.slice(0, 7)} · ${fm.sources.length} källor`}
+          </span>
+          {marksAds ? (
+            <span className="chip chip--ad">Innehåller annonslänkar</span>
+          ) : null}
+        </p>
         <h1>{fm.title}</h1>
         <p className="lede">{fm.description}</p>
       </header>
-
-      <p className="article__meta">
-        <span>Uppdaterad {formatUpdated(fm.updated)}</span>
-        {fm.sources.length ? (
-          <span>
-            <a href="#kallor">{fm.sources.length} källor</a>
-          </span>
-        ) : null}
-      </p>
 
       <div className="article__body">
         <div>
@@ -88,54 +97,80 @@ export function ArticleTemplate({
           ) : null}
         </div>
 
-        <aside className="article__aside">
+        <aside className="article__aside no-print">
           <Toc body={article.body} />
-          {fm.partners.length ? <PartnerCta partners={fm.partners} /> : null}
+
+          {pick ? (
+            <div className="aside-card aside-card--mint">
+              <h2>Vårt val</h2>
+              <p>{pick.name}</p>
+              <a
+                className="btn btn--dark btn--small btn--block"
+                href={goHref(pick.id)}
+                rel={isAffiliate(pick) ? "sponsored nofollow noopener" : "nofollow noopener"}
+                target="_blank"
+              >
+                {pick.cta}
+              </a>
+              <p className="chip chip--ad" style={{ marginBlockStart: "var(--space-1)" }}>
+                Annonslänk
+              </p>
+            </div>
+          ) : null}
+
+          <div className="aside-card aside-card--dark">
+            <h2>Få offert från en redovisningsbyrå</h2>
+            <p>Tre byråer svarar inom två dagar. Gratis och utan bindning.</p>
+            <a
+              className="btn btn--sun btn--small btn--block"
+              href={hasLeadForm ? "#byra" : "/redovisningsbyra/"}
+            >
+              Få offert
+            </a>
+          </div>
         </aside>
       </div>
 
       {fm.sources.length ? (
         <section className="sources" id="kallor" aria-labelledby="sources-heading">
           <h2 id="sources-heading">Källor</h2>
-          <p>
-            Siffrorna på den här sidan är hämtade härifrån. Hittar du något som inte
-            stämmer längre — hör av dig, vi rättar och daterar om sidan.
-          </p>
           <ul>
             {fm.sources.map((source) => (
               <li key={source.url}>
                 <a href={source.url} rel="noopener" target="_blank">
                   {source.label}
-                </a>
+                </a>{" "}
+                · hämtad {formatUpdated(fm.updated)}
               </li>
             ))}
           </ul>
+          <p className="sources__note">
+            Hittar du något som inte stämmer längre — hör av dig, vi rättar och daterar om
+            sidan.
+          </p>
         </section>
       ) : null}
 
       {related.length ? (
         <section className="related" aria-labelledby="related-heading">
-          <h2 id="related-heading">Läs vidare</h2>
-          <ul className="card-grid">
+          <h2 id="related-heading">Relaterade guider</h2>
+          <ul className="related-pills">
             {related.map((item) => (
-              <li className="card" key={item.frontmatter.slug}>
-                <h3>
-                  <Link href={`/${item.frontmatter.slug}/`}>{item.frontmatter.title}</Link>
-                </h3>
-                <p>{item.frontmatter.description}</p>
+              <li key={item.frontmatter.slug} data-hub={item.frontmatter.hub}>
+                <Link href={`/${item.frontmatter.slug}/`}>{item.frontmatter.title}</Link>
               </li>
             ))}
           </ul>
         </section>
       ) : null}
 
-      {LEAD_FORM_HUBS.has(fm.hub) ? (
-        <div className="related">
+      {hasLeadForm ? (
+        <div className="related" id="byra">
           <LeadForm sourcePage={path} />
         </div>
       ) : null}
 
-      <NewsletterBand source={path} />
+      <NewsletterStrip source={path} />
     </article>
   );
 }

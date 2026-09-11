@@ -5,18 +5,20 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { NewsletterBand } from "@/components/SiteFooter";
 import { breadcrumbJsonLd } from "@/lib/jsonld";
-import { tools } from "@/lib/content/site";
+import { tools, getHub } from "@/lib/content/site";
 import { formatUpdated } from "@/lib/site";
 
 /**
- * A hub is an SEO surface in its own right (plan §3): intro, the one guide we
- * would hand a beginner first, a tool card, then everything else in the hub.
+ * A hub is an SEO surface in its own right (plan §3), and in "Verkstan" it is
+ * also the room: the head panel carries the hub's tint, and so do the dots on
+ * its cards. /jamfor/ is the same template with the comparison marking on.
  */
 export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[] }) {
   const crumbs = [
     { name: "Start", path: "/" },
     { name: hub.h1, path: hub.path },
   ];
+  const isComparisons = hub.kind === "comparisons";
 
   // `featured` names slugs; a slug a content phase has not written yet simply
   // drops out, so the hub never links to a page that does not exist.
@@ -26,40 +28,60 @@ export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[
   const rest = articles.filter((a) => !featured.includes(a));
 
   return (
-    <div className="container hub">
+    <div className="container hub" data-hub={hub.id}>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <Breadcrumbs crumbs={crumbs} />
 
-      <p className="eyebrow">Guidesamling</p>
-      <h1>{hub.h1}</h1>
-      <p className="hub__intro">{hub.intro}</p>
+      <header className="head-panel">
+        {articles.length ? (
+          <p className="chip-row">
+            <span className="chip">
+              {articles.length}{" "}
+              {isComparisons
+                ? articles.length === 1
+                  ? "jämförelse"
+                  : "jämförelser"
+                : articles.length === 1
+                  ? "guide"
+                  : "guider"}
+            </span>
+            {isComparisons ? (
+              <span className="chip chip--ad">Innehåller annonslänkar</span>
+            ) : null}
+          </p>
+        ) : null}
+        <h1>{hub.h1}</h1>
+        <p className="lede">{hub.intro}</p>
+      </header>
 
       {featured.map((article) => (
         <section className="hub__featured" key={article.frontmatter.slug}>
           <p className="eyebrow">Börja här</p>
-          <h2>
-            <Link href={`/${article.frontmatter.slug}/`}>{article.frontmatter.title}</Link>
-          </h2>
+          <h2>{article.frontmatter.title}</h2>
           <p>{article.frontmatter.description}</p>
-          <Link className="btn btn--primary" href={`/${article.frontmatter.slug}/`}>
+          <Link className="btn btn--dark" href={`/${article.frontmatter.slug}/`}>
             Läs guiden
           </Link>
         </section>
       ))}
 
       {rest.length ? (
-        <ul className="card-grid">
+        <ul className="guide-cards guide-cards--3">
           {rest.map((article) => (
-            <li className="card" key={article.frontmatter.slug}>
-              <h2>
-                <Link href={`/${article.frontmatter.slug}/`}>
-                  {article.frontmatter.title}
-                </Link>
-              </h2>
-              <p>{article.frontmatter.description}</p>
-              <p className="card__meta">
-                Uppdaterad {formatUpdated(article.frontmatter.updated)}
-              </p>
+            <li key={article.frontmatter.slug}>
+              <Link
+                className="guide-card"
+                data-hub={getHub(article.frontmatter.hub)?.id ?? hub.id}
+                href={`/${article.frontmatter.slug}/`}
+              >
+                <span className="guide-card__dot" aria-hidden="true" />
+                <h2 className="guide-card__title">{article.frontmatter.title}</h2>
+                <p className="guide-card__desc">{article.frontmatter.description}</p>
+                <span className="guide-card__meta">
+                  {isComparisons ? "Annonslänkar · " : ""}
+                  Uppdaterad {formatUpdated(article.frontmatter.updated)}
+                </span>
+              </Link>
             </li>
           ))}
         </ul>
@@ -73,17 +95,20 @@ export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[
         </p>
       ) : null}
 
-      <section className="section no-print" aria-labelledby="hub-tools-heading">
+      <section className="hub__section no-print" aria-labelledby="hub-tools-heading">
         <div className="section__head">
           <h2 id="hub-tools-heading">Räkna själv innan du bestämmer dig</h2>
         </div>
-        <ul className="card-grid card-grid--3">
+        <ul className="tool-cards tool-cards--compact">
           {tools.map((tool) => (
-            <li className="card" key={tool.id}>
-              <h3>
-                <Link href={tool.path}>{tool.title}</Link>
-              </h3>
-              <p>{tool.description}</p>
+            <li key={tool.id}>
+              <Link className="tool-card" data-tint={tool.tint} href={tool.path}>
+                <h3 className="tool-card__title">{tool.title}</h3>
+                <span className="tool-card__foot">
+                  <span className="tool-card__minutes">{tool.minutes} minuter</span>
+                  <span className="tool-card__go">Starta</span>
+                </span>
+              </Link>
             </li>
           ))}
         </ul>

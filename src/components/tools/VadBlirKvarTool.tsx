@@ -159,10 +159,12 @@ export function VadBlirKvarSteps() {
       </p>
 
       <div className="tool__actions">
-        <button className="btn btn--ghost" onClick={reset} type="button">
+        <button className="btn btn--ghost btn--small" onClick={reset} type="button">
           Återställ
         </button>
       </div>
+
+      <ToolSources keys={SOURCE_KEYS} />
     </div>
   );
 }
@@ -211,20 +213,22 @@ function Ledger({ result }: { result: FormResult }) {
 }
 
 export function VadBlirKvarResult() {
-  const { input, result } = useTool();
+  const { result } = useTool();
 
   return (
     <>
       <div className="result__verdict">
-        <span className="result__label">Kvar till dig, per år</span>
+        <p className="result__label">Kvar till dig, per år</p>
         <div className="versus">
           <Column result={result.enskild} winner={result.better === "enskild"} />
           <Column result={result.ab} winner={result.better === "ab"} />
         </div>
-        <span className="result__estimate">Uppskattning, inte rådgivning</span>
+        <span className="result__estimate">
+          Uppskattning, inte rådgivning · Källa Skatteverket, Bolagsverket
+        </span>
       </div>
 
-      <p className="q__help" data-testid="difference">
+      <p className="result__explain" data-testid="difference">
         {result.surplus === 0
           ? "Med de siffrorna finns inget överskott att fördela — kostnaderna är lika stora som omsättningen eller större."
           : result.better === "lika"
@@ -239,8 +243,10 @@ export function VadBlirKvarResult() {
         </p>
       ) : null}
 
-      <div style={{ display: "grid", gap: "var(--space-3)", marginBlockStart: "var(--space-3)" }}>
+      <div className="result__box">
         <Ledger result={result.enskild} />
+      </div>
+      <div className="result__box">
         <Ledger result={result.ab} />
       </div>
 
@@ -259,8 +265,19 @@ export function VadBlirKvarResult() {
         och hur du vill ta ut pengarna, inte bara skatten.
       </p>
 
-      <ToolSources keys={SOURCE_KEYS} />
+    </>
+  );
+}
 
+export function VadBlirKvarPartners() {
+  const { input, result } = useTool();
+
+  return (
+    <>
+      <PartnerCta
+        heading="Passar ditt svar"
+        partners={["bokio", "fortnox", "visma-eekonomi", "wint"]}
+      />
       <EmailResult
         payload={{
           input,
@@ -270,17 +287,6 @@ export function VadBlirKvarResult() {
         }}
         summary={`Vad blir kvar på ${formatSek(result.surplus)} i överskott: ${formatSek(result.enskild.net)} som enskild firma, ${formatSek(result.ab.net)} som aktiebolag`}
         tool="vad-blir-kvar"
-      />
-    </>
-  );
-}
-
-export function VadBlirKvarPartners() {
-  return (
-    <>
-      <PartnerCta
-        heading="Håll koll på siffrorna löpande"
-        partners={["bokio", "fortnox", "visma-eekonomi", "wint"]}
       />
       <LeadForm sourcePage="/verktyg/vad-blir-kvar/" />
     </>

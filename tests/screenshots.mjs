@@ -27,7 +27,13 @@ const paths = args.filter((a) => a.startsWith("/"));
 
 const ROUTES = paths.length
   ? paths
-  : ["/", "/starta-foretag/", "/starta-aktiebolag/", "/basta-bokforingsprogram/", "/verktyg/"];
+  : [
+      "/",
+      "/starta-foretag/",
+      "/starta-aktiebolag/",
+      "/basta-bokforingsprogram/",
+      "/verktyg/bolagsform/",
+    ];
 
 const VIEWPORTS = [
   { name: "mobile", width: 375, height: 812 },

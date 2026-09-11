@@ -1,73 +1,106 @@
 import type { Comparison } from "@/lib/content/schema";
-import { COMPARISON_COLUMNS } from "@/lib/content/schema";
-import { Annonslank } from "@/components/Annonslank";
+import { getPartner, isAffiliate, goHref } from "@/lib/affiliates";
 
 /**
- * The money page's table (plan §5.2). Five fixed columns, one verdict per row,
- * a "bäst för" badge, and — because a sponsored row must be recognisable as one
- * — the partner name itself is the marked Annonslänk.
+ * The money page (docs/design/verkstan.md §2). One white card per row rather
+ * than a table: a five-column table cannot be read on a phone, and the phone is
+ * where most of this traffic lands. The data shape in content/comparisons/*.ts
+ * is untouched — S5 owns it — only the rendering changed.
  *
- * Wide on purpose: the table scrolls inside its own box so the page never does.
+ * A sponsored row is recognisable as one: the CTA carries the peach Annonslänk
+ * chip, unconditionally, whether or not the programme is enrolled yet.
  */
+
+/** The badge cycles through four tints so neighbouring rows never collide. */
+const BADGE_TINTS = ["mint", "sky", "sun", "lilac"] as const;
+
 export function ComparisonTemplate({ comparison }: { comparison: Comparison }) {
   return (
-    <section className="comparison" aria-labelledby="comparison-heading">
+    <section className="cmp" aria-labelledby="comparison-heading">
       <h2 id="comparison-heading">Jämförelsen i korthet</h2>
 
-      <div className="comparison__scroll">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Alternativ</th>
-              {COMPARISON_COLUMNS.map((column) => (
-                <th key={column.key} scope="col">
-                  {column.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {comparison.rows.map((row) => (
-              <tr key={row.id}>
-                <th scope="row">
-                  {row.partnerId ? (
-                    <Annonslank partner={row.partnerId}>{row.name}</Annonslank>
-                  ) : (
-                    row.name
-                  )}
-                  {row.badge ? (
-                    <>
-                      <br />
-                      <span className="comparison__badge">{row.badge}</span>
-                    </>
-                  ) : null}
-                </th>
-                {COMPARISON_COLUMNS.map((column) => (
-                  <td key={column.key}>{row[column.key]}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <p className="cmp__head" aria-hidden="true">
+        <span>Alternativ</span>
+        <span>Pris</span>
+        <span>Omdöme</span>
+        <span>Till</span>
+      </p>
 
-      <div className="comparison__verdicts">
-        {comparison.rows.map((row) => (
-          <div className="comparison__verdict" key={row.id}>
-            <h3>
-              {row.name}
-              {row.badge ? ` — ${row.badge}` : ""}
-            </h3>
-            <p>{row.verdict}</p>
-            {row.sourceUrl ? (
-              <a className="comparison__source" href={row.sourceUrl} rel="noopener" target="_blank">
-                Pris kontrollerat hos {row.name}
-                {row.sourceDate ? ` ${row.sourceDate}` : ""}
-              </a>
-            ) : null}
-          </div>
-        ))}
-      </div>
+      <ul className="cmp__rows">
+        {comparison.rows.map((row, index) => {
+          const partner = row.partnerId ? getPartner(row.partnerId) : null;
+          return (
+            <li className="cmp__row" key={row.id}>
+              <div>
+                <h3 className="cmp__name">{row.name}</h3>
+                {row.badge ? (
+                  <span
+                    className="chip chip--tint cmp__badge"
+                    data-tint={BADGE_TINTS[index % BADGE_TINTS.length]}
+                  >
+                    {row.badge}
+                  </span>
+                ) : null}
+              </div>
+
+              <div>
+                <p className="cmp__price">{row.price}</p>
+                <p className="cmp__free">{row.freeTier}</p>
+              </div>
+
+              <div>
+                <p className="cmp__verdict">{row.verdict}</p>
+                <p className="cmp__best">
+                  <strong>Bäst för</strong> {row.bestFor}
+                </p>
+                <p className="cmp__traits">
+                  Styrka {row.highlight} · Svaghet {row.drawback}
+                </p>
+                {row.sourceUrl ? (
+                  <a
+                    className="cmp__source"
+                    href={row.sourceUrl}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    Pris kontrollerat hos {row.name}
+                    {row.sourceDate ? ` ${row.sourceDate}` : ""}
+                  </a>
+                ) : null}
+              </div>
+
+              <div className="cmp__actions">
+                {partner ? (
+                  <>
+                    <a
+                      className="btn btn--dark btn--small"
+                      href={goHref(partner.id)}
+                      rel={
+                        isAffiliate(partner)
+                          ? "sponsored nofollow noopener"
+                          : "nofollow noopener"
+                      }
+                      target="_blank"
+                    >
+                      Testa
+                    </a>
+                    <span className="chip chip--ad">Annonslänk</span>
+                  </>
+                ) : row.sourceUrl ? (
+                  <a
+                    className="btn btn--ghost btn--small"
+                    href={row.sourceUrl}
+                    rel="nofollow noopener"
+                    target="_blank"
+                  >
+                    Läs mer
+                  </a>
+                ) : null}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }

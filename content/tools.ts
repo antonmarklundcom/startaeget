@@ -10,6 +10,8 @@ export const tools = [
     intro:
       "Åtta frågor om vinst, risk, delägare och hur du vill ta ut pengar — sedan ett svar med motiveringen utskriven.",
     status: "live",
+    tint: "mint",
+    minutes: 3,
   },
   {
     id: "startkostnad",
@@ -21,6 +23,8 @@ export const tools = [
     intro:
       "Alla poster du faktiskt betalar vid start, med rimliga standardvärden du kan ändra rad för rad.",
     status: "live",
+    tint: "sun",
+    minutes: 5,
   },
   {
     id: "vad-blir-kvar",
@@ -32,5 +36,7 @@ export const tools = [
     intro:
       "Fyll i omsättning och kostnader och se hur mycket som blir kvar efter skatt och avgifter i respektive bolagsform.",
     status: "live",
+    tint: "sky",
+    minutes: 2,
   },
 ] as const;
