@@ -1,0 +1,86 @@
+[
+  {
+    "slot": "ehandel-hero",
+    "prompt": "Small home-based e-commerce packing station, neat stack of cardboard boxes and a roll of tape, warm natural daylight, editorial photo style, no visible text or logos",
+    "alt": "Litet lager med paket som packas för leverans till e-handelskunder",
+    "page": "/ehandel/"
+  },
+  {
+    "slot": "dropshipping-sverige-hero",
+    "prompt": "Person at a desk unboxing a single parcel next to an open laptop showing a generic online store, bright modern home office, editorial photo style, no visible text or logos",
+    "alt": "Person som packar upp ett paket från en leverantör vid ett skrivbord med laptop",
+    "page": "/dropshipping-sverige/"
+  },
+  {
+    "slot": "webshop-hero",
+    "prompt": "Laptop on a desk showing a generic online store product page, one wrapped parcel ready to ship beside it, clean Scandinavian interior, editorial photo style, no visible text or logos",
+    "alt": "Bärbar dator som visar en webshops produktsida bredvid ett paket redo att skickas",
+    "page": "/webshop/"
+  },
+  {
+    "slot": "konverteringsoptimering-hero",
+    "prompt": "Close-up of a hand holding a phone at an online checkout screen showing a clear total price, soft daylight, editorial photo style, no visible text or logos",
+    "alt": "Kund handlar i en webshop och ser totalpriset tydligt innan kassan",
+    "page": "/konverteringsoptimering/"
+  },
+  {
+    "slot": "starta-webshop-hero",
+    "prompt": "Person packing an order box next to an open laptop with a generic storefront, small home warehouse setting, editorial photo style, no visible text or logos",
+    "alt": "Person som packar en orderlåda bredvid en bärbar dator med en öppen webshop",
+    "page": "/starta-webshop/"
+  },
+  {
+    "slot": "basta-e-handelsplattform-hero",
+    "prompt": "Person packing a shipping box beside a laptop displaying a generic e-commerce storefront comparison, bright workspace, editorial photo style, no visible text or logos",
+    "alt": "Person som packar paket bredvid en laptop med en öppen webshop på skärmen",
+    "page": "/basta-e-handelsplattform/"
+  },
+  {
+    "slot": "skapa-hemsida-med-wordpress-hero",
+    "prompt": "Founder building a website in a generic content-management admin panel on a laptop, cozy home-office desk, editorial photo style, no visible text or logos",
+    "alt": "Företagare som bygger sin hemsida i WordPress på en bärbar dator",
+    "page": "/skapa-hemsida-med-wordpress/"
+  },
+  {
+    "slot": "wordpress-teman-hero",
+    "prompt": "Two generic website theme previews shown side by side on a laptop screen, person comparing them, bright desk setting, editorial photo style, no visible text or logos",
+    "alt": "Person jämför två WordPress-teman i förhandsvisning på en bärbar dator",
+    "page": "/wordpress-teman/"
+  },
+  {
+    "slot": "basta-webbhotellet-hero",
+    "prompt": "Small server rack beside a laptop showing a generic hosting control panel dashboard, clean modern office, editorial photo style, no visible text or logos",
+    "alt": "Serverrack och en bärbar dator som visar en webbhotellskontrollpanel",
+    "page": "/basta-webbhotellet/"
+  },
+  {
+    "slot": "webbhotell-hero",
+    "prompt": "Founder looking at generic server icons and technical specification sheet on a laptop screen, focused expression, bright office, editorial photo style, no visible text or logos",
+    "alt": "Företagare tittar på serverikoner och tekniska specifikationer för ett webbhotell på skärmen",
+    "page": "/webbhotell/"
+  },
+  {
+    "slot": "doman-hero",
+    "prompt": "Person thinking over several domain name ideas written on a whiteboard next to a laptop, bright workspace, editorial photo style, no visible text or logos",
+    "alt": "Person som funderar över olika domännamn på en whiteboard bredvid en laptop",
+    "page": "/doman/"
+  },
+  {
+    "slot": "registrera-doman-hero",
+    "prompt": "Person registering a domain name for their business on a laptop, close-up over the shoulder, bright home-office desk, editorial photo style, no visible text or logos",
+    "alt": "Person som registrerar en domän för sitt företag på en bärbar dator",
+    "page": "/registrera-doman/"
+  },
+  {
+    "slot": "hemsida-for-foretag-kostnad-hero",
+    "prompt": "Founder calculating website costs with a notebook and calculator app open beside a laptop, tidy desk, editorial photo style, no visible text or logos",
+    "alt": "Företagare räknar på kostnader för en ny hemsida vid datorn",
+    "page": "/hemsida-for-foretag-kostnad/"
+  },
+  {
+    "slot": "wordpress-eller-hemsidebyggare-hero",
+    "prompt": "Founder comparing two generic website-building interfaces side by side on a laptop screen, bright modern desk, editorial photo style, no visible text or logos",
+    "alt": "Företagare som jämför en hemsidebyggare och WordPress på sin dator",
+    "page": "/wordpress-eller-hemsidebyggare/"
+  }
+]
