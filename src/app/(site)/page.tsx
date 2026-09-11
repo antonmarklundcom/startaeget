@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { home, hubs, tools } from "@/lib/content/site";
 import { getPublishedArticles, getComparisonArticles } from "@/lib/content";
 import { NewsletterBand } from "@/components/SiteFooter";
+import { HeroToolSlot } from "@/components/home/HeroToolSlot";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -45,30 +46,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* O3 mounts the live first question of Bolagsformsväljaren here. */}
-          <div className="tool-slot" id="hero-tool-slot" data-slot="bolagsform-q1">
-            <p className="tool-slot__label">Fråga 1 av 8</p>
-            <p className="tool-slot__question">
-              Hur mycket räknar du med att företaget går med i vinst det första året?
-            </p>
-            <div className="tool-slot__options">
-              <Link href="/verktyg/bolagsform/?vinst=under-200">
-                <span>Under 200 000 kr</span>
-                <span aria-hidden="true">→</span>
-              </Link>
-              <Link href="/verktyg/bolagsform/?vinst=200-500">
-                <span>200 000–500 000 kr</span>
-                <span aria-hidden="true">→</span>
-              </Link>
-              <Link href="/verktyg/bolagsform/?vinst=over-500">
-                <span>Över 500 000 kr</span>
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-            <p className="tool-slot__foot">
-              Åtta frågor, ett svar med motiveringen utskriven. Inget konto, inget mejl.
-            </p>
-          </div>
+          <HeroToolSlot />
         </div>
       </section>
 

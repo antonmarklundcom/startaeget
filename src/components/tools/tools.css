@@ -1,0 +1,619 @@
+/**
+ * The tool layer (O3). Lives here rather than in src/styles/components.css
+ * because src/styles/** is O2's to own (plan §4.9) — this file is inside O3's
+ * Owns block and is imported once, by ToolFrame.
+ *
+ * It adds only what the three tools need on top of O2's .tool* classes and
+ * consumes the same tokens, so the calculators read as part of the same product.
+ */
+
+/* --- Questions ------------------------------------------------------------ */
+
+.q {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.q__progress {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.q__bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-surface-sunk);
+  overflow: hidden;
+}
+
+.q__bar span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 200ms ease;
+}
+
+.q__title {
+  font-family: var(--font-display, inherit);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  margin: 0;
+}
+
+.q__help {
+  color: var(--color-ink-soft);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.q__options {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.q__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2);
+  text-align: left;
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease;
+}
+
+.q__option:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.q__option[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+.q__option-mark {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-line-strong);
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  color: var(--color-accent-contrast);
+}
+
+.q__option[aria-pressed="true"] .q__option-mark {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.q__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-block-start: var(--space-1);
+}
+
+/* --- Answered summary ----------------------------------------------------- */
+
+.answers {
+  display: grid;
+  gap: var(--space-1);
+  margin-block-start: var(--space-3);
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid var(--color-line);
+}
+
+.answers__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.answers__row button {
+  font: inherit;
+  color: var(--color-accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  flex: none;
+}
+
+.answers__q {
+  color: var(--color-ink-muted);
+}
+
+/* --- Result --------------------------------------------------------------- */
+
+.result__verdict {
+  display: grid;
+  gap: var(--space-1);
+  padding-block-end: var(--space-2);
+  border-block-end: 1px solid var(--color-line);
+}
+
+.result__label {
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+}
+
+.result__form {
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  margin: 0;
+  color: var(--color-accent);
+}
+
+.result__figure {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.result__estimate {
+  display: inline-block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.15rem var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--color-warning-soft);
+  border: 1px solid var(--color-warning-line);
+  color: var(--color-ink);
+}
+
+.result__why {
+  margin-block-start: var(--space-2);
+  display: grid;
+  gap: var(--space-1);
+  padding-inline-start: 1.1rem;
+}
+
+.result__why li {
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+}
+
+.result__steps {
+  margin-block-start: var(--space-3);
+  display: grid;
+  gap: var(--space-1);
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+}
+
+.result__steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.result__steps li::before {
+  content: counter(step);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.result__tie {
+  font-size: var(--text-sm);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-warning-soft);
+  border: 1px solid var(--color-warning-line);
+}
+
+/* --- Money table (tools 2 and 3) ----------------------------------------- */
+
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger caption {
+  text-align: left;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  padding-block-end: var(--space-1);
+}
+
+.ledger th,
+.ledger td {
+  padding: 0.45rem 0;
+  border-block-end: 1px solid var(--color-line);
+  text-align: left;
+  font-size: var(--text-sm);
+  vertical-align: baseline;
+}
+
+.ledger td:last-child,
+.ledger th:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ledger tr:last-child th,
+.ledger tr:last-child td {
+  border-block-end: 0;
+}
+
+.ledger__total th,
+.ledger__total td {
+  border-block-start: 2px solid var(--color-ink);
+  font-weight: 700;
+  font-size: var(--text-base);
+  padding-block-start: var(--space-1);
+}
+
+.ledger__out td:last-child {
+  color: var(--color-ink-soft);
+}
+
+.ledger__help {
+  display: block;
+  color: var(--color-ink-muted);
+  font-size: 0.75rem;
+  margin-block-start: 0.15rem;
+  max-width: 44ch;
+  white-space: normal;
+}
+
+/* --- Editable cost lines (tool 2) ---------------------------------------- */
+
+.lines {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-2);
+  align-items: center;
+  padding-block: var(--space-1);
+  border-block-end: 1px solid var(--color-line);
+}
+
+.line:last-child {
+  border-block-end: 0;
+}
+
+.line__label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  font-size: var(--text-base);
+}
+
+.line__kind {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-muted);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0 0.3rem;
+}
+
+.line__help {
+  grid-column: 1 / -1;
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.line__input {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.line__input input {
+  width: 7rem;
+  padding: 0.4rem var(--space-1);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+}
+
+.line__input input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.line__unit {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+.line__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+}
+
+/* --- Number inputs (tool 3) ---------------------------------------------- */
+
+.inputs {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inputs__field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.inputs__field label {
+  font-weight: 600;
+}
+
+.inputs__field input {
+  padding: 0.6rem var(--space-1);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+}
+
+.inputs__field input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.inputs__hint {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+}
+
+/* --- Side-by-side comparison (tool 3) ----------------------------------- */
+
+.versus {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.versus__col {
+  padding: var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.versus__col--winner {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+.versus__name {
+  font-size: var(--text-base);
+  margin: 0 0 0.2rem;
+}
+
+.versus__net {
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.versus__rate {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  margin: 0.2rem 0 0;
+}
+
+.versus__badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+  margin-block-start: var(--space-1);
+}
+
+@media (min-width: 30rem) {
+  .versus {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- Assumptions and sources -------------------------------------------- */
+
+.assumptions {
+  margin-block-start: var(--space-3);
+}
+
+.assumptions summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+.assumptions ul {
+  margin-block-start: var(--space-1);
+  display: grid;
+  gap: 0.4rem;
+  padding-inline-start: 1.1rem;
+}
+
+.assumptions li {
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+}
+
+.sources-box {
+  margin-block-start: var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.sources-box h2,
+.sources-box h3 {
+  font-size: var(--text-base);
+  margin: 0 0 var(--space-1);
+}
+
+.sources-box ul {
+  display: grid;
+  gap: 0.4rem;
+  padding-inline-start: 1.1rem;
+}
+
+.sources-box li {
+  font-size: var(--text-sm);
+}
+
+.sources-box__flag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a5a00;
+  background: var(--color-warning-soft);
+  border: 1px solid var(--color-warning-line);
+  border-radius: var(--radius-sm);
+  padding: 0 0.3rem;
+  margin-inline-start: 0.3rem;
+  white-space: nowrap;
+}
+
+.sources-box__note {
+  display: block;
+  color: var(--color-ink-muted);
+  font-size: 0.75rem;
+  margin-block-start: 0.15rem;
+}
+
+/* --- E-mail my result ---------------------------------------------------- */
+
+.email-result {
+  margin-block-start: var(--space-3);
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid var(--color-line);
+}
+
+.email-result h2,
+.email-result h3 {
+  font-size: var(--text-base);
+  margin: 0 0 0.3rem;
+}
+
+.email-result p {
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+  margin: 0 0 var(--space-1);
+}
+
+.email-result__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.email-result__row input[type="email"] {
+  flex: 1 1 12rem;
+  min-width: 0;
+  padding: 0.5rem var(--space-1);
+  font: inherit;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.email-result__consent {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  margin-block-start: var(--space-1);
+}
+
+/* --- Share / reset row --------------------------------------------------- */
+
+.tool__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-block-start: var(--space-3);
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid var(--color-line);
+}
+
+.tool__actions .btn {
+  flex: 0 0 auto;
+}
+
+@media print {
+  .tool__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .q,
+  .tool__actions,
+  .email-result {
+    display: none;
+  }
+}
+
+/* Screen-reader-only label text. O2's stylesheet has no such utility and
+   src/styles/** is O2's to own, so the tools carry their own. */
+.tool-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
