@@ -13,7 +13,7 @@ export const hubs = [
     intro:
       "Här samlar vi guiderna om att välja bolagsform, registrera företaget och få ordning på F-skatt, moms och försäkring från dag ett.",
     kind: "hub",
-    featured: ["starta-aktiebolag"],
+    featured: ["starta-eget-foretag"],
     tint: "mint",
   },
   {
@@ -39,7 +39,7 @@ export const hubs = [
     intro:
       "Från idélistor och validering till en affärsplan du kan visa banken. Mallar och exempel ingår.",
     kind: "hub",
-    featured: [],
+    featured: ["affarsideer"],
     tint: "sun",
   },
   {
@@ -52,7 +52,7 @@ export const hubs = [
     intro:
       "Guider för dig som säljer på nätet: plattformsval, uppstart, bokföring och de misstag som kostar mest i början.",
     kind: "hub",
-    featured: [],
+    featured: ["ehandel"],
     tint: "peach",
   },
   {
@@ -65,7 +65,7 @@ export const hubs = [
     intro:
       "Att få upp en hemsida är enkelt. Att välja rätt domän, webbhotell och verktyg från början sparar dig ett byte senare.",
     kind: "hub",
-    featured: [],
+    featured: ["skapa-hemsida-med-wordpress"],
     tint: "lilac",
   },
   {
@@ -78,7 +78,7 @@ export const hubs = [
     intro:
       "De första kunderna kommer sällan från annonser. Här är kanalerna i den ordning de brukar löna sig för ett nystartat företag.",
     kind: "hub",
-    featured: [],
+    featured: ["marknadsforing-nyforetagare"],
     tint: "rose",
   },
   {
@@ -91,7 +91,7 @@ export const hubs = [
     intro:
       "Kortare texter mellan guiderna: vad som ändrats hos myndigheterna, vad vi har skrivit om senast och vad som är på väg.",
     kind: "hub",
-    featured: [],
+    featured: ["nystartad-sajt"],
     tint: "sand",
   },
   {
@@ -104,7 +104,7 @@ export const hubs = [
     intro:
       "Varje jämförelse bygger på leverantörernas egna prissidor, med datum för när vi kontrollerade dem senast.",
     kind: "comparisons",
-    featured: [],
+    featured: ["basta-bokforingsprogram"],
     tint: "lilac",
   },
 ] as const;
