@@ -1,0 +1,56 @@
+[
+  {
+    "slot": "marknadsforing-nyforetagare-hero",
+    "prompt": "Editorial photo, natural light: a founder at a home desk with a notebook sketching out marketing channels (a simple hand-drawn list or funnel, no readable brand logos), laptop open beside it. Calm, planning mood, not a busy agency office.",
+    "alt": "Företagare som planerar sin marknadsföring vid ett skrivbord med anteckningar om kanaler och budget",
+    "page": "/marknadsforing-nyforetagare/"
+  },
+  {
+    "slot": "seo-guide-hero",
+    "prompt": "Editorial photo: a small business owner looking at a laptop screen showing a generic search-results-style page layout (no real brand names or readable logos), focused expression, home-office or small-shop setting.",
+    "alt": "Företagare tittar på sökresultat och sidstatistik på en datorskärm",
+    "page": "/seo-guide/"
+  },
+  {
+    "slot": "google-ads-hero",
+    "prompt": "Editorial photo: a person at a desk setting up an online ad campaign on a laptop, a small notebook with a simple budget calculation beside the keyboard, warm daylight, no visible brand logos or real platform UI.",
+    "alt": "Person som sätter upp en Google Ads-kampanj på en laptop vid ett skrivbord",
+    "page": "/google-ads/"
+  },
+  {
+    "slot": "sociala-medier-hero",
+    "prompt": "Editorial photo: a small business owner planning a content calendar on a tablet or notebook, sticky notes with days of the week, relaxed home-office setting, no visible app logos or readable UI.",
+    "alt": "Företagare planerar innehåll för sociala medier i en kalender på en surfplatta",
+    "page": "/sociala-medier/"
+  },
+  {
+    "slot": "instagram-marknadsforing-hero",
+    "prompt": "Editorial photo: a small business owner photographing a product with a smartphone in good natural light, for social media content, no visible app icons or logos.",
+    "alt": "Företagare fotograferar sina produkter för att posta på Instagram från mobilen",
+    "page": "/instagram-marknadsforing/"
+  },
+  {
+    "slot": "google-foretagsprofil-hero",
+    "prompt": "Editorial photo: a shopkeeper or service-business owner looking at a smartphone showing a generic local-business listing layout (opening hours, star rating, no real brand names), storefront visible softly in the background.",
+    "alt": "Handlare som visar sin Google Företagsprofil med öppettider och recensioner på en mobilskärm",
+    "page": "/google-foretagsprofil/"
+  },
+  {
+    "slot": "nyhetsbrev-for-smaforetag-hero",
+    "prompt": "Editorial photo: a small shop or café owner writing a short newsletter on a laptop at the counter, warm and personal mood, no visible brand logos or readable screen content.",
+    "alt": "Företagare skriver ett nyhetsbrev på en laptop vid disken i sin butik",
+    "page": "/nyhetsbrev-for-smaforetag/"
+  },
+  {
+    "slot": "smma-hero",
+    "prompt": "Editorial photo: a person at a desk with two monitors showing generic social media post drafts and a simple ad-performance chart (no real brand names or platform logos), focused, professional home-office setting.",
+    "alt": "Person som planerar innehåll och annonser för en kunds sociala medier på en laptop",
+    "page": "/smma/"
+  },
+  {
+    "slot": "ai-byra-hero",
+    "prompt": "Editorial photo: a person at a desk with multiple monitors showing generic automation-flow diagrams and a simple chat-interface mockup (abstract boxes and arrows, no real product names or logos), concentrated, modern home-office setting.",
+    "alt": "Person som arbetar vid en dator med flera skärmar som visar automationsflöden och chattgränssnitt",
+    "page": "/ai-byra/"
+  }
+]
