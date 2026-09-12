@@ -37,9 +37,9 @@ jobs:
         run: npm test
 
   screenshots:
-    name: screenshots
+    name: screenshots + e2e
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     if: github.event_name == 'pull_request'
     env:
       SITE_URL: http://127.0.0.1:4322
@@ -60,6 +60,14 @@ jobs:
 
       - name: Screenshot pass
         run: node tests/screenshots.mjs
+
+      # Both e2e passes reuse the .next the screenshot pass just built, so the
+      # browser and the build are paid for once.
+      - name: Tools e2e
+        run: node tests/tools.e2e.mjs --fast
+
+      - name: Admin e2e
+        run: node tests/admin.e2e.mjs --fast
 
       - name: Upload screenshots
         if: always()

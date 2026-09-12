@@ -20,6 +20,19 @@ export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[
   ];
   const isComparisons = hub.kind === "comparisons";
 
+  // The chip counts what the room actually holds. /jamfor/ holds comparisons and
+  // /blogg/ holds posts; every other room holds guides. Derived from the
+  // articles rather than hard-coded per hub, so a new room labels itself.
+  const countNoun = (() => {
+    const one = articles.length === 1;
+    if (isComparisons) return one ? "jämförelse" : "jämförelser";
+    // "inlägg" is a neuter noun: same in the singular and the plural.
+    if (articles.length && articles.every((a) => a.frontmatter.type === "post")) {
+      return "inlägg";
+    }
+    return one ? "guide" : "guider";
+  })();
+
   // `featured` names slugs; a slug a content phase has not written yet simply
   // drops out, so the hub never links to a page that does not exist.
   const featured = hub.featured
@@ -36,14 +49,7 @@ export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[
         {articles.length ? (
           <p className="chip-row">
             <span className="chip">
-              {articles.length}{" "}
-              {isComparisons
-                ? articles.length === 1
-                  ? "jämförelse"
-                  : "jämförelser"
-                : articles.length === 1
-                  ? "guide"
-                  : "guider"}
+              {articles.length} {countNoun}
             </span>
             {isComparisons ? (
               <span className="chip chip--ad">Innehåller annonslänkar</span>

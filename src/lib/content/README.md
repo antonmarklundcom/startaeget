@@ -20,9 +20,11 @@ Content error in content/articles/starta-aktiebolag.mdx
 | `content/articles/**/*.mdx` | every guide, comparison, list and template page | lane 2 (S4–S8) |
 | `content/comparisons/<slug>.ts` | the table rows for a `type: comparison` article | S5 |
 | `content/pages/*.mdx` | `/om-oss/`, `/kontakt/`, the legal pages | S8 |
-| `content/hubs.ts` | the seven hub pages | O2 |
+| `content/lead-magnets/*.mdx` | the printable magnets behind the newsletter gate | S6 |
+| `content/articles/blogg/*.mdx` | blog posts, written through `/admin/` | B1, then whoever writes |
+| `content/hubs.ts` | the eight hub pages | O2, D1, B1 (`blogg`), S9 (`featured`) |
 | `content/home.ts` | home page copy | O2 |
-| `content/nav.ts` | header and footer navigation | O2, S9 |
+| `content/nav.ts` | header and footer navigation | O2, D1, B1 |
 | `content/tools.ts` | the three tools | O3 |
 | `content/affiliates.ts` | partner registry behind `/go/<id>/` | O1, then §7 enrolment |
 | `content/legacy-urls.json` | WordPress paths and what happens to each | O1, Anton |
@@ -33,8 +35,8 @@ Content error in content/articles/starta-aktiebolag.mdx
 ```yaml
 title: Starta aktiebolag                 # ≤ 60 chars, no year
 slug: starta-aktiebolag                  # must equal the file name
-hub: starta-foretag                      # starta-foretag | ekonomi | affarside | e-handel | hemsida | marknadsforing
-type: guide                              # guide | comparison | list | template
+hub: starta-foretag                      # starta-foretag | ekonomi | affarside | e-handel | hemsida | marknadsforing | blogg
+type: guide                              # guide | comparison | list | template | post
 description: …                           # 50–155 chars
 intent: "registrera ab steg för steg"    # the one search intent this page owns
 updated: 2025-09-11                      # YYYY-MM-DD
@@ -42,7 +44,7 @@ sources:                                 # ≥ 1 for guide and comparison
   - label: Bolagsverket — Registrera aktiebolag
     url: https://bolagsverket.se/…
 partners: [bokio, fortnox]               # ids from content/affiliates.ts
-related: []                              # the link pass (S9) fills this
+related: [enskild-firma, f-skatt]        # 2–4 slugs; filled by the link pass (S9)
 faq:                                     # optional → FAQPage JSON-LD
   - q: …
     a: …
@@ -94,6 +96,17 @@ const comparison = {
 export default comparison;
 ```
 
+## Lead magnets
+
+`content/lead-magnets/*.mdx` uses the page frontmatter above plus one extra
+field:
+
+```yaml
+gate: newsletter    # optional — hides the body behind the newsletter form
+```
+
+They resolve at `/<slug>/` like any page, and `getLeadMagnets()` lists them.
+
 ## Components available inside MDX
 
 Only what `src/components/Mdx.tsx` registers — anything else is a build error:
@@ -104,6 +117,17 @@ Only what `src/components/Mdx.tsx` registers — anything else is a build error:
 - `<PartnerCta partners={["bokio", "fortnox"]} />` — a CTA block. The article
   template already renders one from the `partners` frontmatter; use this only
   when a second block belongs mid-article.
+- `<Callout title="…" variant="warning">…</Callout>` — a boxed aside. `variant`
+  is optional.
+- `<Checklist items={["…", "…"]} />` — a checklist. **The items render as plain
+  text: markdown inside them is not parsed**, so a link has to live in the prose
+  around the list, not in an item.
+- `<Stat k="bolagsverket-ab-nyregistrering" label="…" />` — one figure straight
+  from `src/lib/tax/constants.ts`, with its source link and, until the constant
+  is verified, the "verifiera" marking. Prefer this over typing a number.
+- `<StatRow items={[{ value: "…", label: "…", note: "…" }]} />` — a row of
+  literal figures, for anything that is not a tax constant.
+- `<Verifiera />` — marks a single number we could not check against its source.
 
 Need another component? It is a `src/**` change, which lane 2 may not make
 (plan §4.7) — write the wish into `docs/decisions-needed.md` and work around it.
@@ -119,6 +143,7 @@ import {
   getComparisonArticles,
   getAllPages,
   getPageBySlug,
+  getLeadMagnets,        // content/lead-magnets/*.mdx, as Page objects
   getComparison,         // async — reads content/comparisons/<slug>.ts
   getFlatEntries,        // everything reachable at /<slug>/
   getFlatEntry,
