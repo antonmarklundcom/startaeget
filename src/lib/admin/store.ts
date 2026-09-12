@@ -49,6 +49,8 @@ export type WriteResult = {
   mode: StoreMode;
   /** Short commit sha, github mode only. */
   commit?: string;
+  /** The file's blob sha after the write, so the editor can keep saving. */
+  sha?: string;
   /** What went wrong outside validation (a GitHub 409, a disk error). */
   error?: string;
   slug?: string;
@@ -317,7 +319,13 @@ class GithubStore implements AdminStore {
       const sha = input.sha ?? (await this.api.readFile(file))?.sha;
       const outcome = await this.api.putFile(file, contents, `admin: ${frontmatter.title}`, sha);
       return outcome.ok
-        ? { ok: true, mode: this.mode, validation: EMPTY_VALIDATION, commit: outcome.commit }
+        ? {
+            ok: true,
+            mode: this.mode,
+            validation: EMPTY_VALIDATION,
+            commit: outcome.commit,
+            sha: outcome.sha,
+          }
         : { ok: false, mode: this.mode, validation: EMPTY_VALIDATION, error: outcome.error };
     });
   }

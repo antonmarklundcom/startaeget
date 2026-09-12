@@ -18,7 +18,9 @@ export function githubConfig(): GithubConfig | null {
 
 export type GithubFile = { contents: string; sha: string };
 export type GithubEntry = { name: string; path: string; type: string };
-export type WriteOutcome = { ok: true; commit?: string } | { ok: false; error: string };
+export type WriteOutcome =
+  | { ok: true; commit?: string; sha?: string }
+  | { ok: false; error: string };
 
 const CACHE_TTL_MS = 60_000;
 const cache = new Map<string, { at: number; value: unknown }>();
@@ -144,9 +146,14 @@ export class GithubApi {
       }
       return { ok: false, error: `GitHub svarade ${response.status}: ${detail}` };
     }
-    const body = (await response.json().catch(() => ({}))) as { commit?: { sha?: string } };
+    const body = (await response.json().catch(() => ({}))) as {
+      commit?: { sha?: string };
+      content?: { sha?: string };
+    };
     clearGithubCache();
-    return { ok: true, commit: body.commit?.sha?.slice(0, 7) };
+    // The file's *new* blob sha: the editor keeps it so a second save in the
+    // same page does not arrive with the sha it loaded and get a 409.
+    return { ok: true, commit: body.commit?.sha?.slice(0, 7), sha: body.content?.sha };
   }
 }
 

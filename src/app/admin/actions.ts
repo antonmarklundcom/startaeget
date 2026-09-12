@@ -57,6 +57,8 @@ export type SaveState = {
   message?: string;
   errors?: string[];
   warnings?: string[];
+  /** The blob sha after a github write; the editor saves again against it. */
+  sha?: string;
 };
 
 function readFrontmatter(formData: FormData): Record<string, unknown> {
@@ -111,6 +113,7 @@ function toState(result: WriteResult, saved: string): SaveState {
     message: saved,
     warnings: result.validation.warnings,
     errors: [],
+    sha: result.sha,
   };
 }
 

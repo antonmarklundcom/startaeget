@@ -279,6 +279,17 @@ describe("the github backend", () => {
     expect(Buffer.from(String(put?.body?.content), "base64").toString("utf8")).toBe("innehåll");
   });
 
+  it("hands back the file's new blob sha so the next save is not stale", async () => {
+    stubFetch({
+      contents: {
+        status: 200,
+        body: { commit: { sha: "abcdef1234567890" }, content: { sha: "nyblobsha" } },
+      },
+    });
+    const outcome = await githubApi()?.putFile("content/articles/blogg/x.mdx", "a", "admin: X", "gammal");
+    expect(outcome).toEqual({ ok: true, commit: "abcdef1", sha: "nyblobsha" });
+  });
+
   it("reports GitHub's own message when the sha is stale", async () => {
     stubFetch({ contents: { status: 409, body: { message: "is at 111 but expected 222" } } });
     const api = githubApi();

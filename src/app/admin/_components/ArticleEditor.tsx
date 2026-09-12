@@ -69,6 +69,13 @@ export function ArticleEditor({
   const [pickerOpen, setPickerOpen] = useState(false);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
+  /**
+   * The blob sha this form saves against: the one the page loaded until a
+   * github save returns a newer one. Without it a second save in the same page
+   * would arrive with a stale sha and get GitHub's 409.
+   */
+  const sha = state.sha ?? article.sha;
+
   /** Inserts at the caret, which is the only reason the toolbar needs JS. */
   function insert(snippet: string, selectionOffset = snippet.length) {
     const textarea = bodyRef.current;
@@ -90,7 +97,7 @@ export function ArticleEditor({
     <>
       <form className="adm-form adm-editor" action={action}>
         <input type="hidden" name="existing-slug" value={mode === "edit" ? article.slug : ""} />
-        {article.sha ? <input type="hidden" name="sha" value={article.sha} /> : null}
+        {sha ? <input type="hidden" name="sha" value={sha} /> : null}
         <input type="hidden" name="legacy" value={article.legacy ? "true" : "false"} />
 
         <div className="adm-grid">
