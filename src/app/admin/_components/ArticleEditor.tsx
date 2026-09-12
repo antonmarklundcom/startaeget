@@ -328,7 +328,12 @@ export function ArticleEditor({
         </fieldset>
 
         <div className="adm-actions">
-          <button type="submit" className="adm-btn adm-btn--primary" disabled={pending}>
+          <button
+            type="submit"
+            className="adm-btn adm-btn--primary"
+            disabled={pending}
+            data-testid="save"
+          >
             {pending ? "Sparar …" : mode === "create" ? "Skapa posten" : "Spara"}
           </button>
           <button
@@ -336,22 +341,28 @@ export function ArticleEditor({
             className="adm-btn"
             formAction={previewFormAction}
             disabled={previewPending}
+            data-testid="preview"
           >
             {previewPending ? "Förhandsgranskar …" : "Förhandsgranska"}
           </button>
         </div>
 
-        {justCreated ? <p className="adm-chip adm-chip--ok">Posten är skapad.</p> : null}
+        {justCreated ? (
+          <p className="adm-chip adm-chip--ok" data-testid="created">
+            Posten är skapad.
+          </p>
+        ) : null}
         {state.message ? (
           <p
             className={state.ok ? "adm-chip adm-chip--ok" : "adm-chip adm-chip--error"}
             role="status"
+            data-testid="save-state"
           >
             {state.message}
           </p>
         ) : null}
         {state.errors?.length ? (
-          <ul className="adm-errors" role="alert">
+          <ul className="adm-errors" role="alert" data-testid="save-errors">
             {state.errors.map((error) => (
               <li key={error}>{error}</li>
             ))}

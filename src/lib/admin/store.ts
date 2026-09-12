@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { articleFrontmatterSchema, type ArticleFrontmatter, type Hub } from "@/lib/content/schema";
 import { toFileContents, validateArticle, type ValidationResult } from "./validate";
+import { GithubApi, githubApi, githubConfig } from "./github";
 
 /**
  * The only module in the admin that knows whether an article lives on disk or in
@@ -64,6 +65,18 @@ export interface AdminStore {
 }
 
 export const ARTICLES_PREFIX = "content/articles";
+/** The other two folders that claim a flat `/<slug>/`, so a slug check sees them. */
+const PAGE_DIRS = ["content/pages", "content/lead-magnets"];
+
+const EMPTY_VALIDATION: ValidationResult = { ok: true, errors: [], warnings: [] };
+
+function invalidPath(mode: StoreMode): WriteResult {
+  return {
+    ok: false,
+    mode,
+    validation: { ok: false, errors: ["Ogiltig adress."], warnings: [] },
+  };
+}
 
 export function articlePath(hub: string, slug: string): string {
   return `${ARTICLES_PREFIX}/${hub}/${slug}.mdx`;
@@ -159,8 +172,7 @@ class LocalStore implements AdminStore {
   private async taken(): Promise<Map<string, string>> {
     const taken = new Map<string, string>();
     for (const item of await this.listArticles()) taken.set(item.slug, item.file);
-    const pagesDirs = ["content/pages", "content/lead-magnets"];
-    for (const dir of pagesDirs) {
+    for (const dir of PAGE_DIRS) {
       for (const file of await this.mdxFiles(dir)) {
         const raw = await fs.readFile(path.join(this.root, file), "utf8");
         const slug = matter(raw).data?.slug;
@@ -214,7 +226,7 @@ class LocalStore implements AdminStore {
       const absolute = path.join(this.root, file);
       await fs.mkdir(path.dirname(absolute), { recursive: true });
       await fs.writeFile(absolute, contents, "utf8");
-      return { ok: true, mode: this.mode, validation: { ok: true, errors: [], warnings: [] } };
+      return { ok: true, mode: this.mode, validation: EMPTY_VALIDATION };
     });
   }
 
@@ -235,18 +247,15 @@ class LocalStore implements AdminStore {
   }
 
   async deleteArticle(hub: string, slug: string): Promise<WriteResult> {
-    const empty: ValidationResult = { ok: true, errors: [], warnings: [] };
-    if (!safeSegment(hub) || !safeSegment(slug)) {
-      return { ok: false, mode: this.mode, validation: { ...empty, ok: false, errors: ["Ogiltig adress."] } };
-    }
+    if (!safeSegment(hub) || !safeSegment(slug)) return invalidPath(this.mode);
     try {
       await fs.unlink(path.join(this.root, articlePath(hub, slug)));
-      return { ok: true, mode: this.mode, validation: empty, slug, hub };
+      return { ok: true, mode: this.mode, validation: EMPTY_VALIDATION, slug, hub };
     } catch (error) {
       return {
         ok: false,
         mode: this.mode,
-        validation: empty,
+        validation: EMPTY_VALIDATION,
         error: error instanceof Error ? error.message : String(error),
       };
     }
@@ -255,110 +264,36 @@ class LocalStore implements AdminStore {
 
 // --- github -----------------------------------------------------------------
 
-type GithubConfig = { token: string; repo: string; branch: string };
-
-export function githubConfig(): GithubConfig | null {
-  const token = process.env.GITHUB_TOKEN?.trim();
-  const repo = process.env.GITHUB_REPO?.trim();
-  if (!token || !repo) return null;
-  return { token, repo, branch: process.env.GITHUB_BRANCH?.trim() || "main" };
-}
-
-type CacheEntry = { at: number; value: unknown };
-const CACHE_TTL_MS = 60_000;
-const cache = new Map<string, CacheEntry>();
-
-function cached<T>(key: string): T | null {
-  const entry = cache.get(key);
-  if (!entry || Date.now() - entry.at > CACHE_TTL_MS) return null;
-  return entry.value as T;
-}
-
-function putCache(key: string, value: unknown): void {
-  cache.set(key, { at: Date.now(), value });
-}
-
-export function clearStoreCache(): void {
-  cache.clear();
-}
-
 /**
- * The GitHub Contents API over plain `fetch` — no Octokit (plan §5.5). Reads
- * come from the branch, not from the deployed build, so an edit that is
- * committed but not yet rebuilt is what the editor shows.
+ * The git-backed backend. List and read come from the branch, not from the
+ * deployed build, so an edit that is committed but not yet rebuilt is what the
+ * editor shows (plan §5.5). All HTTP lives in `github.ts`.
  */
 class GithubStore implements AdminStore {
   readonly mode = "github" as const;
 
-  constructor(private config: GithubConfig) {}
-
-  private async api(url: string, init?: RequestInit): Promise<Response> {
-    return fetch(`https://api.github.com${url}`, {
-      ...init,
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${this.config.token}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-        "User-Agent": "startaegetforetag-admin",
-        ...(init?.body ? { "Content-Type": "application/json" } : {}),
-        ...init?.headers,
-      },
-      cache: "no-store",
-    });
-  }
-
-  private contentsUrl(file: string): string {
-    return `/repos/${this.config.repo}/contents/${file}?ref=${encodeURIComponent(this.config.branch)}`;
-  }
-
-  private async listDir(dir: string): Promise<{ name: string; path: string; type: string }[]> {
-    const response = await this.api(this.contentsUrl(dir));
-    if (!response.ok) return [];
-    const body = (await response.json()) as { name: string; path: string; type: string }[];
-    return Array.isArray(body) ? body : [];
-  }
+  constructor(private api: GithubApi) {}
 
   async listArticles(): Promise<ArticleSummary[]> {
-    const key = `list:${this.config.repo}:${this.config.branch}`;
-    const hit = cached<ArticleSummary[]>(key);
-    if (hit) return hit;
-
     const out: ArticleSummary[] = [];
-    for (const hubDir of await this.listDir(ARTICLES_PREFIX)) {
+    for (const hubDir of await this.api.listDir(ARTICLES_PREFIX)) {
       if (hubDir.type !== "dir") continue;
-      for (const entry of await this.listDir(hubDir.path)) {
+      for (const entry of await this.api.listDir(hubDir.path)) {
         if (entry.type !== "file" || !entry.name.endsWith(".mdx")) continue;
         if (entry.name.startsWith("_")) continue;
-        const file = await this.readFile(entry.path);
+        const file = await this.api.readFile(entry.path);
         if (!file) continue;
         const article = parseFile(entry.path, file.contents, file.sha);
         if (article) out.push(summarise(entry.path, article.frontmatter, file.sha));
       }
     }
-    const sorted = sortArticles(out);
-    putCache(key, sorted);
-    return sorted;
-  }
-
-  private async readFile(file: string): Promise<{ contents: string; sha: string } | null> {
-    const key = `file:${this.config.repo}:${this.config.branch}:${file}`;
-    const hit = cached<{ contents: string; sha: string }>(key);
-    if (hit) return hit;
-
-    const response = await this.api(this.contentsUrl(file));
-    if (!response.ok) return null;
-    const body = (await response.json()) as { content?: string; sha?: string; encoding?: string };
-    if (!body.content || !body.sha) return null;
-    const contents = Buffer.from(body.content, "base64").toString("utf8");
-    const value = { contents, sha: body.sha };
-    putCache(key, value);
-    return value;
+    return sortArticles(out);
   }
 
   async readArticle(hub: string, slug: string): Promise<StoredArticle | null> {
     if (!safeSegment(hub) || !safeSegment(slug)) return null;
     const file = articlePath(hub, slug);
-    const found = await this.readFile(file);
+    const found = await this.api.readFile(file);
     if (!found) return null;
     return parseFile(file, found.contents, found.sha);
   }
@@ -366,10 +301,10 @@ class GithubStore implements AdminStore {
   private async taken(): Promise<Map<string, string>> {
     const taken = new Map<string, string>();
     for (const item of await this.listArticles()) taken.set(item.slug, item.file);
-    for (const dir of ["content/pages", "content/lead-magnets"]) {
-      for (const entry of await this.listDir(dir)) {
+    for (const dir of PAGE_DIRS) {
+      for (const entry of await this.api.listDir(dir)) {
         if (entry.type !== "file" || !entry.name.endsWith(".mdx")) continue;
-        const file = await this.readFile(entry.path);
+        const file = await this.api.readFile(entry.path);
         const slug = file ? matter(file.contents).data?.slug : null;
         if (typeof slug === "string") taken.set(slug, entry.path);
       }
@@ -379,42 +314,22 @@ class GithubStore implements AdminStore {
 
   async writeArticle(input: WriteInput): Promise<WriteResult> {
     return guardedWrite(this, input, await this.taken(), async (file, contents, frontmatter) => {
-      // The sha the editor loaded, or the current one: GitHub refuses a PUT with
-      // a stale sha, which is exactly the lost-update protection we want.
-      const sha = input.sha ?? (await this.readFile(file))?.sha;
-      const response = await this.api(`/repos/${this.config.repo}/contents/${file}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          message: `admin: ${frontmatter.title}`,
-          content: Buffer.from(contents, "utf8").toString("base64"),
-          branch: this.config.branch,
-          ...(sha ? { sha } : {}),
-        }),
-      });
-      const empty: ValidationResult = { ok: true, errors: [], warnings: [] };
-      if (!response.ok) {
-        return { ok: false, mode: this.mode, validation: empty, error: await githubError(response) };
-      }
-      const body = (await response.json()) as { commit?: { sha?: string } };
-      clearStoreCache();
-      return {
-        ok: true,
-        mode: this.mode,
-        validation: empty,
-        commit: body.commit?.sha?.slice(0, 7),
-      };
+      const sha = input.sha ?? (await this.api.readFile(file))?.sha;
+      const outcome = await this.api.putFile(file, contents, `admin: ${frontmatter.title}`, sha);
+      return outcome.ok
+        ? { ok: true, mode: this.mode, validation: EMPTY_VALIDATION, commit: outcome.commit }
+        : { ok: false, mode: this.mode, validation: EMPTY_VALIDATION, error: outcome.error };
     });
   }
 
   async createArticle(input: WriteInput): Promise<WriteResult> {
-    const existing = await this.readArticle(input.hub, input.slug);
-    if (existing) {
+    if (await this.readArticle(input.hub, input.slug)) {
       return {
         ok: false,
         mode: this.mode,
         validation: {
           ok: false,
-          errors: [`${articlePath(input.hub, input.slug)} finns redan i ${this.config.repo}.`],
+          errors: [`${articlePath(input.hub, input.slug)} finns redan i ${this.api.repo}.`],
           warnings: [],
         },
       };
@@ -423,49 +338,31 @@ class GithubStore implements AdminStore {
   }
 
   async deleteArticle(hub: string, slug: string, sha?: string): Promise<WriteResult> {
-    const empty: ValidationResult = { ok: true, errors: [], warnings: [] };
     if (!safeSegment(hub) || !safeSegment(slug)) {
-      return { ok: false, mode: this.mode, validation: { ...empty, ok: false, errors: ["Ogiltig adress."] } };
+      return invalidPath(this.mode);
     }
     const file = articlePath(hub, slug);
-    const blob = sha ?? (await this.readFile(file))?.sha;
+    const blob = sha ?? (await this.api.readFile(file))?.sha;
     if (!blob) {
-      return { ok: false, mode: this.mode, validation: empty, error: `${file} finns inte.` };
+      return {
+        ok: false,
+        mode: this.mode,
+        validation: EMPTY_VALIDATION,
+        error: `${file} finns inte.`,
+      };
     }
-    const response = await this.api(`/repos/${this.config.repo}/contents/${file}`, {
-      method: "DELETE",
-      body: JSON.stringify({
-        message: `admin: ta bort ${slug}`,
-        sha: blob,
-        branch: this.config.branch,
-      }),
-    });
-    if (!response.ok) {
-      return { ok: false, mode: this.mode, validation: empty, error: await githubError(response) };
-    }
-    const body = (await response.json()) as { commit?: { sha?: string } };
-    clearStoreCache();
-    return {
-      ok: true,
-      mode: this.mode,
-      validation: empty,
-      commit: body.commit?.sha?.slice(0, 7),
-      slug,
-      hub,
-    };
+    const outcome = await this.api.deleteFile(file, `admin: ta bort ${slug}`, blob);
+    return outcome.ok
+      ? {
+          ok: true,
+          mode: this.mode,
+          validation: EMPTY_VALIDATION,
+          commit: outcome.commit,
+          slug,
+          hub,
+        }
+      : { ok: false, mode: this.mode, validation: EMPTY_VALIDATION, error: outcome.error };
   }
-}
-
-async function githubError(response: Response): Promise<string> {
-  const text = await response.text().catch(() => "");
-  let detail = text.slice(0, 300);
-  try {
-    const parsed = JSON.parse(text) as { message?: string };
-    if (parsed.message) detail = parsed.message;
-  } catch {
-    /* the body was not JSON; the raw text is the best we have */
-  }
-  return `GitHub svarade ${response.status}: ${detail}`;
 }
 
 function sortArticles(items: ArticleSummary[]): ArticleSummary[] {
@@ -479,12 +376,13 @@ function sortArticles(items: ArticleSummary[]): ArticleSummary[] {
  * token is never a stop (plan §4.5): the admin still runs, and says where it saved.
  */
 export function getStore(): AdminStore {
-  const config = githubConfig();
-  return config ? new GithubStore(config) : new LocalStore();
+  const api = githubApi();
+  return api ? new GithubStore(api) : new LocalStore();
 }
 
 export function storeMode(): StoreMode {
   return githubConfig() ? "github" : "local";
 }
 
+export { githubConfig };
 export type { Hub };
