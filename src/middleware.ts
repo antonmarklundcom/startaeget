@@ -13,7 +13,11 @@ import { SESSION_COOKIE, verifySessionTokenEdge } from "@/lib/admin/session-edge
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/admin/login")) return NextResponse.next();
+  // Exactly the login screen, not every path that starts with those letters:
+  // "/admin/login-historik/" must not slip past the guard.
+  if (pathname === "/admin/login" || pathname === "/admin/login/") {
+    return NextResponse.next();
+  }
 
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   if (await verifySessionTokenEdge(token)) {
