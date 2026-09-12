@@ -320,7 +320,7 @@ export function StartkostnadPartners() {
         summary={`Startkostnad för ${FORM_NAMES[selection.form]}: ${formatSek(result.once)} vid start, ${formatSek(result.monthly)} per månad`}
         tool="startkostnad"
       />
-      <LeadForm sourcePage="/verktyg/startkostnad/" />
+      <LeadForm collapsible sourcePage="/verktyg/startkostnad/" />
       <p className="q__help no-print">
         Räknar du på {FORM_NAMES[selection.form].toLowerCase()}? Posterna med{" "}
         {LINE_ITEMS.filter((item) => item.range).length} marknadsspann är de som varierar

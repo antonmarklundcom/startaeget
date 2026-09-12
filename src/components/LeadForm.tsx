@@ -5,9 +5,21 @@ import { useState } from "react";
 /**
  * "Få offert från en redovisningsbyrå" (plan §1.2 item 2). Posts to /api/lead,
  * which writes our own row first and forwards to VenderCRM when configured.
+ *
+ * `collapsible` renders the card as a one-line offer with a button instead of
+ * the full form. The tools that always show a result (startkostnad,
+ * vad-blir-kvar) use it, so a six-field form does not sit under the answer
+ * before the visitor has asked for anything — the form opens on the click.
  */
-export function LeadForm({ sourcePage }: { sourcePage: string }) {
+export function LeadForm({
+  sourcePage,
+  collapsible = false,
+}: {
+  sourcePage: string;
+  collapsible?: boolean;
+}) {
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [open, setOpen] = useState(!collapsible);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,6 +60,15 @@ export function LeadForm({ sourcePage }: { sourcePage: string }) {
         <p className="form__status" role="status">
           Tack! Vi har tagit emot din förfrågan och hör av oss inom ett par arbetsdagar.
         </p>
+      ) : !open ? (
+        <button
+          type="button"
+          className="btn btn--dark"
+          aria-expanded={false}
+          onClick={() => setOpen(true)}
+        >
+          Få offert
+        </button>
       ) : (
         <form className="form" onSubmit={onSubmit}>
           <div className="form__field">
