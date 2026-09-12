@@ -61,6 +61,13 @@ export type SaveState = {
   sha?: string;
 };
 
+/** Today, unless the admin picked a date other than the one the form loaded. */
+function updatedOnSave(submitted: string, loaded: string): string {
+  const today = new Date().toISOString().slice(0, 10);
+  if (!submitted || submitted === loaded) return today;
+  return submitted;
+}
+
 function readFrontmatter(formData: FormData): Record<string, unknown> {
   const text = (name: string): string => String(formData.get(name) ?? "").trim();
 
@@ -87,8 +94,9 @@ function readFrontmatter(formData: FormData): Record<string, unknown> {
     type: text("type"),
     description: text("description"),
     intent: text("intent"),
-    // `updated` defaults to today on every save (plan §5.5).
-    updated: text("updated") || new Date().toISOString().slice(0, 10),
+    // `updated` defaults to today on save (plan §5.5): a date the admin did not
+    // touch means "I just changed this page", which is what the line says.
+    updated: updatedOnSave(text("updated"), text("loaded-updated")),
     sources,
     partners: formData.getAll("partners").map(String),
     related: formData.getAll("related").map(String),

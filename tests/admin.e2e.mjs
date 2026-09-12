@@ -103,6 +103,18 @@ function check(condition, message) {
   if (!condition) problems.push(message);
 }
 
+/**
+ * A save is finished when the file on disk says so. The status chip cannot be
+ * waited on twice in a row — the previous save's message is still in the DOM.
+ */
+async function waitForFile(predicate, message) {
+  for (let attempt = 0; attempt < 60; attempt += 1) {
+    if (fs.existsSync(FILE) && predicate(matter(fs.readFileSync(FILE, "utf8")))) return;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  problems.push(message);
+}
+
 if (fs.existsSync(FILE)) fs.rmSync(FILE);
 
 try {
@@ -215,9 +227,25 @@ try {
   await page.waitForSelector('[data-testid="save-state"]', { timeout: 20_000 });
   const saved = (await page.locator('[data-testid="save-state"]').textContent()) ?? "";
   check(/Sparat lokalt/.test(saved), `the save message was "${saved}"`);
-  check(
-    matter(fs.readFileSync(FILE, "utf8")).data.title === "Testpost, redigerad av e2e",
+  await waitForFile(
+    (file) => file.data.title === "Testpost, redigerad av e2e",
     "the edited title did not reach the file",
+  );
+
+  // An untouched date field bumps to today, per plan §5.5.
+  const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+  await page.fill('input[name="updated"]', yesterday);
+  await page.click('[data-testid="save"]');
+  await waitForFile(
+    (file) => file.data.updated === yesterday,
+    "an explicitly chosen date was overwritten",
+  );
+
+  await page.reload({ waitUntil: "load" });
+  await page.click('[data-testid="save"]');
+  await waitForFile(
+    (file) => file.data.updated === new Date().toISOString().slice(0, 10),
+    "a save that left the date alone did not bump it to today",
   );
 
   // Invalid frontmatter is refused, and must not touch the file.

@@ -147,7 +147,10 @@ export function ArticleEditor({
           <label>
             <span>Uppdaterad</span>
             <input name="updated" type="date" defaultValue={article.updated} />
-            <small className="adm-muted">Tomt fält = dagens datum vid sparning.</small>
+            <input type="hidden" name="loaded-updated" value={article.updated} />
+            <small className="adm-muted">
+              Rör du inte fältet sätts dagens datum när du sparar.
+            </small>
           </label>
 
           <label className="adm-span2">
@@ -347,6 +350,9 @@ export function ArticleEditor({
             type="submit"
             className="adm-btn"
             formAction={previewFormAction}
+            /* The preview reads only the body, so an unfinished frontmatter
+               field must not stop the browser from submitting it. */
+            formNoValidate
             disabled={previewPending}
             data-testid="preview"
           >
