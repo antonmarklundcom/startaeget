@@ -79,4 +79,5 @@ Städat under bygget, listat här så ingen jagar dem igen:
 - `content/lead-magnets/` har en loader och egna routes (B1). `/affarsplan-mall/` och `/startkostnads-checklista/` svarar 200.
 - De sju `content/pages`-sidorna finns (S8), så footerns länkar 404:ar inte längre.
 - `hub.featured` var tom för sex hubbar; S9 satte hörnstensartikeln i varje.
-- `starta-aktiebolag.mdx` angav 2 400 kr för AB-registreringen mot constants 2 200 kr. Rättad av S9.
+- `starta-aktiebolag.mdx` angav 2 400 kr för AB-registreringen. Redan rättad till 2 200 kr i PR #6 — S4:s notering i `docs/decisions-needed.md` var förlegad när S9 kom dit.
+- `affarsideer.mdx` lovade "56 affärsidéer" men listar 55. Siffran rättad av S9 (beskrivning och StatRow).
