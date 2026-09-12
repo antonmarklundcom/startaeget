@@ -15,11 +15,13 @@ export const HUBS = [
   "e-handel",
   "hemsida",
   "marknadsforing",
+  // B1: the blog. Sources are optional on `post` (see the superRefine below).
+  "blogg",
 ] as const;
 
 export type Hub = (typeof HUBS)[number];
 
-export const ARTICLE_TYPES = ["guide", "comparison", "list", "template"] as const;
+export const ARTICLE_TYPES = ["guide", "comparison", "list", "template", "post"] as const;
 export type ArticleType = (typeof ARTICLE_TYPES)[number];
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -99,6 +101,12 @@ export const pageFrontmatterSchema = z
     noindex: z.boolean().default(false),
     /** Renders the byrå lead form at the bottom of the page. */
     leadForm: z.boolean().default(false),
+    /**
+     * B1: lead magnets (`content/lead-magnets/*.mdx`) are page-shaped. `gate:
+     * newsletter` renders the body behind the newsletter form (client state
+     * only — the value is the list, not the secrecy of a printable checklist).
+     */
+    gate: z.enum(["newsletter"]).optional(),
   })
   .strict();
 
