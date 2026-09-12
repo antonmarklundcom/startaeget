@@ -3,7 +3,7 @@ import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import { Annonslank } from "./Annonslank";
 import { PartnerCta } from "./PartnerCta";
-import { Callout, Checklist, StatRow, Verifiera } from "./mdx/blocks";
+import { Callout, Checklist, Stat, StatRow, Verifiera } from "./mdx/blocks";
 import { headingId } from "./mdx/headings";
 
 /**
@@ -26,6 +26,7 @@ export const mdxComponents = {
   PartnerCta,
   Callout,
   Checklist,
+  Stat,
   StatRow,
   Verifiera,
   /* The id comes from the same function the table of contents uses, so a

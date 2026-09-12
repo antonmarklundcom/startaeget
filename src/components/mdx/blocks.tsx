@@ -1,3 +1,6 @@
+import { constant } from "@/lib/tax/constants";
+import { formatConstant } from "@/components/tools/ToolSources";
+
 /**
  * The component vocabulary an MDX author may use (plan §5.2). Anything not
  * registered in src/components/Mdx.tsx is a build error, on purpose: a lane 2
@@ -59,5 +62,32 @@ export function Verifiera({ children }: { children?: React.ReactNode }) {
     <span className="verifiera" title="Siffran är inte kontrollerad mot källan än">
       {children ?? "verifiera"}
     </span>
+  );
+}
+
+/**
+ * One figure from `src/lib/tax/constants.ts`, with its source and its
+ * verification state (plan §5.5, §4.16). `<Stat k="bolagsskatt" />` is how an
+ * article cites a rate without copying the number into its own prose, so a
+ * corrected constant corrects every page that shows it.
+ *
+ * An unknown key throws at build time — the same failure mode as a bad
+ * frontmatter field, and for the same reason.
+ */
+export function Stat({ k, label }: { k: string; label?: string }) {
+  const item = constant(k);
+  return (
+    <div className="stat-row">
+      <div className="stat">
+        <p className="stat__value">{formatConstant(item)}</p>
+        <p className="stat__label">{label ?? item.label}</p>
+        <p className="chip chip--source stat__note">
+          <a href={item.source} rel="noopener nofollow" target="_blank">
+            Källa
+          </a>
+          {item.verified ? null : <> · <Verifiera /></>}
+        </p>
+      </div>
+    </div>
   );
 }

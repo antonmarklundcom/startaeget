@@ -27,6 +27,12 @@ export const CONTENT_ROOT = path.join(process.cwd(), "content");
 const ARTICLES_DIR = path.join(CONTENT_ROOT, "articles");
 const PAGES_DIR = path.join(CONTENT_ROOT, "pages");
 const COMPARISONS_DIR = path.join(CONTENT_ROOT, "comparisons");
+/**
+ * Lead magnets (S6) are page-shaped, so they load through the page loader and
+ * reach `/[slug]/`, the sitemap and `generateStaticParams` without any route
+ * knowing they are a separate folder. `gate: newsletter` is the only difference.
+ */
+const LEAD_MAGNETS_DIR = path.join(CONTENT_ROOT, "lead-magnets");
 
 export type Article = {
   frontmatter: ArticleFrontmatter;
@@ -153,7 +159,7 @@ export function getAllPages(): Page[] {
   if (pageCache) return pageCache;
 
   const pages: Page[] = [];
-  for (const file of walk(PAGES_DIR, ".mdx")) {
+  for (const file of [...walk(PAGES_DIR, ".mdx"), ...walk(LEAD_MAGNETS_DIR, ".mdx")]) {
     const raw = fs.readFileSync(file, "utf8");
     const { data, content } = matter(raw);
     const parsed = pageFrontmatterSchema.safeParse(data);
@@ -191,8 +197,11 @@ export function getAllPages(): Page[] {
   for (const page of pages) {
     const owner = claimed.get(page.frontmatter.slug);
     if (owner) {
-      throw new ContentError(page.file, `slug already used by the article in ${owner}`);
+      throw new ContentError(page.file, `slug already used by ${owner}`);
     }
+    // Pages and lead magnets share the flat namespace, so two files claiming
+    // the same `/<slug>/` is an error here too, not a first-one-wins surprise.
+    claimed.set(page.frontmatter.slug, page.file);
   }
 
   pageCache = pages;
@@ -201,6 +210,11 @@ export function getAllPages(): Page[] {
 
 export function getPageBySlug(slug: string): Page | null {
   return getAllPages().find((p) => p.frontmatter.slug === slug) ?? null;
+}
+
+/** The printable lead magnets, whatever they are gated behind. */
+export function getLeadMagnets(): Page[] {
+  return getAllPages().filter((p) => p.file.startsWith("content/lead-magnets/"));
 }
 
 export function listComparisonSlugs(): string[] {

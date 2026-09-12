@@ -13,6 +13,7 @@ import { hubs, getHubByPath } from "@/lib/content/site";
 import { ArticleTemplate } from "@/components/templates/ArticleTemplate";
 import { PageTemplate } from "@/components/templates/PageTemplate";
 import { HubTemplate } from "@/components/templates/HubTemplate";
+import { NewsletterGate } from "@/components/mdx/NewsletterGate";
 import { buildMetadata } from "@/lib/seo";
 
 /**
@@ -81,6 +82,16 @@ export default async function FlatPage({ params }: Params) {
   if (!entry) notFound();
 
   if (entry.kind === "page") {
+    const fm = entry.page.frontmatter;
+    // A lead magnet renders through the same template; `gate: newsletter` only
+    // decides whether the newsletter form comes first (plan §5.5).
+    if (fm.gate === "newsletter") {
+      return (
+        <NewsletterGate slug={fm.slug} title={fm.title} description={fm.description}>
+          <PageTemplate page={entry.page} />
+        </NewsletterGate>
+      );
+    }
     return <PageTemplate page={entry.page} />;
   }
 

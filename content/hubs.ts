@@ -82,6 +82,19 @@ export const hubs = [
     tint: "rose",
   },
   {
+    id: "blogg",
+    path: "/blogg/",
+    title: "Blogg",
+    h1: "Blogg",
+    description:
+      "Nyheter, uppdateringar och kortare texter om att starta och driva företag i Sverige — och om sajten själv.",
+    intro:
+      "Kortare texter mellan guiderna: vad som ändrats hos myndigheterna, vad vi har skrivit om senast och vad som är på väg.",
+    kind: "hub",
+    featured: [],
+    tint: "sand",
+  },
+  {
     id: "jamfor",
     path: "/jamfor/",
     title: "Jämförelser",

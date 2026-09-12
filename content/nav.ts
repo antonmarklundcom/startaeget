@@ -20,6 +20,7 @@ export const nav = {
         { label: "E-handel", href: "/e-handel/" },
         { label: "Hemsida", href: "/hemsida/" },
         { label: "Marknadsföring", href: "/marknadsforing/" },
+        { label: "Blogg", href: "/blogg/" },
       ],
     },
     {
