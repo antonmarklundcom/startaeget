@@ -288,7 +288,7 @@ export function VadBlirKvarPartners() {
         summary={`Vad blir kvar på ${formatSek(result.surplus)} i överskott: ${formatSek(result.enskild.net)} som enskild firma, ${formatSek(result.ab.net)} som aktiebolag`}
         tool="vad-blir-kvar"
       />
-      <LeadForm sourcePage="/verktyg/vad-blir-kvar/" />
+      <LeadForm collapsible sourcePage="/verktyg/vad-blir-kvar/" />
     </>
   );
 }
