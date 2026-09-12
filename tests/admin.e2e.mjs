@@ -244,7 +244,22 @@ try {
   );
   process.stdout.write("ok\n");
 
-  // 7. Delete.
+  // 7. The work surface has to survive a phone, like every other route.
+  process.stdout.write("  mobile … ");
+  await page.setViewportSize({ width: 375, height: 812 });
+  for (const route of ["/admin/", `/admin/artiklar/blogg/${SLUG}/`]) {
+    await page.goto(`${BASE}${route}`, { waitUntil: "load" });
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    check(overflow <= 1, `${route} scrolls ${overflow}px sideways at 375px`);
+  }
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(`${BASE}/admin/artiklar/blogg/${SLUG}/`, { waitUntil: "load" });
+  await page.waitForSelector('[data-testid="delete"]');
+  process.stdout.write("ok\n");
+
+  // 8. Delete.
   process.stdout.write("  delete … ");
   await page.click('[data-testid="delete"]');
   await page.waitForURL(/\/admin\/\?borttagen=1/, { timeout: 20_000 });

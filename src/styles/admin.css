@@ -243,14 +243,20 @@
   flex: 1 1 16rem;
 }
 
-.adm-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #ffffff;
+/* The table is the one element allowed to be wider than a phone screen, so it
+   scrolls inside its own box instead of pushing the page sideways. */
+.adm-tablewrap {
+  overflow-x: auto;
+  margin-block: 12px;
   border: 1px solid var(--color-line);
   border-radius: 16px;
-  overflow: hidden;
-  margin-block: 12px;
+  background: #ffffff;
+}
+
+.adm-table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
 }
 
 .adm-table th,

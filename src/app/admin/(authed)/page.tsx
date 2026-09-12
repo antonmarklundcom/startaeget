@@ -77,7 +77,8 @@ export default async function AdminListPage({
           : "läst från content/ på disk"}
       </p>
 
-      <table className="adm-table">
+      <div className="adm-tablewrap">
+        <table className="adm-table">
         <thead>
           <tr>
             <th scope="col">Titel</th>
@@ -123,7 +124,8 @@ export default async function AdminListPage({
             );
           })}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       {visible.length === 0 ? (
         <p className="adm-note">Inga artiklar matchar filtret.</p>
