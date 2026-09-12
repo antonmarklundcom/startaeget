@@ -63,11 +63,8 @@ Dessutom:
 
 ## 7. Små tekniska skulder
 
-- **`src/lib/content/README.md` ligger en fas efter.** Den nämner inte `content/lead-magnets/`, `gate`-fältet, `type: post`, `blogg`-hubben eller `<Stat k>`. Schemana är kontraktet och de är aktuella; prosan är det inte.
-- **Hubbens sifferpanel räknar blogginlägg som "1 guide".** `HubTemplate` har ett substantivpar för hubbar och ett för `/jamfor/`; en `kind`-medveten etikett löser det.
-- **Verktygens e2e-pass körs inte i CI.** `node tests/tools.e2e.mjs` måste startas för hand. Förslag: ett `test:tools`-skript plus ett CI-steg.
 - **`related` och `partners` i adminen är checkbox-listor över samtliga artiklar och partner** (61 och 27 idag). Rimligt i den här storleken, trångt vid tre gånger så mycket.
-- **Watcher-Routinen skrev aldrig `docs/log/_watcher.md`**, så dess egen spärr ("efter 10 körningar: meddela och stäng av") räknade inte. Routinen är avstängd och raderas när S9 är klar.
+- **Watcher-Routinen skrev aldrig `docs/log/_watcher.md`**, så dess egen spärr ("efter 10 körningar: meddela och stäng av") räknade inte. Routinen är raderad sedan S9 mergades.
 
 ---
 
@@ -79,5 +76,8 @@ Städat under bygget, listat här så ingen jagar dem igen:
 - `content/lead-magnets/` har en loader och egna routes (B1). `/affarsplan-mall/` och `/startkostnads-checklista/` svarar 200.
 - De sju `content/pages`-sidorna finns (S8), så footerns länkar 404:ar inte längre.
 - `hub.featured` var tom för sex hubbar; S9 satte hörnstensartikeln i varje.
+- `src/lib/content/README.md` är uppdaterad: `content/lead-magnets/`, `gate`, `type: post`, `blogg`-hubben och hela komponentlistan inklusive `<Stat k>`.
+- Hubbens sifferpanel säger "inlägg" på `/blogg/` i stället för "guide". Etiketten härleds nu ur artiklarnas `type`, så en ny hub märker sig själv.
+- Verktygens och adminens e2e-pass körs i CI, i jobbet som redan har Chromium (`npm run test:tools` / `test:admin` lokalt).
 - `starta-aktiebolag.mdx` angav 2 400 kr för AB-registreringen. Redan rättad till 2 200 kr i PR #6 — S4:s notering i `docs/decisions-needed.md` var förlegad när S9 kom dit.
 - `affarsideer.mdx` lovade "56 affärsidéer" men listar 55. Siffran rättad av S9 (beskrivning och StatRow).
