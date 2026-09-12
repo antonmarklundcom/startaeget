@@ -1,0 +1,82 @@
+# Kända problem
+
+Tvärgående punkter som fortfarande är öppna när bygget är klart (plan §4.3). Fas-lokala noteringar ligger kvar i respektive `docs/log/<fas>.md`.
+
+Sammanställd av S9:s link pass. Ordnad efter vad som gör mest skada om det inte åtgärdas.
+
+---
+
+## 1. Varenda siffra är overifierad mot källan
+
+**Alla 22 skattekonstanter i `src/lib/tax/constants.ts` har `verified: false`.** Sandlådans egress-proxy svarar 403 på CONNECT till `skatteverket.se`, `bolagsverket.se` och `verksamt.se` — bekräftat av O1, O2, O3 och S5 var för sig. Ingen byggsession har kunnat öppna en enda myndighetssida.
+
+Formen är rätt, kronorna är inte bekräftade. Det här är den enskilt viktigaste punkten före lansering: sajtens hela löfte är "siffror med källa och datum".
+
+Mest osäkra posterna, i den ordningen:
+
+- **3:12-reglerna för 2026.** Förenklingsregeln och huvudregeln har ersatts av en regel med ett grundbelopp på 4 inkomstbasbelopp (322 400 kr). Reformen är ny och andrahandskällorna var inte överens om schablonbeloppet. Kontrollera denna först.
+- **Grundavdrag och jobbskatteavdrag** är approximationer, inte Skatteverkets tabeller. Verktyg 3 säger det i sina antaganden och länkar ut. Att byta in de riktiga tabellerna är en avgränsad ändring i `src/lib/tax/income.ts`.
+- **Bolagsverkets avgifter** ändrades 19 juni 2025. `bolagsverket-ab-nyregistrering` är satt till 2 200 kr.
+
+**Nästa steg:** öppna varje konstants `source`-URL från en vanlig webbläsare, rätta värdet om det skiljer, sätt `verified: true` och `verifiedOn` till dagens datum.
+
+## 2. Inga jämförelsepriser är kontrollerade mot leverantörens egen prissida
+
+Samma 403 blockerar varje leverantörsdomän: bokio.se, fortnox.se, vismaspcs.se, wint.se, bjornlunden.se, shopify.com, wikinggruppen.se, quickbutik.com, woocommerce.com, loopia.se, one.com, hostinger.se, misshosting.se, bankernas och försäkringsbolagens sidor.
+
+Varje jämförelserad bär leverantörens URL och ett datum, men ingen rad anger en bekräftad siffra. Marknadsprisraderna i verktyg 2 (bank, bokföringsprogram, försäkring, webbhotell, e-handel) är intervall av samma skäl.
+
+**Nästa steg:** öppna varje rads `sourceUrl` och fyll i riktiga priser innan lansering. Det är sex jämförelsesidor.
+
+## 3. `content/legacy-urls.json` är ofullständig — och tretton slugs är gissningar
+
+Filen är fortfarande `"complete": false` med 27 av 48 WordPress-sökvägar (plan §7 punkt 1). Sandlådan når inte `startaegetforetag.se`, så ingen session har kunnat hämta sitemapen.
+
+Följande artikel-slugs är skrivna efter plan §6, inte efter den riktiga exporten, och kan ha fel sökväg — vilket betyder att rankingen på den gamla URL:en tappas:
+
+`enskild-firma` · `stod-till-nytt-foretag` · `foretagslan` · `affarsplan` · `affarsplan-exempel` · `affarsplan-mall` · `doman` · `webshop` · `konverteringsoptimering` · `google-ads` · `sociala-medier` · `instagram-marknadsforing` · `ai-byra`
+
+**Nästa steg:** exportera sökvägslistan ur WP-admin (Inlägg, eller `wp-sitemap-posts-post-1.xml`), fyll på filen, sätt `"complete": true` och rätta varje slug som skiljer. `verify.mjs` varnar tills flaggan vänds.
+
+## 4. Affärsmodellen är inte inkopplad
+
+- **Inget affiliateprogram är anslutet.** Alla 27 partner i `content/affiliates.ts` har tom `affiliateUrl`, så varje `/go/<id>/` går till den vanliga länken och ingenting är märkt "Annonslänk". Märkningen slås på per partner automatiskt när `affiliateUrl` fylls i (plan §7 punkt 5).
+- **Ingen e-post skickas.** `/api/subscribe` och `/api/tool-result` sparar raden men skickar inget utan `RESEND_API_KEY`, så dubbel opt-in för nyhetsbrevet finns inte ännu (plan §7 punkt 4).
+- **Org.nr och postadress saknas** i `kontakt.mdx` och `integritetspolicy.mdx` (plan §7 punkt 6). Ingen påhittad adress användes — sidorna säger att uppgifterna publiceras när de finns.
+
+## 5. Bloggadmin kräver hPanel-konfiguration innan den fungerar i drift
+
+Plan §7 punkt 10–12: `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, och en fine-grained `GITHUB_TOKEN` med *Contents: read/write* på bara detta repo. **Utan token är produktionsadminen skrivskyddad.**
+
+Dessutom:
+
+- `NEXT_PUBLIC_BUILD_SHA` måste sättas av byggkommandot (`NEXT_PUBLIC_BUILD_SHA=$(git rev-parse HEAD)`); inget i repot kan sätta den för Hostinger.
+- GitHub-backenden är testad mot en stubbad `fetch`, inte mot det riktiga API:et — sandlådan når inte `api.github.com` och har ingen token.
+- Bekräfta att Node-slotten autodeployar vid push till `main`. Gör den inte det kräver varje admin-sparning en manuell "Redeploy".
+
+## 6. Innehåll som behöver en mänsklig läsning
+
+- **`bokforing-dropshipping`** hedgar medvetet om importmoms och EU:s gränsöverskridande konsumentmoms — inga påhittade trösklar eller ordningsnamn. Markerad i artikeln med en varnings-Callout och en `<Verifiera />`. Värd en riktig revisorsgenomgång.
+- **`basta-kassasystem`** beskriver kravet på kassaregister och kontrollenhet bara i allmänna termer; undantagströsklarna är inte verifierade.
+- **`webshop`, `ehandel` och `starta-webshop`** täcker angränsande mark med avsikt, men skrevs inte mot varandra. Värd en skumläsning för att bekräfta att de tre inte upprepar sig.
+- **`foretagsforsakring`** anger Konsumenternas Försäkringsbyrå som källa; den exakta URL:en kunde inte kontrolleras från sandlådan.
+
+## 7. Små tekniska skulder
+
+- **`src/lib/content/README.md` ligger en fas efter.** Den nämner inte `content/lead-magnets/`, `gate`-fältet, `type: post`, `blogg`-hubben eller `<Stat k>`. Schemana är kontraktet och de är aktuella; prosan är det inte.
+- **Hubbens sifferpanel räknar blogginlägg som "1 guide".** `HubTemplate` har ett substantivpar för hubbar och ett för `/jamfor/`; en `kind`-medveten etikett löser det.
+- **Verktygens e2e-pass körs inte i CI.** `node tests/tools.e2e.mjs` måste startas för hand. Förslag: ett `test:tools`-skript plus ett CI-steg.
+- **`related` och `partners` i adminen är checkbox-listor över samtliga artiklar och partner** (61 och 27 idag). Rimligt i den här storleken, trångt vid tre gånger så mycket.
+- **Watcher-Routinen skrev aldrig `docs/log/_watcher.md`**, så dess egen spärr ("efter 10 körningar: meddela och stäng av") räknade inte. Routinen är avstängd och raderas när S9 är klar.
+
+---
+
+## Det som inte är ett problem längre
+
+Städat under bygget, listat här så ingen jagar dem igen:
+
+- `<Stat k="…">` finns nu (B1). S5:s notering att komponenten saknades är löst.
+- `content/lead-magnets/` har en loader och egna routes (B1). `/affarsplan-mall/` och `/startkostnads-checklista/` svarar 200.
+- De sju `content/pages`-sidorna finns (S8), så footerns länkar 404:ar inte längre.
+- `hub.featured` var tom för sex hubbar; S9 satte hörnstensartikeln i varje.
+- `starta-aktiebolag.mdx` angav 2 400 kr för AB-registreringen mot constants 2 200 kr. Rättad av S9.
