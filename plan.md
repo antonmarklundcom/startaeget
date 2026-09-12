@@ -296,6 +296,7 @@ Plus, generated from `content/legacy-urls.json` and §2.1: every `retire` entry 
 | D1 Verkstan design | #11 | `docs/log/D1.md` |
 | S8 Marknadsföring & sidor | #13 | `docs/log/S8.md` |
 | B1 Blog admin | #14 | `docs/log/B1.md` |
+| S9 Link pass | #17 | `docs/log/S9.md` |
 
 ## 10. Backlog
 - Affärsplan-generator (form → PDF), gated by e-mail.
