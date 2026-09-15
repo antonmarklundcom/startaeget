@@ -82,9 +82,13 @@ export function ComparisonTemplate({ comparison }: { comparison: Comparison }) {
                       }
                       target="_blank"
                     >
-                      Testa
+                      {partner.cta}
                     </a>
-                    <span className="chip chip--ad">Annonslänk</span>
+                    <span
+                      className={`chip ${partner.disclosure === "Annonslänk" ? "chip--ad" : "chip--source"}`}
+                    >
+                      {partner.disclosure}
+                    </span>
                   </>
                 ) : row.sourceUrl ? (
                   <a

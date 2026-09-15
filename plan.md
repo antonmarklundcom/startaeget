@@ -1,4 +1,5 @@
 # startaegetforetag.se — relaunch plan
+> Current priorities: [docs/codex-improvement-plan.md](docs/codex-improvement-plan.md) currently supersedes this file's priorities.
 
 Sweden only. Swedish language (du-form). Founder-first content + decision tools hub, built as a custom Next.js app on the Hostinger Node.js + MySQL/Drizzle stack. Old WordPress: 48 posts, nothing carried over except ~40 evergreen URL paths.
 
