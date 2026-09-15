@@ -33,9 +33,10 @@ export default function ToolsHubPage() {
         </p>
         <h1>Verktyg</h1>
         <p className="lede">
-          Tre räknare som tar dig från fråga till beslut. Alla siffror bygger på
-          Skatteverkets och Bolagsverkets egna uppgifter, med datum för när vi
-          kontrollerade dem.
+          Tre räknare som hjälper dig från fråga till beslut. Myndighetsbeloppen har
+          källhänvisningar till bland annat Skatteverket och Bolagsverket, men är ännu
+          inte kontrollerade mot källorna. Leverantörspriser i startkostnadskalkylatorn
+          är uppskattningar inom marknadsspann.
         </p>
       </header>
 

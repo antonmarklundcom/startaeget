@@ -182,9 +182,9 @@ export function StartkostnadSteps() {
       </fieldset>
 
       <p className="q__help">
-        Posterna nedan är förifyllda med myndighetsavgifter där det finns en, och med
-        mitten av ett marknadsspann där priset sätts av leverantören. Ändra varje rad till
-        det du faktiskt får betalt för.
+        Posterna nedan är förifyllda med myndighetsbelopp där sådana finns, och med
+        uppskattade typpriser inom marknadsspannet där leverantören sätter priset.
+        Ändra varje rad till det du faktiskt ska betala.
       </p>
 
       <fieldset className="lines">
