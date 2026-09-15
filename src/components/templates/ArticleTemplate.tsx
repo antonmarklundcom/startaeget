@@ -13,6 +13,7 @@ import { NewsletterStrip } from "@/components/SiteFooter";
 import { ComparisonTemplate } from "./ComparisonTemplate";
 import { articleJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/jsonld";
 import { formatUpdated } from "@/lib/site";
+import { comparisonHasAds } from "@/lib/content/presentation";
 
 /**
  * The article surface (docs/design/verkstan.md §2). Everything on it is driven
@@ -47,8 +48,8 @@ export function ArticleTemplate({
 
   const pick = getPartners(fm.partners)[0] ?? null;
   const hasLeadForm = LEAD_FORM_HUBS.has(fm.hub);
-  const comparisonHasPartner = comparison?.rows.some((row) => row.partnerId) ?? false;
-  const marksAds = fm.partners.length > 0 || comparisonHasPartner;
+  const marksAds = getPartners(fm.partners).some((partner) => partner.disclosure === "Annonslänk")
+    || comparisonHasAds(comparison);
   const priceCheck = comparison?.rows.find((row) => row.sourceDate)?.sourceDate;
 
   return (
@@ -112,8 +113,11 @@ export function ArticleTemplate({
               >
                 {pick.cta}
               </a>
-              <p className="chip chip--ad" style={{ marginBlockStart: "var(--space-1)" }}>
-                Annonslänk
+              <p
+                className={`chip ${pick.disclosure === "Annonslänk" ? "chip--ad" : "chip--source"}`}
+                style={{ marginBlockStart: "var(--space-1)" }}
+              >
+                {pick.disclosure}
               </p>
             </div>
           ) : null}
