@@ -40,7 +40,11 @@ export function PartnerCta({
             >
               {partner.cta}
             </a>
-            <span className="chip chip--ad">{partner.disclosure}</span>
+            <span
+              className={`chip ${partner.disclosure === "Annonslänk" ? "chip--ad" : "chip--source"}`}
+            >
+              {partner.disclosure}
+            </span>
           </li>
         ))}
       </ul>
