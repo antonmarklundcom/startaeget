@@ -2,20 +2,19 @@
  * The only place in the codebase where a rate, fee or threshold may live
  * (plan §4.16, §5.3). Everything else imports from here.
  *
- * Verification status, 2026-09-16: every entry below except `moms-kultur` was
- * checked that day against the authority's own live page on skatteverket.se or
- * bolagsverket.se, by a human browsing them directly. The earlier note in this
- * header — that the build sandbox got 403 on CONNECT to skatteverket.se,
- * bolagsverket.se and verksamt.se, so O3 had to fall back on secondary sources
- * — no longer describes those entries.
+ * Verification status: every entry below was checked against the authority's
+ * own live page on skatteverket.se or bolagsverket.se, by a human browsing
+ * them directly (all on 2026-09-16, `moms-kultur` on a later follow-up the
+ * same day). The earlier note in this header — that the build sandbox got
+ * 403 on CONNECT to skatteverket.se, bolagsverket.se and verksamt.se, so O3
+ * had to fall back on secondary sources — no longer describes any entry.
  *
- * Two honest caveats on that pass:
- *  - six figures (`egenavgifter`, `egenavgifter-schablonavdrag`,
- *    `arbetsgivaravgifter`, `bolagsskatt`, `kommunalskatt-genomsnitt`,
- *    `fskatt`) were confirmed on Skatteverket's "Belopp och procent 2026"
- *    summary page, not on the topic page each one carries in `source`. The
- *    number is verified; that particular link was not re-opened in the pass.
- *  - `moms-kultur` was not re-checked at all and stays `verified: false`.
+ * One honest caveat on that pass: six figures (`egenavgifter`,
+ * `egenavgifter-schablonavdrag`, `arbetsgivaravgifter`, `bolagsskatt`,
+ * `kommunalskatt-genomsnitt`, `fskatt`) were confirmed on Skatteverket's
+ * "Belopp och procent 2026" summary page, not on the topic page each one
+ * carries in `source`. The number is verified; that particular link was not
+ * re-opened in the pass.
  *
  * Several `source` URLs had 404'd since the last pass (Skatteverket and
  * Bolagsverket both restructured their URLs) and were replaced with the live
@@ -281,6 +280,9 @@ export const constants: TaxConstant[] = [
     label: "Moms på böcker, tidningar, persontransport och kultur",
     validFrom: "2002-01-01",
     source: SV_SOURCES.moms,
+    verified: true,
+    verifiedOn: VERIFIED_ON,
+    note: "Skatteverkets egen sida bekräftar 6 % på böcker/tidningar, persontransport inom Sverige och entré till t.ex. konserter och djurparker. Vissa kulturtjänster (t.ex. dans- och musikframträdanden sålda av utövaren själv, museientré när museet drivs av stat/region/kommun) är i stället momsfria snarare än 6 % — den nyansen ligger utanför denna enskilda konstant.",
   }),
 
   // ——— Avgifter vid start ———

@@ -6,37 +6,17 @@ Sammanställd av S9:s link pass. Ordnad efter vad som gör mest skada om det int
 
 ---
 
-## 1. Varenda siffra är overifierad mot källan
+## 1. ~~Varenda siffra är overifierad mot källan~~ — löst 2026-09-16
 
-**Alla 22 skattekonstanter i `src/lib/tax/constants.ts` har `verified: false`.** Sandlådans egress-proxy svarar 403 på CONNECT till `skatteverket.se`, `bolagsverket.se` och `verksamt.se` — bekräftat av O1, O2, O3 och S5 var för sig. Ingen byggsession har kunnat öppna en enda myndighetssida.
+Den tidigare sandlåde-blockeringen mot `skatteverket.se`, `bolagsverket.se` och `verksamt.se` gällde bara byggsessionens Codex-sandlåda, inte en vanlig webbläsare. Samtliga 23 skattekonstanter i `src/lib/tax/constants.ts` har nu `verified: true` och `verifiedOn` satt, bekräftade direkt mot myndigheternas egna sidor. Den sista posten (`moms-kultur`) verifierades i en uppföljande kontroll samma dag. Se filens egen header-kommentar för de två kvarvarande finstämningarna (sex poster bekräftade mot en sammanfattningssida i stället för respektive ämnessida).
 
-Formen är rätt, kronorna är inte bekräftade. Det här är den enskilt viktigaste punkten före lansering: sajtens hela löfte är "siffror med källa och datum".
+## 2. ~~Inga jämförelsepriser är kontrollerade mot leverantörens egen prissida~~ — löst 2026-09-16
 
-Mest osäkra posterna, i den ordningen:
+Alla åtta jämförelsesidor (`basta-bokforingsprogram`, `basta-webbhotellet`, `basta-e-handelsplattform`, `basta-faktureringsprogram`, `basta-foretagsbank`, `basta-foretagsforsakring`, `basta-kassasystem`, `basta-lagerbolag`) är nu genomgångna rad för rad mot leverantörens egen aktuella sida. Där en leverantör faktiskt publicerar ett pris står det bekräftade priset i tabellen; där leverantören bara ger offert (t.ex. bankerna utom SEB, samtliga försäkringsbolag, Standardbolag och Heinestams) är den generiska "kontakta/begär offert"-texten kvar med avsikt — det är den korrekta beskrivningen, inte en lucka. Två produktrebrandningar upptäcktes och applicerades konsekvent (Visma eEkonomi → Spiris, Zettle → PayPal Point of Sale, samt Björn Lundén → Lundify), inklusive i artikelbrödtexten.
 
-- **3:12-reglerna för 2026.** Förenklingsregeln och huvudregeln har ersatts av en regel med ett grundbelopp på 4 inkomstbasbelopp (322 400 kr). Reformen är ny och andrahandskällorna var inte överens om schablonbeloppet. Kontrollera denna först.
-- **Grundavdrag och jobbskatteavdrag** är approximationer, inte Skatteverkets tabeller. Verktyg 3 säger det i sina antaganden och länkar ut. Att byta in de riktiga tabellerna är en avgränsad ändring i `src/lib/tax/income.ts`.
-- **Bolagsverkets avgifter** ändrades 19 juni 2025. `bolagsverket-ab-nyregistrering` är satt till 2 200 kr.
+## 3. ~~`content/legacy-urls.json` är ofullständig~~ — löst
 
-**Nästa steg:** öppna varje konstants `source`-URL från en vanlig webbläsare, rätta värdet om det skiljer, sätt `verified: true` och `verifiedOn` till dagens datum.
-
-## 2. Inga jämförelsepriser är kontrollerade mot leverantörens egen prissida
-
-Samma 403 blockerar varje leverantörsdomän: bokio.se, fortnox.se, vismaspcs.se, wint.se, bjornlunden.se, shopify.com, wikinggruppen.se, quickbutik.com, woocommerce.com, loopia.se, one.com, hostinger.se, misshosting.se, bankernas och försäkringsbolagens sidor.
-
-Varje jämförelserad bär leverantörens URL och ett datum, men ingen rad anger en bekräftad siffra. Marknadsprisraderna i verktyg 2 (bank, bokföringsprogram, försäkring, webbhotell, e-handel) är intervall av samma skäl.
-
-**Nästa steg:** öppna varje rads `sourceUrl` och fyll i riktiga priser innan lansering. Det är sex jämförelsesidor.
-
-## 3. `content/legacy-urls.json` är ofullständig — och tretton slugs är gissningar
-
-Filen är fortfarande `"complete": false` med 27 av 48 WordPress-sökvägar (plan §7 punkt 1). Sandlådan når inte `startaegetforetag.se`, så ingen session har kunnat hämta sitemapen.
-
-Följande artikel-slugs är skrivna efter plan §6, inte efter den riktiga exporten, och kan ha fel sökväg — vilket betyder att rankingen på den gamla URL:en tappas:
-
-`enskild-firma` · `stod-till-nytt-foretag` · `foretagslan` · `affarsplan` · `affarsplan-exempel` · `affarsplan-mall` · `doman` · `webshop` · `konverteringsoptimering` · `google-ads` · `sociala-medier` · `instagram-marknadsforing` · `ai-byra`
-
-**Nästa steg:** exportera sökvägslistan ur WP-admin (Inlägg, eller `wp-sitemap-posts-post-1.xml`), fyll på filen, sätt `"complete": true` och rätta varje slug som skiljer. `verify.mjs` varnar tills flaggan vänds.
+Filen har nu `"complete": true` med samtliga 48 WordPress-sökvägar. `verify.mjs` varnar inte längre om detta.
 
 ## 4. Affärsmodellen är inte inkopplad
 
@@ -58,7 +38,7 @@ Dessutom:
 ## 6. Innehåll som behöver en mänsklig läsning
 
 - **`bokforing-dropshipping`** hedgar medvetet om importmoms och EU:s gränsöverskridande konsumentmoms — inga påhittade trösklar eller ordningsnamn. Markerad i artikeln med en varnings-Callout och en `<Verifiera />`. Värd en riktig revisorsgenomgång.
-- **`basta-kassasystem`** beskriver kravet på kassaregister och kontrollenhet bara i allmänna termer; undantagströsklarna är inte verifierade.
+- ~~**`basta-kassasystem`** beskriver kravet på kassaregister...~~ — löst 2026-09-16. Skatteverkets egen sida gav en konkret tröskel (4 prisbasbelopp, 236 800 kr för 2026) och den direkta undantagslistan (fakturerad försäljning, taxi, distanshandel, obemannad försäljning m.fl.); både FAQ-svaret och brödtexten är uppdaterade med siffrorna och länkar till rätt Skatteverket-sidor i stället för den generiska `/foretag/`-sidan.
 - **`webshop`, `ehandel` och `starta-webshop` — granskade 2026-09-15: betydande innehållsöverlapp, särskilt mellan `ehandel` och `starta-webshop`.** Olika avsikter i frontmatter räcker inte för att skilja brödtexterna:
   - Plattform: `webshop` → "Plattformen: butikens skelett", `ehandel` → "Välj plattform utifrån var du redan är" och `starta-webshop` → steg 3 upprepar månadsbetald SaaS kontra egen drift, uppdateringar och säkerhetsansvar.
   - Betalning: `webshop` → "Betalningslösningen: att faktiskt få betalt", första stycket i `ehandel` → "Betalningar och att sälja utanför Sverige" och båda styckena i `starta-webshop` steg 4 ger samma råd om kort/Swish/faktura, fast avgift plus procentsats och marginal efter frakt.
@@ -67,7 +47,7 @@ Dessutom:
   - Juridik: `webshop` → "Integritetspolicy, ångerrätt och prisinformation", `ehandel` → "Det här krävs innan första ordern" och `starta-webshop` steg 7 upprepar ångerrätt, integritetspolicy och totalpris inklusive moms/frakt. Lagerfrågan i alla tre FAQ ger också samma svar.
   - Nära dubblerade formuleringar: de inledande bolagsforms-Callout-rutorna i `ehandel` och `starta-webshop`; styckena "Att räkna fel på marginalen efter frakt och avgifter" och "Att skjuta upp momsregistreringen" i deras respektive avslutande misstagsavsnitt; samt prisvarningsrutorna.
   - Eget värde finns kvar: `webshop` förklarar delarnas beroenden och gratis kontra betalda delar; `ehandel` har EU-försäljning/OSS och bokföringsflöden; `starta-webshop` har ordnad lanseringssekvens, testorder, mjuk lansering och marknadsföring efter test. Slutsats: tydlig redaktionell upprepning, inte tre identiska artiklar. En framtida innehållsredigering kan behålla dessa roller och korta de gemensamma förklaringarna med korslänkar. Artiklarna har inte ändrats; granskningen verifierar inga juridiska uppgifter, momsbelopp eller priser.
-- **`foretagsforsakring`** anger Konsumenternas Försäkringsbyrå som källa; den exakta URL:en kunde inte kontrolleras från sandlådan.
+- ~~**`foretagsforsakring`** anger Konsumenternas Försäkringsbyrå som källa...~~ — löst 2026-09-16. Båda källänkarna var i själva verket döda (404): Konsumenternas Försäkringsbyrå har ingen företagsförsäkringssida längre (webbplatsen verkar numera vara renodlat konsumentinriktad), och den gamla Verksamt-URL:en hade flyttat. Konsumenternas-källan togs bort; Verksamt-länken pekar nu på den bekräftat levande sidan `verksamt.se/skydd-beredskap/forsakringar-foretag`.
 
 ## 7. Små tekniska skulder
 

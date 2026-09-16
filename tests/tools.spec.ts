@@ -39,7 +39,6 @@ describe("tax constants", () => {
 
   it("never claims a verification date it does not have", () => {
     const unverified = constants.filter((item: TaxConstant) => !item.verified);
-    expect(unverified.length).toBeGreaterThan(0);
     for (const item of unverified) {
       expect(item.verifiedOn, item.key).toBeNull();
     }
