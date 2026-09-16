@@ -238,28 +238,36 @@ class LocalStore implements AdminStore {
   }
 
   async writeArticle(input: WriteInput): Promise<WriteResult> {
+    return this.write(input);
+  }
+
+  private async write(input: WriteInput, isCreate = false): Promise<WriteResult> {
     return guardedWrite(this, input, await this.taken(), async (file, contents) => {
       const absolute = path.join(this.root, file);
       await fs.mkdir(path.dirname(absolute), { recursive: true });
-      await fs.writeFile(absolute, contents, "utf8");
+      await fs.writeFile(absolute, contents, { encoding: "utf8", flag: isCreate ? "wx" : "w" });
       return { ok: true, mode: this.mode, validation: EMPTY_VALIDATION };
     });
   }
 
   async createArticle(input: WriteInput): Promise<WriteResult> {
     const existing = await this.readArticle(input.hub, input.slug);
-    if (existing) {
-      return {
-        ok: false,
-        mode: this.mode,
-        validation: {
-          ok: false,
-          errors: [`${articlePath(input.hub, input.slug)} finns redan.`],
-          warnings: [],
-        },
-      };
+    if (!existing) {
+      try {
+        return await this.write(input, true);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException)?.code !== "EEXIST") throw error;
+      }
     }
-    return this.writeArticle(input);
+    return {
+      ok: false,
+      mode: this.mode,
+      validation: {
+        ok: false,
+        errors: [`${articlePath(input.hub, input.slug)} finns redan.`],
+        warnings: [],
+      },
+    };
   }
 
   async deleteArticle(hub: string, slug: string): Promise<WriteResult> {
@@ -329,8 +337,12 @@ class GithubStore implements AdminStore {
   }
 
   async writeArticle(input: WriteInput): Promise<WriteResult> {
+    return this.write(input);
+  }
+
+  private async write(input: WriteInput, isCreate = false): Promise<WriteResult> {
     return guardedWrite(this, input, await this.taken(), async (file, contents, frontmatter) => {
-      const sha = input.sha ?? (await this.api.readFile(file))?.sha;
+      const sha = isCreate ? undefined : input.sha ?? (await this.api.readFile(file))?.sha;
       const outcome = await this.api.putFile(file, contents, `admin: ${frontmatter.title}`, sha);
       return outcome.ok
         ? {
@@ -356,7 +368,7 @@ class GithubStore implements AdminStore {
         },
       };
     }
-    return this.writeArticle({ ...input, sha: undefined });
+    return this.write(input, true);
   }
 
   async deleteArticle(hub: string, slug: string, sha?: string): Promise<WriteResult> {

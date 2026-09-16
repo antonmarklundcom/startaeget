@@ -49,19 +49,21 @@ export async function POST(request: Request) {
   const payloadJson = JSON.stringify(data.payload);
 
   const stored = await withDb(async (db) => {
-    await db.insert(schema.toolResults).values({
-      tool: data.tool,
-      email: data.email,
-      payloadJson,
-    });
-    if (data.subscribe) {
-      await db.insert(schema.subscribers).values({
+    return db.transaction(async (tx) => {
+      await tx.insert(schema.toolResults).values({
+        tool: data.tool,
         email: data.email,
-        source: `verktyg/${data.tool}`,
-        magnet: null,
+        payloadJson,
       });
-    }
-    return true;
+      if (data.subscribe) {
+        await tx.insert(schema.subscribers).values({
+          email: data.email,
+          source: `verktyg/${data.tool}`,
+          magnet: null,
+        });
+      }
+      return true;
+    });
   });
 
   if (!stored && !isDbConfigured()) {
