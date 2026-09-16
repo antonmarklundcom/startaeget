@@ -235,12 +235,20 @@ export const partners: Partner[] = [
     fallback: "https://woocommerce.com/",
   },
   {
+    // The product rebranded from "Zettle" to "PayPal Point of Sale" (vendor's
+    // own wording, verified 2026-09-16: zettle.com/se now leads to PayPal's
+    // Point of Sale-sidor, which state "Zettle by PayPal blir PayPal Point of
+    // Sale"). The `id` is deliberately kept as `zettle` because /go/zettle/ is
+    // a stable public URL, and the display name keeps the old name in
+    // parentheses because that is still what people search for. `url` and
+    // `fallback` are unchanged because zettle.com/se still resolves to the
+    // correct, now PayPal-branded, entry point.
     id: "zettle",
-    name: "Zettle",
+    name: "PayPal Point of Sale (f.d. Zettle)",
     category: "kassasystem",
     url: "https://www.zettle.com/se",
     disclosure: ANNONS,
-    cta: "Till Zettle",
+    cta: "Till PayPal Point of Sale",
     fallback: "https://www.zettle.com/se",
   },
 
