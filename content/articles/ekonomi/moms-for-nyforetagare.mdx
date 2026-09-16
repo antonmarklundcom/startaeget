@@ -5,14 +5,14 @@ hub: ekonomi
 type: guide
 description: "Momssatserna, hur momsregistreringen hänger ihop med bokföringen och hur ofta du ska redovisa – grunderna du behöver innan första fakturan."
 intent: grunderna i momsregistrering och löpande momsredovisning för en ny företagare
-updated: "2026-09-11"
+updated: "2026-09-16"
 legacy: false
 partners:
   - bokio
   - fortnox
 sources:
   - label: "Skatteverket: momssatser på varor och tjänster"
-    url: https://www.skatteverket.se/foretag/moms/saljavarorochtjanster/momssatserpavarorochtjanster.4.58d555751259e4d661600f5.html
+    url: https://www.skatteverket.se/foretag/moms/saljavarorochtjanster/momssatserochundantagfranmoms.4.58d555751259e4d66168000409.html
   - label: "Skatteverket: godkännande för F-skatt"
     url: https://www.skatteverket.se/foretag/drivaforetag/startaochregistrera/godkannandeforfskatt.4.361dc8c15312eff6fd1f7cd.html
   - label: "Skatteverket: Driva företag"
@@ -28,7 +28,7 @@ faq:
   - q: Måste jag ha momsregistrerat mig innan jag skickar min första faktura?
     a: I princip ja, om det du säljer är momspliktigt. Skatteverket vill ha in ansökan i god tid innan verksamheten startar eller så snart du vet att den är momspliktig, så att du hinner få beslutet innan första fakturan går ut.
   - q: Vilken momssats ska jag använda?
-    a: Det beror på vad du säljer, inte på vem du är som företagare. De flesta varor och tjänster har 25 procent, men mat, hotell och restaurang ligger på 12 procent och till exempel böcker, tidningar och persontransporter på 6 procent. En del tjänster, som vård och utbildning, är helt undantagna.
+    a: Det beror på vad du säljer, inte på vem du är som företagare. De flesta varor och tjänster har 25 procent. Restaurang- och cateringtjänster och hotell ligger på 12 procent, och livsmedel har sedan 1 april 2026 6 procent i stället för 12 – samma sats som böcker, tidningar och persontransporter. En del tjänster, som vård och utbildning, är helt undantagna.
   - q: Hur ofta ska jag redovisa moms?
     a: Det styrs av din omsättning och beslutas av Skatteverket i samband med registreringen – periodiciteten kan vara månad, kvartal eller helår. Se Skatteverkets egen gräns för vilken nivå som gäller just din verksamhet.
   - q: Kan jag ha flera momssatser på samma faktura?
@@ -56,11 +56,11 @@ I Sverige finns tre momssatser plus ett antal undantag, och det är vad du sälj
 
 <StatRow items={[
   { value: "25 %", label: "Normalskattesats", note: "Källa: Skatteverket" },
-  { value: "12 %", label: "Livsmedel, hotell, restaurang", note: "Källa: Skatteverket" },
-  { value: "6 %", label: "Böcker, tidningar, persontransport, kultur", note: "Källa: Skatteverket" }
+  { value: "12 %", label: "Restaurang, catering, hotell", note: "Källa: Skatteverket" },
+  { value: "6 %", label: "Livsmedel, böcker, tidningar, persontransport, kultur", note: "Livsmedel sänkt från 12 % 1 april 2026" }
 ]} />
 
-De flesta varor och tjänster hamnar på 25 procent – det är standardsatsen och den du ska utgå från om inget annat anges. 12 procent gäller bland annat livsmedel samt hotell- och restaurangtjänster. 6 procent gäller till exempel böcker, tidningar, persontransporter och delar av kulturområdet. Utöver de tre satserna finns undantag och nollskattesatser för vissa verksamheter, till exempel sjukvård, tandvård och utbildning – där tas ingen moms ut alls, men du får heller inte dra av ingående moms på samma sätt.
+De flesta varor och tjänster hamnar på 25 procent – det är standardsatsen och den du ska utgå från om inget annat anges. 12 procent gäller bland annat restaurang- och cateringtjänster samt hotellövernattningar. 6 procent gäller livsmedel, och dessutom böcker, tidningar, persontransporter och delar av kulturområdet. Just livsmedel är den sats som ändrats senast: den 1 april 2026 sänktes momsen på livsmedel från 12 till 6 procent, medan restaurangtjänster behöll sina 12 procent – säljer du mat både över disk och som servering på plats har du alltså två olika satser i samma verksamhet. Utöver de tre satserna finns undantag och nollskattesatser för vissa verksamheter, till exempel sjukvård, tandvård och utbildning – där tas ingen moms ut alls, men du får heller inte dra av ingående moms på samma sätt.
 
 Säljer du flera olika saker – en vara med 25 procent och en tjänst med 6 procent i samma affär – ska varje rad bokföras med sin egen momssats. Det är ett vanligt missförstånd att moms bara räknas på fakturans totalsumma; i verkligheten modelleras den rad för rad, och det är precis det ett bokföringsprogram är byggt för att hålla reda på automatiskt när du lägger in en försäljning eller ett inköp.
 
@@ -89,7 +89,7 @@ Det som gör moms hanterbart i praktiken är att du sällan behöver räkna sjä
 
 ## Vanliga misstag när moms är nytt
 
-**Att blanda ihop momssats med produktkategori på fel nivå.** Det är den enskilda varan eller tjänsten som avgör satsen, inte hela fakturan eller hela företaget. En restaurang som säljer både mat (12 procent) och alkoholhaltig dryck att förtära på plats (25 procent) har båda satserna på samma kvitto.
+**Att blanda ihop momssats med produktkategori på fel nivå.** Det är den enskilda varan eller tjänsten som avgör satsen, inte hela fakturan eller hela företaget. En restaurang som säljer både mat serverad på plats (12 procent) och alkoholhaltig dryck att förtära på plats (25 procent) har båda satserna på samma kvitto – och säljer samma restaurang dessutom matlådor att ta med hem hamnar de på 6 procent, eftersom det räknas som livsmedel och inte som restaurangtjänst.
 
 **Att glömma att momsregistrering är gratis.** Betala aldrig en tredje part för själva registreringen hos Skatteverket – det du eventuellt betalar för är hjälp att fylla i ansökan, inte registreringen som sådan.
 
