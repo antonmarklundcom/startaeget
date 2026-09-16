@@ -8,12 +8,13 @@
  * vendor's own pricing page directly (no sandbox egress block this time) and
  * corrected where they had drifted — those three are vendor-confirmed.
  *
- * Still NOT vendor-confirmed, left unchanged on purpose:
- * - `wint`: wint.se/priser returned 403, so the qualitative price text stays.
- *
  * The `bjorn-lunden` rebrand to Lundify and prices were confirmed on
  * 2026-09-16 at bjornlunden.com/se/ and bjornlunden.com/se/priser/.
  * The display name and price are updated; the stable id and partnerId stay.
+ *
+ * `wint`: wint.se/priser (an earlier session logged a 403 here) resolved
+ * cleanly on a later 2026-09-16 check and confirmed the price live —
+ * this row is now vendor-confirmed too.
  */
 const comparison = {
   slug: "basta-bokforingsprogram",
@@ -71,13 +72,13 @@ const comparison = {
       badge: "Bäst om du vill slippa",
       verdict:
         "Ligger mitt emellan program och byrå: automatiken sköter löpande bokföring och en redovisningskonsult tar resten. Kostar mer per månad än ett rent program och mindre än en traditionell byrå.",
-      price: "Abonnemang efter bolagets storlek",
+      price: "Från 625 kr/mån (kampanjpris, under 500 000 kr oms.), annars från 2 290 kr/mån",
       freeTier: "Nej",
       bestFor: "Bolag som hellre betalar än bokför",
       highlight: "Löpande bokföring, bokslut och deklaration i ett abonnemang",
-      drawback: "Dyrast i jämförelsen och minst kontroll över detaljerna",
-      sourceUrl: "https://www.wint.se/",
-      sourceDate: "2026-09-11",
+      drawback: "Dyrast i jämförelsen och minst kontroll över detaljerna; bokslut 3 600 kr extra på lägsta paketet",
+      sourceUrl: "https://www.wint.se/priser",
+      sourceDate: "2026-09-16",
     },
     {
       id: "bjorn-lunden",
