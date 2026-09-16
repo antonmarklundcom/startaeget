@@ -59,13 +59,19 @@ export const partners: Partner[] = [
     fallback: "https://www.fortnox.se/",
   },
   {
+    // The product rebranded from "Visma eEkonomi" to "Spiris" (vendor's own
+    // wording, verified 2026-09-16 on spiris.se: "Bokföringsprogrammet Visma
+    // eEkonomi har bytt namn till Spiris"). The `id` is deliberately kept as
+    // `visma-eekonomi` because /go/visma-eekonomi/ is a stable public URL, and
+    // the display name keeps the old name in parentheses because that is still
+    // what people search for.
     id: "visma-eekonomi",
-    name: "Visma eEkonomi",
+    name: "Spiris (f.d. Visma eEkonomi)",
     category: "bokforingsprogram",
-    url: "https://vismaspcs.se/produkter/bokforingsprogram",
+    url: "https://www.spiris.se/ekonomiplattform/bokforing-fakturering",
     disclosure: ANNONS,
-    cta: "Till Visma eEkonomi",
-    fallback: "https://vismaspcs.se/produkter/bokforingsprogram",
+    cta: "Till Spiris",
+    fallback: "https://www.spiris.se/ekonomiplattform/bokforing-fakturering",
   },
   {
     id: "wint",
