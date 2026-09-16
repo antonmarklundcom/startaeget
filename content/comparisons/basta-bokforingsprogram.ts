@@ -10,10 +10,10 @@
  *
  * Still NOT vendor-confirmed, left unchanged on purpose:
  * - `wint`: wint.se/priser returned 403, so the qualitative price text stays.
- * - `bjorn-lunden`: third-party sources claim the product rebranded to
- *   "Lundify", but that was not confirmed against the vendor's own product
- *   pages, so neither the name nor the price was touched. Tracked in
- *   docs/codex-improvement-plan.md (entry dated 2026-09-16).
+ *
+ * The `bjorn-lunden` rebrand to Lundify and prices were confirmed on
+ * 2026-09-16 at bjornlunden.com/se/ and bjornlunden.com/se/priser/.
+ * The display name and price are updated; the stable id and partnerId stay.
  */
 const comparison = {
   slug: "basta-bokforingsprogram",
@@ -81,18 +81,18 @@ const comparison = {
     },
     {
       id: "bjorn-lunden",
-      name: "Björn Lundén",
+      name: "Lundify (f.d. Björn Lundén)",
       partnerId: "bjorn-lunden",
       badge: "Bäst för dig som vill förstå",
       verdict:
         "Byggt av ett förlag som skriver faktaböcker om bokföring, och det märks: mer klassiskt upplagt, med kunskapsbanken inbyggd. Passar den som vill lära sig redovisning och inte bara bli klar med den.",
-      price: "Från ca 200 kr/mån beroende på paket",
+      price: "Från 199 kr/mån (Easy), 349 kr/mån för Total-paketet (exkl. moms)",
       freeTier: "Nej, men testperiod",
       bestFor: "Den som vill lära sig bokföring på riktigt",
       highlight: "Faktabank och mallar ingår; rimligt pris för småbolag",
       drawback: "Mindre ekosystem och färre integrationer än de tre största",
-      sourceUrl: "https://www.bjornlunden.se/",
-      sourceDate: "2026-09-11",
+      sourceUrl: "https://bjornlunden.com/se/priser/",
+      sourceDate: "2026-09-16",
     },
   ],
 };
