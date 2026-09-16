@@ -35,7 +35,19 @@ const SOURCE_KEYS = [
   "utdelningsskatt",
 ];
 
+type RawInput = Record<keyof Input, string>;
+
+function rawInput(input: Input): RawInput {
+  return {
+    revenue: String(input.revenue),
+    costs: String(input.costs),
+    kommunalskatt: input.kommunalskatt === undefined ? "" : String(input.kommunalskatt),
+    hoursPerWeek: input.hoursPerWeek === undefined ? "" : String(input.hoursPerWeek),
+  };
+}
+
 type State = {
+  raw: RawInput;
   input: Input;
   result: Comparison;
   set: (field: keyof Input, raw: string) => void;
@@ -52,10 +64,13 @@ function useTool(): State {
 
 export function VadBlirKvarProvider({ children }: { children: React.ReactNode }) {
   const [input, setInput] = useState<Input>(DEFAULT_INPUT);
+  const [raw, setRaw] = useState(() => rawInput(DEFAULT_INPUT));
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setInput(fromQuery(new URLSearchParams(window.location.search)));
+    const initial = fromQuery(new URLSearchParams(window.location.search));
+    setInput(initial);
+    setRaw(rawInput(initial));
     setReady(true);
   }, []);
 
@@ -67,6 +82,7 @@ export function VadBlirKvarProvider({ children }: { children: React.ReactNode })
   const result = useMemo(() => compare(input), [input]);
 
   const set = useCallback((field: keyof Input, raw: string) => {
+    setRaw((current) => ({ ...current, [field]: raw }));
     setInput((current) => {
       const cleaned = raw.replace(/\s/g, "").replace(",", ".");
       if (cleaned === "") {
@@ -81,15 +97,18 @@ export function VadBlirKvarProvider({ children }: { children: React.ReactNode })
     });
   }, []);
 
-  const reset = useCallback(() => setInput(DEFAULT_INPUT), []);
+  const reset = useCallback(() => {
+    setInput(DEFAULT_INPUT);
+    setRaw(rawInput(DEFAULT_INPUT));
+  }, []);
 
-  const state = useMemo(() => ({ input, result, set, reset }), [input, result, set, reset]);
+  const state = useMemo(() => ({ input, raw, result, set, reset }), [input, raw, result, set, reset]);
 
   return <Context.Provider value={state}>{children}</Context.Provider>;
 }
 
 export function VadBlirKvarSteps() {
-  const { input, result, set, reset } = useTool();
+  const { raw, result, set, reset } = useTool();
 
   return (
     <div className="q">
@@ -100,9 +119,9 @@ export function VadBlirKvarSteps() {
           <label htmlFor="omsattning">Omsättning exklusive moms</label>
           <input
             id="omsattning"
-            inputMode="numeric"
+            inputMode="decimal"
             onChange={(event) => set("revenue", event.target.value)}
-            value={String(input.revenue)}
+            value={raw.revenue}
           />
           <span className="inputs__hint">
             Det du fakturerar under ett år, utan moms. Momsen är inte din, så den räknas
@@ -114,9 +133,9 @@ export function VadBlirKvarSteps() {
           <label htmlFor="kostnader">Kostnader exklusive moms</label>
           <input
             id="kostnader"
-            inputMode="numeric"
+            inputMode="decimal"
             onChange={(event) => set("costs", event.target.value)}
-            value={String(input.costs)}
+            value={raw.costs}
           />
           <span className="inputs__hint">
             Material, programvara, försäkring, lokal — allt utom din egen lön eller ditt
@@ -131,7 +150,7 @@ export function VadBlirKvarSteps() {
             inputMode="decimal"
             onChange={(event) => set("kommunalskatt", event.target.value)}
             placeholder={String(value("kommunalskatt-genomsnitt"))}
-            value={input.kommunalskatt === undefined ? "" : String(input.kommunalskatt)}
+            value={raw.kommunalskatt}
           />
           <span className="inputs__hint">
             Lämna tom för riksgenomsnittet {value("kommunalskatt-genomsnitt")} %. Din egen
@@ -143,9 +162,9 @@ export function VadBlirKvarSteps() {
           <label htmlFor="timmar">Timmar per vecka (frivilligt)</label>
           <input
             id="timmar"
-            inputMode="numeric"
+            inputMode="decimal"
             onChange={(event) => set("hoursPerWeek", event.target.value)}
-            value={input.hoursPerWeek === undefined ? "" : String(input.hoursPerWeek)}
+            value={raw.hoursPerWeek}
           />
           <span className="inputs__hint">
             Fyll i om du vill se vad du får kvar per arbetad timme, räknat på 46 veckor.

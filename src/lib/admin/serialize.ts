@@ -94,9 +94,11 @@ export function validateShape(input: {
   if (RESERVED_SLUGS.has(frontmatter.slug)) {
     errors.push(`Adressen /${frontmatter.slug}/ är en hub eller en reserverad route.`);
   }
-  if (frontmatter.slug !== input.existingSlug) {
-    const taken = input.takenSlugs ?? takenSlugsFromContent();
-    const owner = taken.get(frontmatter.slug);
+  const taken = input.takenSlugs ?? takenSlugsFromContent();
+  const owner = taken.get(frontmatter.slug);
+  const sameFile = frontmatter.slug === input.existingSlug &&
+    owner === `content/articles/${frontmatter.hub}/${frontmatter.slug}.mdx`;
+  if (!sameFile) {
     if (owner) errors.push(`Adressen /${frontmatter.slug}/ används redan av ${owner}.`);
   }
 

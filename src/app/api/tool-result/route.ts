@@ -13,7 +13,10 @@ export const dynamic = "force-dynamic";
 const toolResultSchema = z.object({
   tool: z.enum(["bolagsform", "startkostnad", "vad-blir-kvar"]),
   email: z.string().email().max(320),
-  payload: z.record(z.unknown()).default({}),
+  payload: z.record(z.unknown()).default({}).refine(
+    (payload) => JSON.stringify(payload).length <= 60_000,
+    "Resultatet får inte överstiga 60 000 tecken som JSON.",
+  ),
   subscribe: z.boolean().default(false),
   website: z.string().max(200).optional(),
 });
@@ -43,7 +46,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, stored: false });
   }
 
-  const payloadJson = JSON.stringify(data.payload).slice(0, 60_000);
+  const payloadJson = JSON.stringify(data.payload);
 
   const stored = await withDb(async (db) => {
     await db.insert(schema.toolResults).values({

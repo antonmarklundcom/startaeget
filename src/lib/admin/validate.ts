@@ -2,6 +2,8 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import { mdxComponents } from "@/components/Mdx";
+import { getComparison } from "@/lib/content";
+import { renderToReadableStream } from "react-dom/server.edge";
 import { internalLinkWarnings, validateShape, type ValidationResult } from "./serialize";
 
 /**
@@ -28,6 +30,15 @@ export async function validateArticle(input: {
   if (!shape.frontmatter) return shape;
 
   const errors = [...shape.errors];
+  if (shape.frontmatter.type === "comparison") {
+    try {
+      if (!(await getComparison(shape.frontmatter.slug))) {
+        errors.push(`content/comparisons/${shape.frontmatter.slug}.ts saknas.`);
+      }
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : String(error));
+    }
+  }
   const compileError = await compileMdx(input.body);
   if (compileError) errors.push(compileError);
 
@@ -39,14 +50,21 @@ export async function validateArticle(input: {
   };
 }
 
-/** Compiles the body through the site's own MDX pipeline. Returns the error, or null. */
+/** Compiles and renders the site's MDX component map. Returns the error, or null. */
 export async function compileMdx(body: string): Promise<string | null> {
   try {
-    await compileMDX({
+    const { content } = await compileMDX({
       source: body,
       components: mdxComponents,
       options: { mdxOptions: { remarkPlugins: [remarkGfm], rehypePlugins: [rehypeSlug] } },
     });
+    let renderError: unknown;
+    const stream = await renderToReadableStream(content, {
+      onError(error) { renderError = error; },
+    });
+    await stream.allReady;
+    await new Response(stream).text();
+    if (renderError) throw renderError;
     return null;
   } catch (error) {
     return error instanceof Error ? error.message : String(error);

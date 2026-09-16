@@ -130,6 +130,20 @@ async function guardedWrite(
     };
   }
 
+  // Edits may only keep their existing path: neither backend performs moves.
+  const existingFile = input.existingSlug ? taken.get(input.existingSlug) : undefined;
+  if (existingFile && existingFile !== articlePath(hub, slug)) {
+    return {
+      ok: false,
+      mode: store.mode,
+      validation: {
+        ok: false,
+        errors: ["Hub och adress kan inte ändras för en befintlig artikel."],
+        warnings: [],
+      },
+    };
+  }
+
   const validation = await validateArticle({
     frontmatter: input.frontmatter,
     body: input.body,
