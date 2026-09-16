@@ -83,13 +83,19 @@ export const partners: Partner[] = [
     fallback: "https://www.wint.se/",
   },
   {
+    // The product rebranded from "Björn Lundén" to "Lundify" (vendor's own
+    // wording, verified 2026-09-16 on bjornlunden.com/se/: "Prova Lundify
+    // gratis!"). The `id` is deliberately kept as `bjorn-lunden` because
+    // /go/bjorn-lunden/ is a stable public URL, and the display name keeps
+    // the old name in parentheses because that is still what people
+    // search for.
     id: "bjorn-lunden",
-    name: "Björn Lundén",
+    name: "Lundify (f.d. Björn Lundén)",
     category: "bokforingsprogram",
-    url: "https://www.bjornlunden.se/",
+    url: "https://bjornlunden.com/se/",
     disclosure: ANNONS,
-    cta: "Till Björn Lundén",
-    fallback: "https://www.bjornlunden.se/",
+    cta: "Till Lundify",
+    fallback: "https://bjornlunden.com/se/",
   },
 
   // --- Företagskonto och bank ----------------------------------------------
