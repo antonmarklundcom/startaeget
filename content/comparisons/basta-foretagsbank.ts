@@ -5,15 +5,25 @@
  *
  * None of the four banks below currently pays this site an affiliate
  * commission — all links are plain (see content/affiliates.ts, category
- * "foretagskonto", disclosure "Vi tjänar inget på den här länken"). Bank
- * pricing pages for company accounts are rarely published with exact figures
- * and the egress block confirmed in S3/S4 (see docs/log) meant these could
- * not be re-fetched in S5 either — price/freeTier fields below are
- * deliberately generic rather than guessed numbers.
+ * "foretagskonto", disclosure "Vi tjänar inget på den här länken").
+ *
+ * On 2026-09-16 all four banks' own sites were loaded directly (no sandbox
+ * egress block this time). Only one of them publishes concrete figures:
+ * - `seb-foretag` is now vendor-confirmed — seb.se publishes an open price
+ *   list with startavgift and paketpriser, so the row states them exactly.
+ *
+ * The other three keep their deliberately generic "kontakta banken"-framing,
+ * because the vendors genuinely do not publish a company-account price:
+ * - `swedbank-foretag`: the ränte- och prissida only links a PDF-prislista,
+ *   with no per-package figure on the page itself.
+ * - `nordea-foretag`: nordea.se/foretag/ publishes no company-account price.
+ * - `handelsbanken-foretag`: the site is organised around lokalkontor-kontakt
+ *   rather than a publicerad prislista, which is what the row already says.
+ * No number was invented for those three; only `sourceDate` was refreshed.
  */
 const comparison = {
   slug: "basta-foretagsbank",
-  updated: "2026-09-11",
+  updated: "2026-09-16",
   rows: [
     {
       id: "seb-foretag",
@@ -22,13 +32,13 @@ const comparison = {
       badge: "Bäst om du redan är privatkund",
       verdict:
         "Går snabbast att komma igång med om du redan har SEB som privatbank, eftersom mycket av kundkännedomen redan finns registrerad. Den fördelen försvinner om du byter bank samtidigt som du startar bolag.",
-      price: "Kontakta banken för aktuellt pris — publiceras sällan öppet",
-      freeTier: "Ingen renodlad gratisnivå för företagskonto",
+      price: "2 500 kr startavgift, sedan 100 kr/mån (Enkla firman) eller 130 kr/mån",
+      freeTier: "Första 6 månaderna gratis på Enkla firman och Företagspaketet",
       bestFor: "Befintliga SEB-kunder som startar bolag",
-      highlight: "Snabb onboarding för redan existerande privatkunder",
+      highlight: "Snabb onboarding för redan existerande privatkunder; öppet publicerad prislista",
       drawback: "Mindre fördel om du inte redan är kund — då är processen som hos de andra storbankerna",
-      sourceUrl: "https://seb.se/foretag",
-      sourceDate: "2026-09-11",
+      sourceUrl: "https://seb.se/foretag/tjanster/aktuella-priser",
+      sourceDate: "2026-09-16",
     },
     {
       id: "swedbank-foretag",
@@ -43,7 +53,7 @@ const comparison = {
       highlight: "Bredast fysiska kontorsnät i landet",
       drawback: "Inget som sticker ut digitalt jämfört med övriga storbanker",
       sourceUrl: "https://www.swedbank.se/foretag.html",
-      sourceDate: "2026-09-11",
+      sourceDate: "2026-09-16",
     },
     {
       id: "nordea-foretag",
@@ -58,7 +68,7 @@ const comparison = {
       highlight: "Samma bank och infrastruktur i flera nordiska länder",
       drawback: "Ingen tydlig fördel om verksamheten är helt Sverigebaserad",
       sourceUrl: "https://www.nordea.se/foretag/",
-      sourceDate: "2026-09-11",
+      sourceDate: "2026-09-16",
     },
     {
       id: "handelsbanken-foretag",
@@ -73,7 +83,7 @@ const comparison = {
       highlight: "Lokalt beslutsfattande kan ge snabbare och mer skräddarsydda besked",
       drawback: "Kvaliteten kan variera mellan kontor eftersom mycket avgörs lokalt",
       sourceUrl: "https://www.handelsbanken.se/sv/foretag",
-      sourceDate: "2026-09-11",
+      sourceDate: "2026-09-16",
     },
   ],
 };

@@ -5,14 +5,22 @@
  *
  * Company insurance premiums are quoted per business (bransch, omsättning,
  * antal anställda, risknivå) and are not published as list prices the way a
- * SaaS subscription is. The vendor domains below were unreachable from this
- * sandbox (same egress block documented for S3-S5, see docs/log) so
- * price/freeTier fields are deliberately generic rather than guessed — a
- * human should request quotes before launch.
+ * SaaS subscription is.
+ *
+ * On 2026-09-16 all three vendor sites were loaded directly (no sandbox
+ * egress block this time). None of the three publishes a fixed price — every
+ * one funnels to a offertberäknare ("Se ditt pris", "begär offert"), which
+ * confirms that the generic price/freeTier framing below is accurate rather
+ * than stale. No row is therefore vendor-confirmed with a figure, and no
+ * number was invented; only `sourceDate` was refreshed.
+ *
+ * lansforsakringar.se/foretag/ redirects to a regional länsbolag-sajt, which
+ * independently confirms the drawback text about villkor och pris varierande
+ * mellan länsbolagen. The generic URL is kept on purpose.
  */
 const comparison = {
   slug: "basta-foretagsforsakring",
-  updated: "2026-09-11",
+  updated: "2026-09-16",
   rows: [
     {
       id: "if-foretag",
@@ -27,7 +35,7 @@ const comparison = {
       highlight: "Stort utbud av tilläggsmoduler för de flesta branscher",
       drawback: "Kan kännas mer standardiserat än regionalt anpassat för en liten nischverksamhet",
       sourceUrl: "https://www.if.se/foretag",
-      sourceDate: "2026-09-11",
+      sourceDate: "2026-09-16",
     },
     {
       id: "trygg-hansa-foretag",
@@ -42,7 +50,7 @@ const comparison = {
       highlight: "Lång erfarenhet av företagsförsäkring för svenska SME-bolag",
       drawback: "Liknar konkurrenternas grundutbud starkt — jämför offerter noga för att se skillnad",
       sourceUrl: "https://www.trygghansa.se/foretag",
-      sourceDate: "2026-09-11",
+      sourceDate: "2026-09-16",
     },
     {
       id: "lansforsakringar-foretag",
@@ -57,7 +65,7 @@ const comparison = {
       highlight: "Regional, kundägd struktur ger ofta god lokal service",
       drawback: "Villkor och pris kan variera mellan länsbolagen, vilket gör jämförelse mellan orter svårare",
       sourceUrl: "https://www.lansforsakringar.se/foretag/",
-      sourceDate: "2026-09-11",
+      sourceDate: "2026-09-16",
     },
   ],
 };
