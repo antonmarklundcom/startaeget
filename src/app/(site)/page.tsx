@@ -11,6 +11,7 @@ import { NewsletterBand } from "@/components/SiteFooter";
 import { HeroToolSlot } from "@/components/home/HeroToolSlot";
 import { buildMetadata } from "@/lib/seo";
 import { formatUpdated } from "@/lib/site";
+import { articleCountNoun, getAdvertisedComparisonSlugs } from "@/lib/content/presentation";
 
 export const metadata: Metadata = buildMetadata({
   title: home.metaTitle,
@@ -20,25 +21,21 @@ export const metadata: Metadata = buildMetadata({
 
 /**
  * Home (docs/design/verkstan.md §2): gradient hero with the Bolagsformsväljaren's
- * first question live in the tool card, the three tools in their tints, the six
+ * first question live in the tool card, the three tools in their tints, the
  * rooms with their real article counts, two sand panels, the sun band.
  *
  * Every count and every row comes from the loaders. Nothing on this page is a
  * number we made up (plan §4.16) — the hero chip says what is true instead of
  * counting visitors we cannot count.
  */
-export default function HomePage() {
+export default async function HomePage() {
   const comparisons = getComparisonArticles();
   const comparisonSlugs = new Set(comparisons.map((a) => a.frontmatter.slug));
   const guides = getPublishedArticles()
     .filter((a) => !comparisonSlugs.has(a.frontmatter.slug))
     .slice(0, 4);
 
-  /** Real published-article counts per room; "comparisons" hubs count those. */
-  const countFor = (hubId: string, kind: string) =>
-    kind === "comparisons"
-      ? comparisons.length
-      : getArticlesByHub(hubId as Hub).length;
+  const advertisedComparisons = await getAdvertisedComparisonSlugs(comparisons);
 
   return (
     <>
@@ -103,13 +100,14 @@ export default function HomePage() {
       <section className="section">
         <div className="container">
           <div className="section__head">
-            <h2>Sex rum. Gå in där du står just nu.</h2>
+            <h2>Hitta ditt rum. Gå in där du står just nu.</h2>
           </div>
           <ul className="rooms">
             {hubs
-              .filter((hub) => hub.kind !== "comparisons")
+              .filter((hub) => hub.kind === "hub")
               .map((hub) => {
-                const count = countFor(hub.id, hub.kind);
+                const articles = getArticlesByHub(hub.id as Hub);
+                const count = articles.length;
                 return (
                   <li key={hub.id}>
                     <Link className="room" data-tint={hub.tint} href={hub.path}>
@@ -118,7 +116,7 @@ export default function HomePage() {
                       <p className="room__desc">{hub.description}</p>
                       {count > 0 ? (
                         <span className="room__count">
-                          {count} {count === 1 ? "guide" : "guider"}
+                          {count} {articleCountNoun(articles)}
                         </span>
                       ) : null}
                     </Link>
@@ -168,7 +166,9 @@ export default function HomePage() {
                           →
                         </span>
                         <span className="row__desc">{article.frontmatter.description}</span>
-                        <span className="chip chip--ad row__chip">Annonslänkar</span>
+                        {advertisedComparisons.has(article.frontmatter.slug) ? (
+                          <span className="chip chip--ad row__chip">Annonslänkar</span>
+                        ) : null}
                       </Link>
                     </li>
                   ))}

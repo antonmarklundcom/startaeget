@@ -40,13 +40,14 @@ Följande artikel-slugs är skrivna efter plan §6, inte efter den riktiga expor
 
 ## 4. Affärsmodellen är inte inkopplad
 
-- **Inget affiliateprogram är anslutet.** Alla 27 partner i `content/affiliates.ts` har tom `affiliateUrl`, så varje `/go/<id>/` går till den vanliga länken och ingenting är märkt "Annonslänk". Märkningen slås på per partner automatiskt när `affiliateUrl` fylls i (plan §7 punkt 5).
+- **Inget affiliateprogram är anslutet.** Alla 27 partner i `content/affiliates.ts` har tom `affiliateUrl`, så varje `/go/<id>/` går till den vanliga fallback-länken. `Annonslank` och `PartnerCta` visar ändå partnerns "Annonslänk"-märkning ovillkorligt, enligt det uttryckliga beslutet i plan §1.8. När `affiliateUrl` fylls i ändras destinationen och länken får `rel="sponsored nofollow noopener"`; den synliga märkningen är redan på. Detta är sajtens transparenspolicy för partnerslots, inte ett påstående att en fallback-länk redan ger ersättning eller i sig måste annonsmärkas enligt lag (§1.2 kräver märkning av affiliatelänkar).
+- **Annonspolicyn har en kvarvarande motsägelse.** `content/pages/annonspolicy.mdx` säger först att märkningen alltid är på, men under "Vad som styr vilka leverantörer vi visar" står att leverantörer utan aktivt ersättningsprogram länkas utan märkning. Det senare stämmer inte med partnerslotsens beslutade beteende. Filen ligger utanför denna ändrings tillåtna filurval och har inte ändrats.
 - **Ingen e-post skickas.** `/api/subscribe` och `/api/tool-result` sparar raden men skickar inget utan `RESEND_API_KEY`, så dubbel opt-in för nyhetsbrevet finns inte ännu (plan §7 punkt 4).
 - **Org.nr och postadress saknas** i `kontakt.mdx` och `integritetspolicy.mdx` (plan §7 punkt 6). Ingen påhittad adress användes — sidorna säger att uppgifterna publiceras när de finns.
 
-## 5. Bloggadmin kräver hPanel-konfiguration innan den fungerar i drift
+## 5. Bloggadmin behöver GitHub-konfiguration för beständiga ändringar i drift
 
-Plan §7 punkt 10–12: `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, och en fine-grained `GITHUB_TOKEN` med *Contents: read/write* på bara detta repo. **Utan token är produktionsadminen skrivskyddad.**
+Plan §7 punkt 10–12: `ADMIN_PASSWORD` och `ADMIN_SESSION_SECRET` behövs för admininloggningen. GitHub-lagring kräver både en fine-grained `GITHUB_TOKEN` med *Contents: read/write* på bara detta repo och `GITHUB_REPO` (`ägare/repo`); `GITHUB_BRANCH` är valfri och har standardvärdet `main`. **Utan token eller repo väljer `src/lib/admin/store.ts` en skrivbar lokal diskbackend även i produktion.** Den kan skapa, ändra och radera artiklar under `content/articles` om processens filrättigheter tillåter det; validering gäller fortfarande för skrivningar. Ändringarna sparas bara på serverns disk, inte i git, och överlever inte en Hostinger-redeploy som ersätter innehållet från repot. En lyckad lokal sparning innebär inte heller att redan statiskt byggda publika sidor har byggts om.
 
 Dessutom:
 
@@ -58,7 +59,14 @@ Dessutom:
 
 - **`bokforing-dropshipping`** hedgar medvetet om importmoms och EU:s gränsöverskridande konsumentmoms — inga påhittade trösklar eller ordningsnamn. Markerad i artikeln med en varnings-Callout och en `<Verifiera />`. Värd en riktig revisorsgenomgång.
 - **`basta-kassasystem`** beskriver kravet på kassaregister och kontrollenhet bara i allmänna termer; undantagströsklarna är inte verifierade.
-- **`webshop`, `ehandel` och `starta-webshop`** täcker angränsande mark med avsikt, men skrevs inte mot varandra. Värd en skumläsning för att bekräfta att de tre inte upprepar sig.
+- **`webshop`, `ehandel` och `starta-webshop` — granskade 2026-09-15: betydande innehållsöverlapp, särskilt mellan `ehandel` och `starta-webshop`.** Olika avsikter i frontmatter räcker inte för att skilja brödtexterna:
+  - Plattform: `webshop` → "Plattformen: butikens skelett", `ehandel` → "Välj plattform utifrån var du redan är" och `starta-webshop` → steg 3 upprepar månadsbetald SaaS kontra egen drift, uppdateringar och säkerhetsansvar.
+  - Betalning: `webshop` → "Betalningslösningen: att faktiskt få betalt", första stycket i `ehandel` → "Betalningar och att sälja utanför Sverige" och båda styckena i `starta-webshop` steg 4 ger samma råd om kort/Swish/faktura, fast avgift plus procentsats och marginal efter frakt.
+  - Lager: `ehandel` → "Eget lager, dropshipping eller fulfillment" och `starta-webshop` steg 6 har nästan samma tre förklarande stycken om eget lager, dropshipping och fulfillment, inklusive säljarens returansvar och fulfillmentavgiftens effekt på billiga produkter. `webshop` → "Lager, dropshipping eller fulfillment" komprimerar samma resonemang till en checklista; slutstycket om att börja med eget lager och kombinera upplägg återkommer i alla tre.
+  - Leverans/kundkontakt: `webshop` → "Frakt och leverans: löftet du måste hålla" och "Kundservice: den delen som säljer tyst", `ehandel` → "Vad kunderna faktiskt bryr sig om" samt `starta-webshop` steg 5 upprepar tydligt fraktpris och hållbara leveranslöften; de två första upprepar även bemannad telefon/chatt som förtroendesignal.
+  - Juridik: `webshop` → "Integritetspolicy, ångerrätt och prisinformation", `ehandel` → "Det här krävs innan första ordern" och `starta-webshop` steg 7 upprepar ångerrätt, integritetspolicy och totalpris inklusive moms/frakt. Lagerfrågan i alla tre FAQ ger också samma svar.
+  - Nära dubblerade formuleringar: de inledande bolagsforms-Callout-rutorna i `ehandel` och `starta-webshop`; styckena "Att räkna fel på marginalen efter frakt och avgifter" och "Att skjuta upp momsregistreringen" i deras respektive avslutande misstagsavsnitt; samt prisvarningsrutorna.
+  - Eget värde finns kvar: `webshop` förklarar delarnas beroenden och gratis kontra betalda delar; `ehandel` har EU-försäljning/OSS och bokföringsflöden; `starta-webshop` har ordnad lanseringssekvens, testorder, mjuk lansering och marknadsföring efter test. Slutsats: tydlig redaktionell upprepning, inte tre identiska artiklar. En framtida innehållsredigering kan behålla dessa roller och korta de gemensamma förklaringarna med korslänkar. Artiklarna har inte ändrats; granskningen verifierar inga juridiska uppgifter, momsbelopp eller priser.
 - **`foretagsforsakring`** anger Konsumenternas Försäkringsbyrå som källa; den exakta URL:en kunde inte kontrolleras från sandlådan.
 
 ## 7. Små tekniska skulder

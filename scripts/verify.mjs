@@ -18,6 +18,8 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const PORT = Number(process.env.VERIFY_PORT ?? 4321);
 const BASE = `http://127.0.0.1:${PORT}`;
 const FAST = process.argv.includes("--fast");
+// Windows needs a shell to resolve npx.cmd; keep direct spawning on Linux.
+const NPX_SHELL = process.platform === "win32";
 
 const ESC = String.fromCharCode(27);
 const bold = (s) => `${ESC}[1m${s}${ESC}[0m`;
@@ -46,7 +48,7 @@ function step(label) {
 
 function run(label, command, args) {
   const started = Date.now();
-  const result = spawnSync(command, args, { cwd: ROOT, encoding: "utf8", env: process.env });
+  const result = spawnSync(command, args, { cwd: ROOT, encoding: "utf8", env: process.env, shell: NPX_SHELL });
   const seconds = ((Date.now() - started) / 1000).toFixed(1);
   if (result.status !== 0) {
     const output = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
@@ -123,6 +125,7 @@ const expectedUrls = (() => {
     cwd: ROOT,
     encoding: "utf8",
     env: process.env,
+    shell: NPX_SHELL,
   });
   if (result.status !== 0) {
     fail("scripts/expected-urls.ts", `${result.stdout ?? ""}${result.stderr ?? ""}`.trim());
@@ -141,6 +144,7 @@ server = spawn("npx", ["next", "start", "-p", String(PORT)], {
   env: { ...process.env, NODE_ENV: "production" },
   stdio: ["ignore", "pipe", "pipe"],
   detached: true,
+  shell: NPX_SHELL,
 });
 
 let serverLog = "";

@@ -7,31 +7,22 @@ import { NewsletterBand } from "@/components/SiteFooter";
 import { breadcrumbJsonLd } from "@/lib/jsonld";
 import { tools, getHub } from "@/lib/content/site";
 import { formatUpdated } from "@/lib/site";
+import { articleCountNoun, getAdvertisedComparisonSlugs } from "@/lib/content/presentation";
 
 /**
  * A hub is an SEO surface in its own right (plan §3), and in "Verkstan" it is
  * also the room: the head panel carries the hub's tint, and so do the dots on
  * its cards. /jamfor/ is the same template with the comparison marking on.
  */
-export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[] }) {
+export async function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[] }) {
   const crumbs = [
     { name: "Start", path: "/" },
     { name: hub.h1, path: hub.path },
   ];
   const isComparisons = hub.kind === "comparisons";
 
-  // The chip counts what the room actually holds. /jamfor/ holds comparisons and
-  // /blogg/ holds posts; every other room holds guides. Derived from the
-  // articles rather than hard-coded per hub, so a new room labels itself.
-  const countNoun = (() => {
-    const one = articles.length === 1;
-    if (isComparisons) return one ? "jämförelse" : "jämförelser";
-    // "inlägg" is a neuter noun: same in the singular and the plural.
-    if (articles.length && articles.every((a) => a.frontmatter.type === "post")) {
-      return "inlägg";
-    }
-    return one ? "guide" : "guider";
-  })();
+  const countNoun = articleCountNoun(articles, isComparisons);
+  const advertisedComparisons = await getAdvertisedComparisonSlugs(articles);
 
   // `featured` names slugs; a slug a content phase has not written yet simply
   // drops out, so the hub never links to a page that does not exist.
@@ -51,7 +42,7 @@ export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[
             <span className="chip">
               {articles.length} {countNoun}
             </span>
-            {isComparisons ? (
+            {isComparisons && advertisedComparisons.size > 0 ? (
               <span className="chip chip--ad">Innehåller annonslänkar</span>
             ) : null}
           </p>
@@ -84,7 +75,7 @@ export function HubTemplate({ hub, articles }: { hub: HubDef; articles: Article[
                 <h2 className="guide-card__title">{article.frontmatter.title}</h2>
                 <p className="guide-card__desc">{article.frontmatter.description}</p>
                 <span className="guide-card__meta">
-                  {isComparisons ? "Annonslänkar · " : ""}
+                  {advertisedComparisons.has(article.frontmatter.slug) ? "Annonslänkar · " : ""}
                   Uppdaterad {formatUpdated(article.frontmatter.updated)}
                 </span>
               </Link>
