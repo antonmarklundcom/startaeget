@@ -3,16 +3,21 @@
  * src/lib/content/schema.ts › COMPARISON_COLUMNS — the same five for every
  * comparison on the site, so the tables stay comparable.
  *
- * Prices are the vendors' own list prices on `sourceDate`. S5 (2026-09-11)
- * re-attempted the re-check O2 asked for and hit the same egress block
- * (403 on CONNECT to bokio.se, fortnox.se, vismaspcs.se, wint.se and
- * bjornlunden.se — see docs/log/O3.md, confirmed again the same day). Values
- * are unchanged from O2 and still corroborated only against secondary
- * sources; a human must open each `sourceUrl` before launch.
+ * Prices are the vendors' own list prices on `sourceDate`. On 2026-09-16 the
+ * bokio, fortnox and visma-eekonomi rows were re-checked by loading each
+ * vendor's own pricing page directly (no sandbox egress block this time) and
+ * corrected where they had drifted — those three are vendor-confirmed.
+ *
+ * Still NOT vendor-confirmed, left unchanged on purpose:
+ * - `wint`: wint.se/priser returned 403, so the qualitative price text stays.
+ * - `bjorn-lunden`: third-party sources claim the product rebranded to
+ *   "Lundify", but that was not confirmed against the vendor's own product
+ *   pages, so neither the name nor the price was touched. Tracked in
+ *   docs/codex-improvement-plan.md (entry dated 2026-09-16).
  */
 const comparison = {
   slug: "basta-bokforingsprogram",
-  updated: "2026-09-11",
+  updated: "2026-09-16",
   rows: [
     {
       id: "bokio",
@@ -26,8 +31,8 @@ const comparison = {
       bestFor: "Enskild firma och nystartade bolag",
       highlight: "Lättast att komma igång i utan förkunskaper; svensk support",
       drawback: "Gratisnivån har krympt över tid och färre byråer arbetar i det",
-      sourceUrl: "https://www.bokio.se/",
-      sourceDate: "2026-09-11",
+      sourceUrl: "https://www.bokio.se/priser/",
+      sourceDate: "2026-09-16",
     },
     {
       id: "fortnox",
@@ -36,28 +41,28 @@ const comparison = {
       badge: "Bäst när du ska växa",
       verdict:
         "Marknadsstandarden bland svenska redovisningsbyråer, med det största utbudet av integrationer. Priset byggs av moduler, så det som ser billigt ut i grundpaketet kan bli dyrare när lön och tidrapportering läggs till.",
-      price: "Från ca 159 kr/mån för grundpaketet",
+      price: "189 kr/mån för Bokföring plus Access från 29 kr/mån (12 mån avtal)",
       freeTier: "Nej, men kampanjpris för nystartade",
       bestFor: "Aktiebolag som ska ha byrå eller anställda",
       highlight: "Din byrå kan det nästan garanterat; störst integrationsutbud",
       drawback: "Modulprismodellen gör totalkostnaden svår att förutse",
-      sourceUrl: "https://www.fortnox.se/",
-      sourceDate: "2026-09-11",
+      sourceUrl: "https://www.fortnox.se/produkt/prislista",
+      sourceDate: "2026-09-16",
     },
     {
       id: "visma-eekonomi",
-      name: "Visma eEkonomi",
+      name: "Spiris (f.d. Visma eEkonomi)",
       partnerId: "visma-eekonomi",
       badge: "Bäst allroundpaket",
       verdict:
-        "Ligger nära Fortnox i funktion och byråstöd, med mer inkluderat i grundpriset i stället för som tillval. Nystartade bolag får ofta en längre gratisperiod, vilket gör jämförelsen mot listpriset missvisande det första året.",
-      price: "Från ca 179 kr/mån",
-      freeTier: "Introduktionsperiod för nystartade bolag",
+        "Hette Visma eEkonomi fram till rebrandingen till Spiris — samma program, nytt namn. Ligger nära Fortnox i funktion och byråstöd, med mer inkluderat i grundpriset i stället för som tillval. Nystartade bolag får en lång gratisperiod, vilket gör jämförelsen mot listpriset missvisande det första året.",
+      price: "Från 199 kr/mån (paketet Starta)",
+      freeTier: "6 månader gratis för bolag startade senaste 12 mån",
       bestFor: "Den som vill ha allt i ett paket",
       highlight: "Fakturering ingår i grundpriset; stort byråstöd",
       drawback: "Gränssnittet är tyngre än de nyare konkurrenternas",
-      sourceUrl: "https://vismaspcs.se/produkter/bokforingsprogram",
-      sourceDate: "2026-09-11",
+      sourceUrl: "https://www.spiris.se/priser",
+      sourceDate: "2026-09-16",
     },
     {
       id: "wint",
