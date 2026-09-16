@@ -261,7 +261,7 @@ export function toQuery(input: Input): string {
   params.set("omsattning", String(Math.round(clampPositive(input.revenue))));
   params.set("kostnader", String(Math.round(clampPositive(input.costs))));
   if (input.kommunalskatt) params.set("kommunalskatt", String(input.kommunalskatt));
-  if (input.hoursPerWeek) params.set("timmar", String(Math.round(input.hoursPerWeek)));
+  if (input.hoursPerWeek) params.set("timmar", String(input.hoursPerWeek));
   return params.toString();
 }
 

@@ -113,6 +113,8 @@ export const RESERVED_SLUGS = new Set<string>([
   "verktyg",
   "go",
   "api",
+  "admin",
+  "og",
   "sitemap.xml",
   "robots.txt",
 ]);
