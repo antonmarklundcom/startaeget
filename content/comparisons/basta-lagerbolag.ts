@@ -6,7 +6,7 @@
  * Written during an egress-blocked phase (S5, 2026-09-11) — no vendor
  * pricing page could be reached to verify exact lagerbolag prices, so no
  * specific price is stated for any of the three; price/freeTier are
- * intentionally generic. The Bolagsverket nyregistreringsavgift (2 200 kr,
+ * intentionally generic. The Bolagsverket nyregistreringsavgift (2 400 kr,
  * e-tjänst) cited in the article prose is sourced directly from
  * bolagsverket.se and not repeated here. A human must open each `sourceUrl`
  * before launch.

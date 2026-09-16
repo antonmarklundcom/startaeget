@@ -313,7 +313,7 @@ export function nextSteps(form: CompanyForm | null): string[] {
     return [
       "Öppna ett företagskonto och sätt in aktiekapitalet på 25 000 kr.",
       "Be banken om ett bankintyg som visar att kapitalet finns.",
-      "Registrera bolaget på verksamt.se — Bolagsverkets avgift är 2 200 kr via e-tjänsten.",
+      "Registrera bolaget på verksamt.se — Bolagsverkets avgift är 2 400 kr via e-tjänsten.",
       "Ansök om godkännande för F-skatt och momsregistrering samtidigt, det är gratis.",
       "Välj bokföringsprogram och bestäm om du sköter bokslutet själv eller via byrå.",
       "Skriv in dig i aktieboken och spara stiftelseurkunden — du behöver dem vid varje ändring.",
@@ -322,7 +322,7 @@ export function nextSteps(form: CompanyForm | null): string[] {
   if (form === "handelsbolag") {
     return [
       "Skriv ett kompanjonsavtal först — vem gör vad, vad händer om någon vill ut.",
-      "Registrera handelsbolaget hos Bolagsverket, 1 200 kr.",
+      "Registrera handelsbolaget hos Bolagsverket, 1 800 kr.",
       "Ansök om F-skatt och momsregistrering på verksamt.se, gratis.",
       "Öppna företagskonto i bolagets namn.",
       "Bestäm hur ni delar resultatet, och skriv ned det.",
@@ -332,7 +332,7 @@ export function nextSteps(form: CompanyForm | null): string[] {
   return [
     "Ansök om godkännande för F-skatt på verksamt.se — gratis, och tar några dagar.",
     "Momsregistrera dig i samma ansökan om du säljer momspliktigt.",
-    "Registrera företagsnamnet hos Bolagsverket om du vill skydda det, 1 200 kr (frivilligt).",
+    "Registrera företagsnamnet hos Bolagsverket om du vill skydda det, 1 800 kr (frivilligt).",
     "Öppna ett separat konto för firman — inget krav, men du kommer att vilja ha det.",
     "Välj ett bokföringsprogram och börja bokföra från första kvittot.",
     "Lägg undan för skatt och egenavgifter löpande, och ansök om en debiterad preliminärskatt.",

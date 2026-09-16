@@ -43,7 +43,7 @@ export const LINE_ITEMS: LineItem[] = [
     default: value("bolagsverket-ab-nyregistrering"),
     forms: ["ab"],
     constantKey: "bolagsverket-ab-nyregistrering",
-    help: "Avgiften via e-tjänsten på verksamt.se. På pappersblankett kostar det 2 900 kr.",
+    help: "Avgiften via e-tjänsten på verksamt.se. På pappersblankett kostar det 2 700 kr.",
   },
   {
     id: "registrering-handelsbolag",
