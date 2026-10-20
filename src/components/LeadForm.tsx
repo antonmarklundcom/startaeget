@@ -80,8 +80,8 @@ export function LeadForm({
             <input id="lead-email" name="email" type="email" autoComplete="email" required />
           </div>
           <div className="form__field">
-            <label htmlFor="lead-phone">Telefon (frivilligt)</label>
-            <input id="lead-phone" name="phone" type="tel" autoComplete="tel" />
+            <label htmlFor="lead-phone">Telefon</label>
+            <input id="lead-phone" name="phone" type="tel" autoComplete="tel" placeholder="070-123 45 67" required />
           </div>
           <div className="form__field">
             <label htmlFor="lead-form-type">Bolagsform</label>

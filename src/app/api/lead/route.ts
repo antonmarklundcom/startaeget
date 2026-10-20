@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { withDb, schema, isDbConfigured } from "@/db";
-import { forwardLead, isVenderCrmConfigured } from "@/lib/vendercrm";
+import { eq } from "drizzle-orm";
+import { attributionFromCookieHeader, forwardLead, isVenderCrmConfigured, toE164 } from "@/lib/vendercrm";
 import { rateLimit, clientKey } from "@/lib/rate-limit";
 
 /**
@@ -18,7 +19,9 @@ const leadSchema = z.object({
   type: z.enum(["byra", "kontakt"]).default("byra"),
   name: z.string().min(2).max(200),
   email: z.string().email().max(320),
-  phone: z.string().min(6).max(30).optional().or(z.literal("")),
+  // Required: the phone is the contact's identity in VenderCRM; a lead without
+  // one could never leave our own table (vendercrm-lead-capture rule 3).
+  phone: z.string().min(6).max(30).refine((v) => toE164(v) !== null, "phone"),
   companyForm: z.string().max(40).optional().or(z.literal("")),
   message: z.string().max(5000).optional().or(z.literal("")),
   sourcePage: z.string().max(500).default("/"),
@@ -57,7 +60,7 @@ export async function POST(request: Request) {
     type: data.type,
     name: data.name,
     email: data.email,
-    phone: data.phone || null,
+    phone: data.phone,
     companyForm: data.companyForm || null,
     message: data.message || null,
     sourcePage: data.sourcePage,
@@ -71,18 +74,21 @@ export async function POST(request: Request) {
     });
   }
 
-  let forwarded = false;
-  if (data.phone) {
-    forwarded = await forwardLead({
-      phone: data.phone,
-      name: data.name,
-      email: data.email,
-      message: data.message || undefined,
-      source: `site:startaegetforetag.se/${data.type}`,
-      pageUrl: data.sourcePage,
-      referrer: request.headers.get("referer") ?? undefined,
-      fields: data.companyForm ? { bolagsform: data.companyForm } : undefined,
-    });
+  const forwarded = await forwardLead({
+    phone: data.phone,
+    name: data.name,
+    email: data.email,
+    message: data.message || undefined,
+    source: `site:startaegetforetag.se/${data.type}`,
+    pageUrl: data.sourcePage,
+    referrer: request.headers.get("referer") ?? undefined,
+    attribution: attributionFromCookieHeader(request.headers.get("cookie")),
+    fields: data.companyForm ? { bolagsform: data.companyForm } : undefined,
+  });
+  // `forwarded_at` marks what reached the CRM; a null one is what to replay.
+  const insertId = Array.isArray(stored) ? Number((stored[0] as { insertId?: number })?.insertId) : NaN;
+  if (forwarded && Number.isInteger(insertId) && insertId > 0) {
+    await withDb((db) => db.update(schema.leads).set({ forwardedAt: new Date() }).where(eq(schema.leads.id, insertId)));
   }
 
   return NextResponse.json({

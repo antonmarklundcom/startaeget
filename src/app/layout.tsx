@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Figtree, Outfit } from "next/font/google";
 import "@/styles/globals.css";
 import { SITE_NAME, siteUrl } from "@/lib/site";
@@ -32,10 +33,20 @@ export const metadata: Metadata = {
     : {}),
 };
 
+/**
+ * VenderCRM first-touch attribution (vendercrm-lead-capture rule 6): a 90-day
+ * `vc_attr` cookie that /api/lead maps into the lead. Only with VENDERCRM_URL
+ * set (read at build/render on the server; it is a URL, not a secret).
+ */
+const CRM_URL = (process.env.VENDERCRM_URL ?? "").replace(/\/+$/, "");
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sv" className={`${body.variable} ${heading.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        {CRM_URL ? <Script src={`${CRM_URL}/vc-attribution.js`} strategy="afterInteractive" /> : null}
+      </body>
     </html>
   );
 }
